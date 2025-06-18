@@ -64,6 +64,12 @@ Se usarán las rutas API programadas en el backend.
 
 Es decir, desde Vercel se llamará a la API hosteada por mi en mi casa. Ya que la BD de mongo completa es tan grande ~48GB de storage, no quiero gastar dinero hosteandolo en un servicio en la nube. 
 
+Para la UI usaremos componentes de shadcn/ui siempre que sea posible.
+
+Para instalar componentes de shadcn/ui usa:
+
+npx shadcn@latest add [component]
+
 # DOCUMENTACION (MUY IMPORTANTE)
 
 No debes inventarte ningún campo de la BD o método de implementación de algo.
