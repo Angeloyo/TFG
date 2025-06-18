@@ -1,0 +1,77 @@
+\chapter{Estado del Arte}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+\section{Descripción de dominio del problema}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+\section{Metodologías potenciales a aplicar}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+\section{Tecnologías potenciales para usar}
+
+\subsection{Sistemas de gestión de bases de datos}
+
+El almacenamiento y gestión de los datos clínicos del conjunto MIMIC-IV requiere un sistema de base de datos que pueda manejar eficientemente grandes volúmenes de información heterogénea. A continuación, se analizan las principales alternativas consideradas para este proyecto.
+
+\subsubsection{Bases de datos relacionales}
+
+Las bases de datos relacionales tradicionales como PostgreSQL, MySQL y Oracle han sido ampliamente utilizadas en entornos clínicos por su robustez, fiabilidad y garantías ACID (Atomicidad, Consistencia, Aislamiento, Durabilidad).
+
+\paragraph{PostgreSQL} Ofrece un excelente rendimiento para consultas complejas y soporte para datos JSON, lo que permitiría cierta flexibilidad en esquemas. Sin embargo, para conjuntos de datos como MIMIC-IV, que presentan estructuras variables y requieren frecuentes modificaciones de esquema, PostgreSQL podría presentar limitaciones de escalabilidad y flexibilidad.
+
+\paragraph{MySQL} Proporciona buen rendimiento y es ampliamente utilizado en aplicaciones web. No obstante, sus limitaciones en cuanto a esquemas dinámicos y la complejidad para manejar datos con estructuras heterogéneas lo hacen menos adecuado para nuestro caso de uso.
+
+\paragraph{Oracle} Ofrece soluciones empresariales robustas con excelente soporte para entornos críticos. Sin embargo, sus altos costes de licencia y su complejidad de administración suponen barreras significativas para proyectos académicos.
+
+\subsubsection{Bases de datos NoSQL}
+
+Las bases de datos NoSQL surgieron como respuesta a las limitaciones de los sistemas relacionales, especialmente para manejar datos no estructurados o semiestructurados a gran escala.
+
+\paragraph{MongoDB} Es una base de datos documental que almacena datos en documentos similares a JSON (BSON). Entre sus características principales destacan:
+
+\begin{itemize}
+    \item \textbf{Esquema flexible}: Permite almacenar documentos con estructuras variables sin necesidad de definir un esquema rígido previo.
+    \item \textbf{Escalabilidad horizontal}: Facilita la distribución de datos en múltiples servidores.
+    \item \textbf{Alto rendimiento para operaciones de lectura}: Optimizado para consultas sobre grandes volúmenes de datos.
+    \item \textbf{Soporte nativo para consultas geoespaciales}: Útil para análisis de distribución geográfica de pacientes o centros médicos.
+    \item \textbf{Capacidad de indexación avanzada}: Permite optimizar diferentes tipos de consultas.
+\end{itemize}
+
+\paragraph{Cassandra} Diseñada para ofrecer alta disponibilidad y escalabilidad lineal sin comprometer el rendimiento. Si bien es excelente para escribir grandes volúmenes de datos, sus limitaciones en las capacidades de consulta y la complejidad de su modelo de datos la hacen menos adecuada para proyectos que requieren análisis de datos flexibles.
+
+\paragraph{Elasticsearch} Especializada en búsquedas de texto completo y análisis, ofrece capacidades avanzadas de indexación y búsqueda. Aunque sería útil para implementar búsquedas rápidas sobre registros clínicos, no está diseñada primariamente como sistema de almacenamiento principal.
+
+\subsubsection{Bases de datos orientadas a series temporales}
+
+\paragraph{InfluxDB} Optimizada para datos de series temporales, sería adecuada para almacenar mediciones continuas de pacientes. Sin embargo, su especialización la hace menos versátil para otros tipos de datos contenidos en MIMIC-IV.
+
+\paragraph{TimescaleDB} Extiende PostgreSQL con capacidades para series temporales, combinando las ventajas de las bases de datos relacionales con optimizaciones específicas para datos cronológicos. A pesar de estas ventajas, mantiene las limitaciones de flexibilidad de esquema inherentes a los sistemas relacionales.
+
+\subsection{Justificación de la elección de MongoDB}
+
+Tras analizar las diferentes alternativas, MongoDB se seleccionó para este proyecto por las siguientes razones:
+
+\begin{enumerate}
+    \item \textbf{Naturaleza heterogénea de MIMIC-IV}: El conjunto de datos MIMIC-IV contiene información de diversas fuentes (signos vitales, notas clínicas, resultados de laboratorio) con estructuras variables. MongoDB permite almacenar estos datos heterogéneos sin forzar un esquema único, facilitando la importación inicial.
+    
+    \item \textbf{Flexibilidad para evolución del proyecto}: A medida que el proyecto avanza, los requisitos de almacenamiento pueden cambiar. MongoDB permite modificar la estructura de los documentos sin migraciones complejas de schema.
+    
+    \item \textbf{Rendimiento en consultas analíticas}: Las capacidades de agregación de MongoDB (pipeline de agregación, map-reduce) son adecuadas para los análisis estadísticos requeridos en visualizaciones médicas.
+    
+    \item \textbf{Escalabilidad}: Aunque inicialmente el proyecto se desarrolla en un entorno local, la arquitectura de MongoDB facilita la migración a un sistema distribuido si fuera necesario en etapas posteriores.
+    
+    \item \textbf{Facilidad de integración con Python}: La biblioteca PyMongo proporciona una API intuitiva que simplifica el desarrollo de aplicaciones en Python, lenguaje principal del proyecto.
+    
+    \item \textbf{Comunidad activa y documentación extensa}: MongoDB cuenta con una amplia comunidad que proporciona recursos, ejemplos y casos de uso específicos para datos médicos.
+    
+    \item \textbf{Soporte para datos geoespaciales}: Permite análisis por ubicación, potencialmente útil para estudios epidemiológicos o de distribución de recursos.
+\end{enumerate}
+
+Es importante destacar que, aunque MongoDB ofrece flexibilidad en el esquema, el proyecto mantiene una estructura bien definida para los documentos, asegurando la consistencia de los datos y facilitando las consultas complejas necesarias para las visualizaciones.
+
+\section{Trabajos relacionados}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

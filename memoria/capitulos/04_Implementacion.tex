@@ -1,0 +1,104 @@
+\chapter{Implementación}
+
+\section{Entorno de desarrollo}
+
+En esta sección se detalla la configuración del entorno de desarrollo utilizado para la implementación del sistema, incluyendo la virtualización mediante contenedores Docker, la configuración de la base de datos MongoDB y el despliegue de la aplicación web.
+
+\subsection{Arquitectura del sistema}
+
+Para el desarrollo del proyecto se ha diseñado una arquitectura basada en contenedores que facilita tanto el desarrollo como el despliegue en producción. La arquitectura se compone de los siguientes elementos principales:
+
+\begin{figure}[h]
+\centering
+% Aquí debería insertarse la imagen de la arquitectura
+\caption{Arquitectura del sistema basada en contenedores}
+\label{fig:arquitectura}
+\end{figure}
+
+Como se muestra en la Figura \ref{fig:arquitectura}, el sistema se compone de los siguientes elementos:
+
+\begin{itemize}
+    \item \textbf{Contenedor de MongoDB}: Almacena los datos clínicos de MIMIC-IV en un formato de documentos JSON, facilitando consultas flexibles sobre datos heterogéneos.
+    
+    \item \textbf{Contenedor de Mongo Express}: Proporciona una interfaz de gestión web para la base de datos, facilitando la exploración de las colecciones y documentos durante el desarrollo.
+    
+    \item \textbf{Aplicación Flask}: Implementa el backend y sirve el frontend de la aplicación, procesando las solicitudes de los usuarios y generando las visualizaciones.
+    
+    \item \textbf{Servidor Gunicorn}: En el entorno de producción, gestiona las peticiones HTTP y distribuye la carga entre múltiples workers.
+    
+    \item \textbf{CloudFlare Tunnel}: Proporciona acceso seguro desde Internet mediante HTTPS sin necesidad de abrir puertos en el router.
+\end{itemize}
+
+La comunicación entre estos componentes fluye de la siguiente manera: el usuario accede a la aplicación web a través de HTTPS, donde CloudFlare Tunnel redirige la petición al servidor Gunicorn. Este procesa la solicitud con la aplicación Flask, que consulta la información necesaria en la base de datos MongoDB y genera las visualizaciones correspondientes.
+
+\subsection{Virtualización con Docker}
+
+Docker se ha utilizado como pieza fundamental para asegurar un entorno de desarrollo consistente y fácilmente reproducible. La elección de Docker responde a varios motivos fundamentales:
+
+\begin{itemize}
+    \item \textbf{Aislamiento}: Cada servicio opera en su propio contenedor sin interferir con otros servicios o con el sistema operativo principal.
+    
+    \item \textbf{Reproducibilidad}: Garantiza que el entorno de desarrollo sea idéntico en diferentes máquinas y en producción.
+    
+    \item \textbf{Gestión simplificada}: Facilita la administración de servicios mediante herramientas visuales como Portainer.
+\end{itemize}
+
+Para la gestión de contenedores se implementó Portainer, una interfaz web que simplifica operaciones como iniciar, detener o monitorizar contenedores sin necesidad de utilizar la línea de comandos.
+
+\subsection{Configuración de la base de datos MongoDB}
+
+MongoDB fue seleccionada como sistema de gestión de base de datos por su flexibilidad para manejar datos heterogéneos y su capacidad para procesar grandes volúmenes de información, características esenciales para trabajar con el dataset MIMIC-IV.
+
+El despliegue se realizó mediante un contenedor Docker con almacenamiento persistente mediante un volumen, asegurando que los datos se conserven incluso si el contenedor se reinicia o se actualiza. Se configuró para aceptar conexiones en el puerto estándar 27017, permitiendo la interacción tanto con la aplicación principal como con herramientas de administración.
+
+Para facilitar la administración y visualización de la base de datos durante el desarrollo, se implementó Mongo Express en un contenedor separado, proporcionando una interfaz web que permite explorar y modificar documentos sin necesidad de utilizar herramientas de línea de comandos.
+
+\subsection{Importación de datos MIMIC-IV}
+
+El proceso de importación del dataset MIMIC-IV a MongoDB se realizó mediante un script Python desarrollado específicamente para este propósito. Este script realiza las siguientes operaciones:
+
+\begin{itemize}
+    \item Lectura de los archivos CSV originales del dataset MIMIC-IV.
+    \item Transformación de los datos para adaptarlos al modelo de documentos de MongoDB.
+    \item Creación de índices para optimizar las consultas frecuentes.
+    \item Importación de los datos en colecciones específicas.
+\end{itemize}
+
+Para la ejecución del script se configuró un entorno virtual de Python con las dependencias necesarias, principalmente PyMongo para la interacción con la base de datos, Pandas para el procesamiento de datos y tqdm para la visualización del progreso.
+
+\section{Desarrollo del frontend}
+
+\subsection{Tecnologías utilizadas}
+
+El frontend de la aplicación ha evolucionado durante el desarrollo del proyecto. Inicialmente se optó por CSS puro para los estilos, pero posteriormente se migró a Tailwind CSS para agilizar el desarrollo y mantener una consistencia visual en toda la aplicación. Esta decisión también facilitó la preparación del entorno para la implementación de visualizaciones con D3.js.
+
+\subsection{Configuración del entorno frontend}
+
+Para gestionar las dependencias y herramientas de frontend se implementó un entorno basado en Node.js, utilizando Node Version Manager (NVM) para facilitar la gestión de versiones. Este enfoque permite mantener separadas las dependencias del frontend de las del backend, facilitando actualizaciones y mantenimiento.
+
+La configuración de Tailwind CSS se realizó siguiendo las mejores prácticas, con un proceso de compilación que optimiza el CSS resultante para producción eliminando clases no utilizadas y minimizando el tamaño del archivo final.
+
+\section{Despliegue en producción}
+
+\subsection{Enfoque y objetivos del despliegue}
+
+El despliegue en producción se planteó con varios objetivos:
+\begin{itemize}
+    \item Facilitar la supervisión del proyecto por parte de los tutores.
+    \item Permitir el acceso público una vez finalizado el desarrollo.
+    \item Proporcionar un entorno estable y seguro para las pruebas de usuario.
+\end{itemize}
+
+\subsection{Servidor de aplicación}
+
+Para el entorno de producción se implementó Gunicorn como servidor WSGI, seleccionado por su rendimiento, estabilidad y capacidad para gestionar múltiples conexiones simultáneas. Se configuró con múltiples workers y threads para optimizar el uso de recursos y mejorar la capacidad de respuesta bajo carga.
+
+La configuración de la aplicación Flask se adaptó para el entorno de producción, desactivando el modo de depuración y ajustando parámetros para maximizar el rendimiento y la seguridad.
+
+\subsection{Infraestructura}
+
+La aplicación se ejecuta en una máquina virtual operativa 24/7. Para permitir el acceso externo y habilitar SSL sin necesidad de configuraciones complejas de red, se implementó CloudFlare Tunnels, que establece una conexión segura entre la aplicación y los servidores de CloudFlare, proporcionando así protección contra ataques DDoS y cifrado SSL/TLS.
+
+Esta configuración elimina la necesidad de abrir puertos en el router o gestionar certificados SSL manualmente, simplificando significativamente el despliegue y mantenimiento de la aplicación.
+
+La aplicación web se encuentra disponible en: \url{https://tfg.angeloyo.com}
