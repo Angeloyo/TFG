@@ -29,7 +29,7 @@ interface PatientData {
 }
 
 async function getPatient(id: string): Promise<PatientData> {
-  const res = await fetch(`http://localhost:8088/api/patients/${id}`, {
+  const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
     cache: 'no-store'
   });
   
@@ -43,10 +43,14 @@ async function getPatient(id: string): Promise<PatientData> {
 export default async function PatientPage({ 
   params 
 }: { 
-  params: { id: string } 
+  params: Promise<{ id: string }> 
 }) {
+  
+  const resolvedParams = await params;
+
   try {
-    const data = await getPatient(params.id);
+
+    const data = await getPatient(resolvedParams.id);
     const { patient, admissions, total_admissions } = data;
 
     return (
@@ -120,11 +124,12 @@ export default async function PatientPage({
       </div>
     );
   } catch {
+
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="h-[calc(100vh-4.3rem)] bg-white flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-light text-black mb-2">Paciente no encontrado</h1>
-          <p className="text-gray-600">El ID {params.id} no existe en la base de datos</p>
+          <p className="text-gray-600">El ID {resolvedParams.id} no existe en la base de datos</p>
         </div>
       </div>
     );
