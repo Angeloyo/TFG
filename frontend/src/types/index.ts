@@ -1,0 +1,67 @@
+// ====================================
+// MIMIC-IV Types
+// ====================================
+
+/**
+ * Datos básicos de un paciente de MIMIC-IV
+ */
+export interface Patient {
+  subject_id: number;
+  gender: 'M' | 'F';
+  anchor_age: number;
+  anchor_year: number;
+  anchor_year_group: string;
+  dod?: string; // Fecha de muerte (si aplica)
+}
+
+/**
+ * Información de un ingreso hospitalario
+ */
+export interface Admission {
+  subject_id: number;
+  hadm_id: number;
+  admittime: string;
+  dischtime: string;
+  deathtime?: string;
+  admission_type: string;
+  admission_location: string;
+  discharge_location: string;
+  insurance: string;
+  language: string;
+  marital_status: string;
+  race: string;
+  hospital_expire_flag: 0 | 1;
+}
+
+/**
+ * Respuesta completa de la API para un paciente
+ */
+export interface PatientData {
+  patient: Patient;
+  admissions: Admission[];
+  total_admissions: number;
+}
+
+/**
+ * Respuesta de la API para listar pacientes
+ */
+export interface PatientsListData {
+  patients: Patient[];
+  count: number;
+}
+
+// ====================================
+// API Response Types
+// ====================================
+
+/**
+ * Estructura base para respuestas de error de la API
+ */
+export interface ApiError {
+  detail: string;
+}
+
+/**
+ * Estados de carga comunes
+ */
+export type LoadingState = 'idle' | 'loading' | 'success' | 'error';

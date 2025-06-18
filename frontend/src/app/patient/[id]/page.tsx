@@ -1,32 +1,4 @@
-interface Patient {
-  subject_id: number;
-  gender: string;
-  anchor_age: number;
-  anchor_year: number;
-  anchor_year_group: string;
-  dod?: string;
-}
-
-interface Admission {
-  hadm_id: number;
-  admittime: string;
-  dischtime: string;
-  deathtime?: string;
-  admission_type: string;
-  admission_location: string;
-  discharge_location: string;
-  insurance: string;
-  language: string;
-  marital_status: string;
-  race: string;
-  hospital_expire_flag: number;
-}
-
-interface PatientData {
-  patient: Patient;
-  admissions: Admission[];
-  total_admissions: number;
-}
+import { Admission, PatientData } from '@/types';
 
 async function getPatient(id: string): Promise<PatientData> {
   const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
@@ -40,16 +12,10 @@ async function getPatient(id: string): Promise<PatientData> {
   return res.json();
 }
 
-export default async function PatientPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
-}) {
-  
+export default async function PatientPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
 
   try {
-
     const data = await getPatient(resolvedParams.id);
     const { patient, admissions, total_admissions } = data;
 
@@ -94,7 +60,7 @@ export default async function PatientPage({
             <div>
               <h2 className="text-xl font-medium text-black mb-4">Historial de ingresos</h2>
               <div className="space-y-4">
-                {admissions.map((admission) => (
+                {admissions.map((admission: Admission) => (
                   <div key={admission.hadm_id} className="border border-gray-200 p-4 rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
@@ -124,7 +90,6 @@ export default async function PatientPage({
       </div>
     );
   } catch {
-
     return (
       <div className="h-[calc(100vh-4.3rem)] bg-white flex items-center justify-center">
         <div className="text-center">
