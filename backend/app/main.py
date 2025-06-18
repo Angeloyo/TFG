@@ -8,15 +8,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS para desarrollo local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Incluir routers
 app.include_router(patients_router)
 
