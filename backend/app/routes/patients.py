@@ -29,7 +29,7 @@ def clean_data(obj):
 @router.get("/{subject_id}")
 def get_patient(subject_id: int):
     """Obtiene información completa de un paciente"""
-    db = get_db(demo=True)
+    db = get_db(demo=False)
     
     # Buscar datos básicos del paciente
     patient = db["hosp_patients"].find_one({"subject_id": subject_id})
