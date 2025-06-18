@@ -1,0 +1,75 @@
+
+#REGLAS IMPORTANTES:
+
+- VAMOS POCO A POCO NO TE ADELANTES. QUIERO AVANCE PROGRESIVO Y LENTO. QUIERO APRENDER, ASí QUE EXPLICA DETALLADAMENTE TODO LO QUE SE HACE. 
+
+- SI NO TE PIDO QUE IMPLEMENTES CODIGO EXPLÍCITAMENTE, NO LO HAGAS. POR DEFECTO RESPONDE SÓLO CON TEXTO.
+
+- CUANDO IMPLEMENTES CÓDIGO: HAZ EXCLUSIVAMENTE SOLO LO QUE TE PIDA, NO TE ADELANTES!!!!
+
+- MANTÉN LA IMPLEMENTACIÓN LO MÁS SENCILLA POSIBLE, NADA DE COMPLICARSE EN EXCESO. EL MENOR NÚMERO DE LÍNEAS DE CÓDIGO, MEJOR.
+
+- SI TE ENCUENTRAS CON UN PROBLEMA, DIME LAS POSIBLES OPCIONES PARA RESOLVERLO Y PREGUNTAME CUAL ELEGIR. NO TOMES TÚ LAS DECISIONES.
+
+# INFORMACION CODEBASE
+
+Este codebase es para un trabajo de fin de grado
+En el que implementamos una web app que permite visualizar la base de datos MIMIC-IV, con gráficos de distintos tipos y diferentes complejidades.
+Queremos poder obtener conclusiones a partir de tratar y visualizar la gran cantidad de datos.
+En un futuro, queremos implementar IA para poder hacer predicciones y recomendaciones.
+
+descripción formal del Proyecto:
+El objetivo general de este proyecto es desarrollar una aplicación enfocada en la gestión y visualización de historiales clínicos utilizando herramientas interactivas. Esta aplicación estará diseñada como un sistema modular e interoperable, permitiendo su integración con diferentes plataformas y flujos de trabajo en el ámbito sanitario.
+Objetivos específicos:
+
+- Estudio de aplicaciones de gestión y alacenameinto de datos para interacción con plataformas de IA: Revisar y seleccionar bases de datos con capacidades de almacenamiento de datos estructurados y no estructurados y consultas dinámicas y eficientes para su posterior aplicación con algoritmos de aprendizaje automático (machine learning) y otras técnicas avanzadas que sean adecuados para el análisis de historiales clínicos.
+
+- Investigación de herramientas de visualización interactivas: Analizar las herramientas de visualización para representar datos clínicos, incluyendo gráficos dinámicos, dashboards y paneles de control. Diseñar interfaces intuitivas que permitan a los profesionales sanitarios interactuar con los datos de manera eficiente.
+- Desarrollo de una aplicación orientada a servicios: Diseñar y desarrollar una arquitectura modular basada en servicios web. Implementar funcionalidades que permitan gestionar y visualizar historiales clínicos en diferentes formatos, como texto, imágenes y señales biomédicas.
+- Implementación y validación del sistema: Probar la aplicación en escenarios simulados y reales, evaluando su desempeño, interoperabilidad y usabilidad. Realizar ajustes basados en retroalimentación de usuarios potenciales.
+
+Última información que me ha dado el tutor:
+
+- La aplicación debe ser modular, seria que tengas la api de gestion de consultas independiente y tengas una plataforma con microservicios por ejemplo que conecten con esta.
+
+- El plateamiento por lo tanto seria tener la app que visualice todo el conjuto ( BigData) que sera mas eficiente gracias a usar mongodb
+
+- Y aqui habría  que ver en la reunion como hacer prediccion (mediante algun modelo de Ia) para predecir en las graficas y asi poder poner indicadores de riesgo
+
+
+CONCLUSION:
+
+Vamos a hacer poco a poco este proyecto pero nada de lo especificado formalmente o por tutores es final, así que podemos dejar sitio para innovación o cambios.
+
+
+# BACKEND
+
+El dataset MIMIC-IV se ha importado en MongoDB (tanto la versión demo como la completa) con los scripts de la carpeta "scripts".
+
+El dataset full es gigante, necesitamos técnicas avanzadas de procesamiento de muchos datos sin usar muchos recursos y que me explote el ordenador. 
+
+Para el backend haremos una API con FastAPI que se usará desde el front para llevar los datos necesarios de la BD. 
+
+Código del backend en la carpeta "backend".
+
+# FRONTEND
+
+Desarrollado con NextJS y desplegado en Vercel.
+
+Tenemos que hacer una webapp bonita, minimalista, rápida (eficiente), intuitiva y funcional.
+
+En esta webapp crearemos distintos gráficos que nos den información relevante a partir de los datos del dataset. 
+
+Se usarán las rutas API programadas en el backend.
+
+Es decir, desde Vercel se llamará a la API hosteada por mi en mi casa. Ya que la BD de mongo completa es tan grande ~48GB de storage, no quiero gastar dinero hosteandolo en un servicio en la nube. 
+
+# DOCUMENTACION (MUY IMPORTANTE)
+
+No debes inventarte ningún campo de la BD o método de implementación de algo.
+
+SIEMPRE que puedas consulta documentación en internet o pidiendomelo a mi. 
+
+Puedes acceder a la documentación del dataset en: https://mimic.mit.edu/docs/iv/
+
+Debes entender todo el contexto y profundidad de lo que se está haciendo o se quiere hacer. 
