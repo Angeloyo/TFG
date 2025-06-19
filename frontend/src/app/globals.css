@@ -112,6 +112,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Evitar layout shift forzando la barra de scroll siempre visible */
+html {
+  overflow-y: scroll;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
