@@ -44,7 +44,7 @@ export default function DashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex items-center justify-center">
+      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex py-8 md:py-12 lg:py-16 xl:py-20 justify-center ">
         <p className="text-red-600">Error: {error}</p>
       </div>
     );
@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
   if (!stats) {
     return (
-      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex items-center justify-center">
+      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex py-8 md:py-12 lg:py-16 xl:py-20 justify-center ">
         <p className="text-gray-600">No hay datos disponibles</p>
       </div>
     );
@@ -67,9 +67,6 @@ export default function DashboardPage() {
           <h1 className="text-2xl sm:text-3xl font-light text-black mb-2">
             Dashboard
           </h1>
-          <p className="text-gray-600">
-            Estadísticas generales del dataset MIMIC-IV
-          </p>
         </div>
 
         {/* Estadísticas principales - Opción 2: Lista vertical simple */}
