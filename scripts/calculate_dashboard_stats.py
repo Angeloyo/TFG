@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Script para calcular estadísticas del dashboard y guardarlas en MongoDB.
 Esto hace que el dashboard sea instantáneo en lugar de tardar 10+ segundos.
@@ -42,15 +41,14 @@ def calculate_stats(db):
 def save_stats(db, stats):
     """Guardar estadísticas en la colección dashboard_stats"""
     document = {
-        "_id": "main",
         "last_updated": datetime.now(timezone.utc).isoformat(),
         "stats": stats
     }
     
-    # Usar upsert para reemplazar si ya existe
-    db["dashboard_stats"].replace_one(
-        {"_id": "main"}, 
-        document, 
+    # Usar update_one con upsert para crear o actualizar
+    db["dashboard_stats"].update_one(
+        {"_id": "main"},
+        {"$set": document},
         upsert=True
     )
     print(f"Estadísticas guardadas en dashboard_stats")

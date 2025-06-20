@@ -58,94 +58,111 @@ export default function DashboardPage() {
         
         {/* Header */}
         <div className="mb-12 text-center">
-          <h1 className="text-2xl sm:text-3xl font-light text-black mb-2">
+          <h1 className="text-xl sm:text-2xl font-light text-black mb-2">
             Dashboard
           </h1>
-          {/* <p className="text-gray-600">
-            Estadísticas generales de la base de datos MIMIC-IV
-          </p> */}
         </div>
 
-        {/* Estadísticas principales - Lista vertical */}
-        <div className="max-w-md mx-auto space-y-6">
+        {/* Estadísticas principales - Grid de 2 columnas en desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl mx-auto">
           
           {/* Pacientes totales */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Pacientes totales
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.total_patients.toLocaleString()}
             </span>
           </div>
 
           {/* Ingresos hospitalarios */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Ingresos hospitalarios
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.total_admissions.toLocaleString()}
             </span>
           </div>
 
           {/* Estancias en UCI */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Estancias en UCI
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.total_icu_stays.toLocaleString()}
             </span>
           </div>
 
           {/* Total análisis laboratorio */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Análisis de laboratorio
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.total_lab_tests.toLocaleString()}
             </span>
           </div>
 
           {/* Total diagnósticos */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Diagnósticos registrados
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.total_diagnoses.toLocaleString()}
             </span>
           </div>
 
           {/* Mortalidad hospitalaria */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Mortalidad hospitalaria
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.mortality_rate}%
             </span>
           </div>
 
           {/* Pacientes masculinos */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Pacientes masculinos
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.male_percentage}%
             </span>
           </div>
 
           {/* Ingresos de emergencia */}
           <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
+            <span className="text-base font-light text-gray-700">
               Ingresos de emergencia
             </span>
-            <span className="text-2xl font-light text-black">
+            <span className="text-lg font-light text-black">
               {stats.emergency_rate}%
+            </span>
+          </div>
+
+          {/* Edad promedio */}
+          <div className="flex justify-between items-center">
+            <span className="text-base font-light text-gray-700">
+              Edad promedio
+            </span>
+            <span className="text-lg font-light text-black">
+              {stats.avg_patient_age.toLocaleString()} años
+            </span>
+          </div>
+
+          {/* Estancia promedio */}
+          <div className="flex justify-between items-center">
+            <span className="text-base font-light text-gray-700">
+              Estancia promedio
+            </span>
+            <span className="text-lg font-light text-black">
+              {stats.avg_length_of_stay.toLocaleString()} días
             </span>
           </div>
 

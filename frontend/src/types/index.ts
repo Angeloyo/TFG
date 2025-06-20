@@ -62,6 +62,8 @@ export interface DashboardStats {
   male_percentage: number;
   emergency_rate: number;
   total_diagnoses: number;
+  avg_patient_age: number;
+  avg_length_of_stay: number;
 }
 
 // ====================================
