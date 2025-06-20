@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, BarChart3 } from "lucide-react";
 
 export default function Header() {
   return (
@@ -10,14 +10,23 @@ export default function Header() {
           MIMIC-IV Analytics
         </Link>
         
-        {/* Icono de búsqueda */}
-        <Link 
-          href="/search" 
-          className="p-2 text-gray-600 hover:text-black transition-colors"
-          title="Buscar paciente"
-        >
-          <Search size={20} />
-        </Link>
+        {/* Navegación */}
+        <div className="flex items-center space-x-4">
+          <Link 
+            href="/dashboard" 
+            className="p-2 text-gray-600 hover:text-black transition-colors"
+            title="Dashboard"
+          >
+            <BarChart3 size={20} />
+          </Link>
+          <Link 
+            href="/search" 
+            className="p-2 text-gray-600 hover:text-black transition-colors"
+            title="Buscar paciente"
+          >
+            <Search size={20} />
+          </Link>
+        </div>
       </div>
     </header>
   );
