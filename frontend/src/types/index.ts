@@ -50,6 +50,18 @@ export interface PatientsListData {
   count: number;
 }
 
+/**
+ * Estadísticas completas del dashboard
+ */
+export interface DashboardStats {
+  // Métricas existentes
+  total_patients: number;
+  total_admissions: number;
+  mortality_rate: number;
+  total_deaths: number;
+  total_icu_stays: number;
+}
+
 // ====================================
 // API Response Types
 // ====================================

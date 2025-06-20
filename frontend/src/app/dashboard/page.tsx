@@ -1,14 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DashboardStats } from "@/types"; 
 
-interface DashboardStats {
-  total_patients: number;
-  total_admissions: number;
-  mortality_rate: number;
-  total_deaths: number;
-  total_icu_stays: number;
-}
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
