@@ -14,7 +14,7 @@ export default function ICUStayChart({ data }: ICUStayChartProps) {
   const [hoveredData, setHoveredData] = useState<ICUStayData | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [showAll, setShowAll] = useState(false);
-  const [threshold, setThreshold] = useState(100);
+  const [threshold, setThreshold] = useState(500);
 
   // Filtrar datos según el threshold
   const filteredData = showAll ? data : data.filter(d => d.total_stays >= threshold);
@@ -27,7 +27,7 @@ export default function ICUStayChart({ data }: ICUStayChartProps) {
     containerRef.current.innerHTML = '';
 
     const plot = Plot.plot({
-      marginLeft: 200,
+      marginLeft: 250,
       height: 500,
       x: { 
         label: "Estancia promedio (días)",
