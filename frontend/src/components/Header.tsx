@@ -4,9 +4,9 @@ import { Search } from "lucide-react";
 export default function Header() {
   return (
     <header className="w-full bg-white border-b border-gray-200">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         {/* Título / Logo */}
-        <Link href="/" className="text-xl font-light text-black hover:text-gray-700 transition-colors">
+        <Link href="/" className="text-lg sm:text-xl font-light text-black hover:text-gray-700 transition-colors">
           MIMIC-IV Analytics
         </Link>
         
