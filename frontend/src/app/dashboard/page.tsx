@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DashboardStats } from "@/types"; 
+import { DashboardStats } from "@/types";
+import { ArrowRight } from "lucide-react"; 
 
 
 export default function DashboardPage() {
@@ -63,8 +64,13 @@ export default function DashboardPage() {
           </h1>
         </div>
 
-        {/* Estadísticas principales - Grid de 2 columnas en desktop */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 max-w-4xl mx-auto">
+        {/* Estadísticas principales */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <h2 className="text-lg font-light text-black mb-6 text-center">
+            Estadísticas generales
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
           
           {/* Pacientes totales */}
           <div className="flex justify-between items-center">
@@ -166,11 +172,28 @@ export default function DashboardPage() {
             </span>
           </div>
 
+          </div>
         </div>
 
-        {/* Espacio para futuras adiciones */}
-        <div className="mt-16">
-          {/* Aquí irán los enlaces a gráficas específicas */}
+        {/* Enlaces a gráficas */}
+        <div className="mt-0">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-lg font-light text-black mb-6 text-center">
+              Análisis detallados
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+              <a 
+                href="/charts/icu-stay-duration"
+                className="flex justify-between items-center group"
+              >
+                <span className="text-base font-light text-gray-700 group-hover:text-gray-900">
+                  Duración de estancias por UCI
+                </span>
+                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>
