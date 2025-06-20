@@ -16,7 +16,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-8.6rem)] bg-white flex items-center justify-center">
+    <div className="min-h-[calc(100vh-8.6rem)] bg-white py-8 md:py-12 lg:py-16 xl:py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-md mx-auto">
           {/* Header */}

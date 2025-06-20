@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, BarChart3 } from "lucide-react";
+import { Search, Gauge } from "lucide-react";
 
 export default function Header() {
   return (
@@ -17,7 +17,7 @@ export default function Header() {
             className="p-2 text-gray-600 hover:text-black transition-colors"
             title="Dashboard"
           >
-            <BarChart3 size={20} />
+            <Gauge size={20} />
           </Link>
           <Link 
             href="/search" 

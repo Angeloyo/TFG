@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex items-center justify-center">
+      <div className="min-h-[calc(100vh-8.6rem)] bg-white flex py-8 md:py-12 lg:py-16 xl:py-20 justify-center ">
         <p className="text-gray-600">Cargando estadísticas...</p>
       </div>
     );
@@ -59,7 +59,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8.6rem)] bg-white py-8">
+    <div className="min-h-[calc(100vh-8.6rem)] bg-white py-8 md:py-12 lg:py-16 xl:py-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
