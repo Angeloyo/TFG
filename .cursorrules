@@ -48,6 +48,8 @@ El dataset MIMIC-IV se ha importado en MongoDB (tanto la versión demo como la c
 
 El dataset full es gigante, necesitamos técnicas avanzadas de procesamiento de muchos datos sin usar muchos recursos y que me explote el ordenador. 
 
+EN PRODUCCION SIEMPRE USAR BASE DE DATOS FULL LA DE DEMO ES SOLO PARA PRUEBAS
+
 Para el backend haremos una API con FastAPI que se usará desde el front para llevar los datos necesarios de la BD. 
 
 Código del backend en la carpeta "backend".

@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.db.mongo import get_db
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
@@ -6,29 +6,21 @@ router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 @router.get("/stats")
 def get_dashboard_stats():
     """
-    Obtiene las estadísticas básicas para el dashboard principal.
-    Devuelve 4 métricas clave: pacientes, ingresos, mortalidad y UCI.
+    Obtiene las estadísticas del dashboard desde la colección pre-calculada.
+    Súper rápido porque lee datos ya calculados.
     """
     # Conectar a la base de datos completa
     db = get_db(demo=False)
     
-    # 1. Total de pacientes únicos
-    total_patients = db["hosp_patients"].count_documents({})
+    # Leer estadísticas pre-calculadas
+    cached_stats = db["dashboard_stats"].find_one({"_id": "main"})
     
-    # 2. Total de ingresos hospitalarios
-    total_admissions = db["hosp_admissions"].count_documents({})
-    
-    # 3. Calcular mortalidad hospitalaria
-    deaths = db["hosp_admissions"].count_documents({"hospital_expire_flag": 1})
-    mortality_rate = round((deaths / total_admissions) * 100, 2) if total_admissions > 0 else 0
-    
-    # 4. Total de estancias en UCI
-    total_icu_stays = db["icu_icustays"].count_documents({})
-    
-    return {
-        "total_patients": total_patients,
-        "total_admissions": total_admissions,
-        "mortality_rate": mortality_rate,
-        "total_deaths": deaths,
-        "total_icu_stays": total_icu_stays
-    } 
+    if cached_stats and "stats" in cached_stats:
+        # Devolver estadísticas cacheadas
+        return cached_stats["stats"]
+    else:
+        # Fallback: calcular en tiempo real si no existen
+        raise HTTPException(
+            status_code=503, 
+            detail="Estadísticas no disponibles. Ejecuta calculate_dashboard_stats.py primero."
+        )

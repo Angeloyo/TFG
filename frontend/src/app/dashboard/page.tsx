@@ -31,7 +31,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-8.6rem)] bg-white flex py-8 md:py-12 lg:py-16 xl:py-20 justify-center ">
-        <p className="text-gray-600">Cargando estadísticas...</p>
+        {/* <p className="text-gray-600">Cargando estadísticas...</p> */}
       </div>
     );
   }
@@ -61,9 +61,12 @@ export default function DashboardPage() {
           <h1 className="text-2xl sm:text-3xl font-light text-black mb-2">
             Dashboard
           </h1>
+          {/* <p className="text-gray-600">
+            Estadísticas generales de la base de datos MIMIC-IV
+          </p> */}
         </div>
 
-        {/* Estadísticas principales - Opción 2: Lista vertical simple */}
+        {/* Estadísticas principales - Lista vertical */}
         <div className="max-w-md mx-auto space-y-6">
           
           {/* Pacientes totales */}
@@ -86,16 +89,6 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          {/* Mortalidad hospitalaria */}
-          <div className="flex justify-between items-center">
-            <span className="text-lg font-light text-gray-700">
-              Mortalidad hospitalaria
-            </span>
-            <span className="text-2xl font-light text-black">
-              {stats.mortality_rate}%
-            </span>
-          </div>
-
           {/* Estancias en UCI */}
           <div className="flex justify-between items-center">
             <span className="text-lg font-light text-gray-700">
@@ -106,11 +99,61 @@ export default function DashboardPage() {
             </span>
           </div>
 
+          {/* Total análisis laboratorio */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-light text-gray-700">
+              Análisis de laboratorio
+            </span>
+            <span className="text-2xl font-light text-black">
+              {stats.total_lab_tests.toLocaleString()}
+            </span>
+          </div>
+
+          {/* Total diagnósticos */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-light text-gray-700">
+              Diagnósticos registrados
+            </span>
+            <span className="text-2xl font-light text-black">
+              {stats.total_diagnoses.toLocaleString()}
+            </span>
+          </div>
+
+          {/* Mortalidad hospitalaria */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-light text-gray-700">
+              Mortalidad hospitalaria
+            </span>
+            <span className="text-2xl font-light text-black">
+              {stats.mortality_rate}%
+            </span>
+          </div>
+
+          {/* Pacientes masculinos */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-light text-gray-700">
+              Pacientes masculinos
+            </span>
+            <span className="text-2xl font-light text-black">
+              {stats.male_percentage}%
+            </span>
+          </div>
+
+          {/* Ingresos de emergencia */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-light text-gray-700">
+              Ingresos de emergencia
+            </span>
+            <span className="text-2xl font-light text-black">
+              {stats.emergency_rate}%
+            </span>
+          </div>
+
         </div>
 
         {/* Espacio para futuras adiciones */}
         <div className="mt-16">
-          {/* Aquí irán futuras secciones del dashboard */}
+          {/* Aquí irán los enlaces a gráficas específicas */}
         </div>
 
       </div>

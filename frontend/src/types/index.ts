@@ -54,12 +54,14 @@ export interface PatientsListData {
  * Estadísticas completas del dashboard
  */
 export interface DashboardStats {
-  // Métricas existentes
   total_patients: number;
   total_admissions: number;
   mortality_rate: number;
-  total_deaths: number;
   total_icu_stays: number;
+  total_lab_tests: number;
+  male_percentage: number;
+  emergency_rate: number;
+  total_diagnoses: number;
 }
 
 // ====================================
