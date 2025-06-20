@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.patients import router as patients_router
 from app.routes.dashboard import router as dashboard_router
+from app.routes.charts import router as charts_router
 
 app = FastAPI(
     title="MIMIC-IV Analytics API",
@@ -12,6 +13,7 @@ app = FastAPI(
 # Incluir routers
 app.include_router(patients_router)
 app.include_router(dashboard_router)
+app.include_router(charts_router)
 
 app.add_middleware(
     CORSMiddleware,

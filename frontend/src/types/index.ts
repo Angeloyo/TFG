@@ -81,3 +81,14 @@ export interface ApiError {
  * Estados de carga comunes
  */
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
+
+/**
+ * Datos de estancia por UCI para gráficos
+ */
+export interface ICUStayData {
+  careunit: string;
+  avg_stay_days: number;
+  total_stays: number;
+  min_stay: number;
+  max_stay: number;
+}
