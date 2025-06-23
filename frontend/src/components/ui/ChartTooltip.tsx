@@ -16,7 +16,7 @@ export default function ChartTooltip({ visible, x, y, children }: TooltipProps) 
         top: y - 10,
       }}
     >
-      <div className="bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg text-xs sm:text-sm border border-gray-700">
+      <div className="bg-gray-900 text-white px-3 py-2 rounded-lg shadow-lg text-xs border border-gray-700">
         {children}
       </div>
     </div>
