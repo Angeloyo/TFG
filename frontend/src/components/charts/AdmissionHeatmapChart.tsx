@@ -11,21 +11,30 @@ export default function AdmissionHeatmapChart() {
   const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<AdmissionHeatmapData>();
   const [data, setData] = useState<AdmissionHeatmapData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingFilter, setLoadingFilter] = useState(false);
+  const [filterMidnight, setFilterMidnight] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://tfg-api.angeloyo.com/api/charts/admission-heatmap');
+        // Si no es la primera carga, activar loading del filtro
+        if (!loading) {
+          setLoadingFilter(true);
+        }
+        
+        const url = `https://tfg-api.angeloyo.com/api/charts/admission-heatmap?filter_midnight=${filterMidnight}`;
+        const response = await fetch(url);
         const result = await response.json();
         setData(result.data);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false);
+        setLoadingFilter(false);
       }
     };
     fetchData();
-  }, []);
+  }, [filterMidnight]);
 
   useEffect(() => {
     if (!data.length || !containerRef.current) return;
@@ -84,6 +93,35 @@ export default function AdmissionHeatmapChart() {
   return (
     <div className="relative">
       <div ref={containerRef} />
+      
+      {/* Controles de filtrado */}
+      <div className="mt-4 text-sm text-gray-600 space-y-2">
+        {loadingFilter ? (
+          <p className="text-gray-600">
+            Cargando...
+          </p>
+        ) : filterMidnight ? (
+          <p>
+            Se han filtrado los ingresos registrados a las 00:00:00 por no ser informativos.{' '}
+            <button 
+              onClick={() => setFilterMidnight(false)}
+              className="underline text-gray-700 hover:text-gray-900"
+            >
+              Mostrar todos los datos
+            </button>
+          </p>
+        ) : (
+          <p>
+            Mostrando todos los ingresos.{' '}
+            <button 
+              onClick={() => setFilterMidnight(true)}
+              className="underline text-gray-700 hover:text-gray-900"
+            >
+              Filtrar medianoche
+            </button>
+          </p>
+        )}
+      </div>
       
       <ChartTooltip
         visible={!!hoveredData}
