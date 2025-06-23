@@ -101,3 +101,12 @@ export interface AgeDistributionData {
   gender: 'M' | 'F';
   count: number;
 }
+
+/**
+ * Datos del heatmap de ingresos por hora y día
+ */
+export interface AdmissionHeatmapData {
+  hour: number;
+  dayOfWeek: number;
+  count: number;
+}
