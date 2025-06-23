@@ -45,6 +45,7 @@ export default function ICUStayChart() {
     const plot = Plot.plot({
       marginLeft: 250,
       height: 500,
+      marginBottom: 38,
       x: { 
         label: "Estancia promedio (días)",
         grid: true 

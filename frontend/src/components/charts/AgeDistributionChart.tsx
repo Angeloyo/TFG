@@ -51,7 +51,8 @@ export default function AgeDistributionChart({ detailed }: AgeDistributionChartP
     const plot = Plot.plot({
       width: 600,
       height: 400,
-      marginLeft: 60,
+      marginLeft: isDetailed ? 47 : 66,
+      marginBottom: 40,
       x: {
         label: "← hombres · pacientes · mujeres →",
         labelAnchor: "center",
