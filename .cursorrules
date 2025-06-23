@@ -87,3 +87,491 @@ PUEDES USAR LA HERRAMIENTA MCP DE MONGODB PARA VER EL DATASET TANTO DEMO COMO FU
 PERO MUCHISIMO CUIDADO!!!!!!! SOLO LEERLO !!!! NUNCA LO MODIFIQUES!!!!
 
 Debes entender todo el contexto y profundidad de lo que se está haciendo o se quiere hacer. 
+
+# Charts
+
+De los principales objetivos del TFG es visualizar datos.
+
+Intentaremos usar o d3js o plot ambos de observableHQ siempre que se pueda.
+
+Lista de gráficos de ejemplo en Plot:
+
+"Plot Gallery
+Here are a selection of Observable Plot examples.
+
+Dot, Image, Text
+Plot individual data points.
+
+Scatterplot
+Scatterplot with color
+Diverging color scatterplot
+Symbol scatterplot
+Scatterplot with interactive tips
+Proportional symbol scatterplot
+Scatterplot with ordinal dimension
+Stacked dots
+Quantile-quantile plot
+Seattle temperature amplitude
+Simpson’s paradox
+Dot plot
+Background image
+Image dodge
+Image medals
+Image scatterplot
+Default image scatterplot
+Ordinal scatterplot
+Dot heatmap
+Hexbin heatmap
+Sized hexbin heatmap
+Hexbin text
+Text dodge
+Text spiral
+This is just to say
+Voronoi labels
+Stem-and-leaf plot
+Beeswarm (dodge)
+Faceted dodge
+Barley trellis
+2D faceting
+2D faceting with non-faceted marks
+Dot histogram
+The Wealth & Health of Nations
+Dot sort
+Bubble map
+Isotype Chart
+Anscombe’s quartet
+Bar, Cell, Rect
+Represent data and aggregates with rectangular shapes.
+
+Horizontal bar chart
+Vertical bar chart
+Grouped bar chart
+Grouped bar chart 2
+Diverging bars
+Diverging stacked bars
+Stacked bars
+Stacked bars 2
+Stacked rects
+Vertical bars, rotated labels
+Horizontal bars with a label
+Horizontal stacked bars
+Ordinal time bar chart
+Ordinal scale interval
+Temporal bar chart
+Bullet graph
+Binned box plot
+Gradient bars
+Stacked unit chart
+Civilizations timeline
+Single stacked bar
+Single stacked bar 2
+Warming stripes
+Normal histogram
+Stacked histogram
+Overlapping histograms
+Highlighted bin
+Pre-binned histogram
+Cumulative histogram
+Percentogram
+Distribution of poverty
+The Impact of Vaccines
+Seattle temperature temporal heatmap
+Sorted heatmap
+Simpsons IMDB ratings
+Stacked waffles
+Survey waffle
+Calendar
+Simplified calendar
+Correlation heatmap
+Auto mark, heatmap
+Auto mark, heatmap 2
+Heatmap (continuous)
+Basketball shot chart
+Marimekko chart
+Grid choropleth
+County bounding boxes
+Area, Line
+Connect series of data points.
+
+Line chart
+Multi-line chart
+Labeled multi-line chart
+Index chart
+Gradient encoding
+Area chart
+Area chart with gradient
+Difference chart
+Burndown chart
+Area-line custom mark
+Faceted area chart
+Random walk
+Bollinger bands
+Moving average
+Line with missing data
+Line with sparse data
+Rolling min and max
+Line chart, percent change
+Ridgeline plot
+PSR B1919+21
+Horizon chart
+Horizon chart 2
+Stacked areas
+Stacking order
+Population pyramid
+Wiggle streamgraph
+Normalized stack
+Euro parliament seats
+Ribbon chart
+Job vacancies
+Proportion plot
+Overlapping density estimations
+Continuous histogram
+Variable fill area
+Facet wrap
+Line chart with markers
+Non-temporal line chart
+Connected scatterplot
+Difference stroke
+Spherical line with a varying stroke
+Area chart, missing data
+Radar chart
+Radar chart, small multiples
+Slope chart
+Slope chart II
+Marey’s trains
+Rule, Tick
+Trace horizontal and vertical lines.
+
+Candlestick chart
+Band chart with rule
+Lollipop chart
+Faceted lollipop
+Bar and tick
+Barcode chart
+Germany traffic patterns
+Geo
+Make maps of the world, a country, or even a house.
+
+Floor plan
+Polar projection
+Map small multiples
+projection domain
+Albers-USA projection
+World projections
+Earthquake globe
+Hexbin map
+Centroid hexbin
+Centroid dot
+State labels
+State centroids
+V-Counties
+Shockwave
+Choropleth
+Bivariate choropleth
+GeoTIFF contours
+Arrow, Link, Tree, Vector
+Display movement, variation, and hierarchical structures.
+
+Finite state machine
+Arc diagram
+Arrow variation chart
+Difference arrows
+Barley Trellis plot with arrows
+Phases of the moon
+Spike map
+Wind map
+Election wind map
+Tree, tidy
+Cluster diagram
+Indented tree diagram
+Perlin noise
+Contour, Raster, Density
+Draw images from functions or sample points.
+
+Function contour
+Faceted function contour
+Mandelbrot set
+Log heatmap
+Volcano raster
+Function contour 2
+Contours & projection
+Blurred contours
+IGRF90 contours
+Small grid contours
+Filled contours
+Stroked contours
+Olympians density
+Density skew (weight) interactive
+Density, faceted
+Walmart density
+Density stroke
+Projected raster: vapor
+One-dimensional density
+Density options
+Point cloud density
+Non-overlapping density regions
+Axes
+Help the reader interpret the meaning of the position encodings.
+
+Axis with wrapped labels
+ggplot2-style axes
+Datawrapper-style date axis
+New York Times-style axes
+Data-based axis
+Major and minor axis ticks
+Parallel coordinates
+Delaunay, Voronoi
+Derive neighborhoods from point clouds.
+
+Delaunay links
+Voronoi scatterplot
+Delaunay & hull
+Voronoi map
+Walmart Voronoi
+Centroid Voronoi
+Planar vs. spherical Voronoi
+Tips and interactions
+Move the mouse on a chart for direct manipulation of data.
+
+Scatterplot with interactive tips
+Crosshair
+CrosshairX
+One-dimensional crosshair
+Color crosshair
+Pointer transform
+Pointer modes (x, y, and xy)
+Multi-series line chart, interactive tips
+One-dimensional pointing
+Pointer target position
+Line chart, interactive tip
+Static annotations
+Interactive tips with longer text
+Interactive tips with additional channels
+Tip format
+Tips, paired channels
+Map and tips"
+
+
+---------------------
+
+
+Lista de gráficos de ejemplo en d3:
+
+"D3 gallery
+Looking for a good D3 example? Here’s a few (okay, 173…) to peruse.
+
+Animation
+D3’s data join, interpolators, and easings enable flexible animated transitions between views while preserving object constancy.
+
+Animated treemap
+Temporal force-directed graph
+Connected scatterplot
+The wealth & health of nations
+Scatterplot tour
+Bar chart race
+Stacked-to-grouped bars
+Streamgraph transitions
+Smooth zooming
+Zoom to bounding box
+Orthographic to equirectangular
+World tour
+Walmart’s growth
+Hierarchical bar chart
+Zoomable treemap
+Zoomable circle packing
+Collapsible tree
+Zoomable icicle
+Zoomable sunburst
+Sortable bar chart
+Icelandic population by age, 1841–2019
+Pie chart update
+Arc tween
+Interaction
+D3’s low-level approach allows for performant incremental updates during interaction. And D3 supports popular interaction methods including dragging, brushing, and zooming.
+
+Versor dragging
+Index chart
+Sequences sunburst
+Brushable scatterplot
+Brushable scatterplot matrix
+Pannable chart
+Zoomable area chart
+Zoomable bar chart
+Seamless zoomable map tiles
+Analysis
+D3 is for more than visualization; it includes tools for quantitative analysis, such as data transformation, random number generation, hexagonal binning, and contours via marching squares.
+
+Moving average
+Bollinger bands
+Box plot
+Histogram
+Kernel density estimation
+Density contours
+Volcano contours
+Contours
+Hexbin
+Hexbin (area)
+Hexbin map
+Q–Q plot
+Normal quantile plot
+Parallel sets
+Hierarchies
+D3 supports hierarchical data, too, with popular layouts such as treemaps, tidy trees, and packed circles. And you retain complete control over how the data is displayed.
+
+Treemap
+Cascaded treemap
+Nested treemap
+Circle packing
+Indented tree
+Tidy tree
+Radial tidy tree
+Cluster dendrogram
+Radial dendrogram
+Sunburst
+Icicle
+Tangled tree visualization
+Phylogenetic tree
+Force-directed tree
+Networks
+D3 works with networked data (graphs), including simulated forces for resolving competing constraints and an iterative Sankey layout.
+
+Force-directed graph
+Disjoint force-directed graph
+Mobile patent suits
+Arc diagram
+Sankey diagram
+Hierarchical edge bundling
+Hierarchical edge bundling
+Chord diagram
+Chord diagram
+Directed chord diagram
+Chord dependency diagram
+Bars
+D3 scales and axes support basic charts. Or invent a new form that better serves your needs.
+
+Bar chart
+Horizontal bar chart
+Diverging bar chart
+Stacked bar chart
+Stacked horizontal bar chart
+Stacked normalized horizontal bar chart
+Grouped bar chart
+Diverging stacked bar chart
+Marimekko chart
+World history timeline
+Calendar
+The impact of vaccines
+Electricity usage, 2019
+Revenue by music format, 1973–2018
+Lines
+With direct control over graphics, and support for both SVG and Canvas, the possibilities are endless.
+
+Line chart
+Line with missing data
+Multi-line chart
+Change line chart
+Slope chart
+Slope chart II
+Marey’s trains
+Candlestick chart
+Variable-color line
+Gradient encoding
+Threshold encoding
+Parallel coordinates
+Inequality in American cities
+New zealand tourists, 1921–2018
+Sea ice extent, 1978–2017
+Areas
+Go beyond basic area charts with difference charts or streamgraphs. Ridgeline plots and horizon charts are great for comparing many simultaneous time series.
+
+Area chart
+Area with missing data
+Stacked area chart
+Normalized stacked area chart
+U.S. population by state, 1790–1990
+Streamgraph
+Difference chart
+Band chart
+Ridgeline (joy) plot
+Horizon chart
+Realtime horizon chart
+Dots
+Don’t forget the humble scatterplot. For a single dimension, consider the beeswarm; for finding pairwise dimensional correlations, try a SPLOM.
+
+Scatterplot
+Scatterplot with shapes
+Scatterplot matrix
+Dot plot
+Global temperature trends
+Bubble map
+Spike map
+Bubble chart
+Beeswarm
+Mirrored beeswarm
+Hertzsprung–Russell diagram
+Radial
+Pies and donuts are good for comparing a part to the whole. And radial layouts can be appropriate for cyclical data.
+
+Pie chart
+Donut chart
+Radial area chart
+Radial stacked bar chart
+Radial stacked bar chart (sorted)
+Annotation
+Labels, legends, axes, titles, guides, and keys help a visualization communicate effectively. Here are a few strategies.
+
+Inline labels
+Directly labelling lines
+Line chart with tooltip
+Voronoi labels
+Occlusion
+Graticule labels
+Styled axes
+Color legend
+Maps
+D3 implements a dizzying array of geographic projections. It works great with GeoJSON, TopoJSON, and even shapefiles.
+
+Choropleth
+Bivariate choropleth
+State choropleth
+World choropleth
+World map
+Projection transitions
+Projection comparison
+Antimeridian cutting
+Tissot’s indicatrix
+Web Mercator tiles
+Raster tiles
+Vector tiles
+Clipped map tiles
+Raster & vector
+Vector field
+GeoTIFF contours
+U.S. airports voronoi
+World airports voronoi
+Solar terminator
+Solar path
+Star map
+Non-contiguous cartogram
+Essays
+Weave interactive visualizations seamlessly into prose for explorable explanations. Don’t just tell the reader something; let the reader see, engage, and ask questions.
+
+d3.packEnclose
+Centerline labeling
+Methods of comparison, compared
+Predator and prey
+Just for fun
+Why not have a little fun? Life’s not just about work, you know.
+
+Polar clock
+Stern–brocot tree
+Voronoi stippling
+Watercolor
+PSR B1919+21
+Epicyclic gearing
+Owls to the max
+Tadpoles
+Word cloud
+Spilhaus shoreline map
+Phases of the moon
+Color schemes"
