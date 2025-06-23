@@ -92,3 +92,12 @@ export interface ICUStayData {
   min_stay: number;
   max_stay: number;
 }
+
+/**
+ * Datos de distribución por edad para population pyramid
+ */
+export interface AgeDistributionData {
+  age_group: string;
+  gender: 'M' | 'F';
+  count: number;
+}

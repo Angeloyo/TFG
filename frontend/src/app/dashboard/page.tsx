@@ -192,6 +192,16 @@ export default function DashboardPage() {
                 </span>
                 <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
               </a>
+              
+              <a 
+                href="/charts/age-distribution"
+                className="flex justify-between items-center group"
+              >
+                <span className="text-base font-light text-gray-700 group-hover:text-gray-900">
+                  Distribución por edad y género
+                </span>
+                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+              </a>
             </div>
           </div>
         </div>

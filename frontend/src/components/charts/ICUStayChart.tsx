@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Plot from '@observablehq/plot';
 import { ICUStayData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
+import { useChartTooltip } from '@/hooks/useChartTooltip';
 
 interface ICUStayChartProps {
   data: ICUStayData[];
@@ -11,8 +12,7 @@ interface ICUStayChartProps {
 
 export default function ICUStayChart({ data }: ICUStayChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [hoveredData, setHoveredData] = useState<ICUStayData | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<ICUStayData>();
   const [showAll, setShowAll] = useState(false);
   const [threshold, setThreshold] = useState(500);
 
@@ -54,12 +54,11 @@ export default function ICUStayChart({ data }: ICUStayChartProps) {
       const dataItem = filteredData.find(d => d.careunit === bar.getAttribute('aria-label')?.split(',')[0]) || filteredData[index];
       
       bar.addEventListener('mouseenter', (e) => {
-        setHoveredData(dataItem);
-        setTooltipPosition({ x: e.clientX, y: e.clientY });
+        showTooltip(dataItem, e.clientX, e.clientY);
       });
       
       bar.addEventListener('mouseleave', () => {
-        setHoveredData(null);
+        hideTooltip();
       });
     });
 
