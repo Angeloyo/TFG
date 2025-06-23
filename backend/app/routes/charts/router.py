@@ -1,0 +1,8 @@
+from fastapi import APIRouter
+from .icu_stay_duration import router as icu_stay_router
+
+# Router principal para todos los charts
+router = APIRouter(prefix="/api/charts", tags=["charts"])
+
+# Incluir todos los charts individuales
+router.include_router(icu_stay_router) 

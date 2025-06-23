@@ -1,8 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.db.mongo import get_db
-import math
 
-router = APIRouter(prefix="/api/charts", tags=["charts"])
+router = APIRouter()
 
 @router.get("/icu-stay-duration")
 def get_icu_stay_duration():
