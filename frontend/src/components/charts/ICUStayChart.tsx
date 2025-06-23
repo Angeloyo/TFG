@@ -6,15 +6,31 @@ import { ICUStayData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
 import { useChartTooltip } from '@/hooks/useChartTooltip';
 
-interface ICUStayChartProps {
-  data: ICUStayData[];
-}
-
-export default function ICUStayChart({ data }: ICUStayChartProps) {
+export default function ICUStayChart() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<ICUStayData>();
   const [showAll, setShowAll] = useState(false);
   const [threshold, setThreshold] = useState(500);
+  const [data, setData] = useState<ICUStayData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://tfg-api.angeloyo.com/api/charts/icu-stay-duration');
+        if (!response.ok) throw new Error('Error al cargar datos');
+        const result = await response.json();
+        setData(result.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error desconocido');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Filtrar datos según el threshold
   const filteredData = showAll ? data : data.filter(d => d.total_stays >= threshold);
@@ -66,6 +82,9 @@ export default function ICUStayChart({ data }: ICUStayChartProps) {
       plot.remove();
     };
   }, [filteredData]);
+
+  if (loading) return <div className="py-8 md:py-12 lg:py-16 xl:py-20 justify-center flex">Cargando...</div>;
+  if (error) return <div className="py-8 md:py-12 lg:py-16 xl:py-20 justify-center flex text-red-600">Error: {error}</div>;
 
   const handleThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value) || 0;

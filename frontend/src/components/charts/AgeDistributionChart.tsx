@@ -1,18 +1,43 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as Plot from '@observablehq/plot';
 import { AgeDistributionData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
 import { useChartTooltip } from '@/hooks/useChartTooltip';
 
 interface AgeDistributionChartProps {
-  data: AgeDistributionData[];
+  detailed: boolean;
 }
 
-export default function AgeDistributionChart({ data }: AgeDistributionChartProps) {
+export default function AgeDistributionChart({ detailed }: AgeDistributionChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<AgeDistributionData>();
+  const [data, setData] = useState<AgeDistributionData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = `https://tfg-api.angeloyo.com/api/charts/age-distribution${detailed ? '?detailed=true' : ''}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error('Error al cargar datos');
+        }
+
+        const result = await response.json();
+        setData(result.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error desconocido');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [detailed]);
 
   useEffect(() => {
     if (!data.length || !containerRef.current) return;
@@ -101,6 +126,22 @@ export default function AgeDistributionChart({ data }: AgeDistributionChartProps
       plot.remove();
     };
   }, [data]);
+
+  if (loading) {
+    return (
+      <div className="py-8 justify-center flex">
+        <p className="text-gray-600">Cargando datos...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-8 justify-center flex">
+        <p className="text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
