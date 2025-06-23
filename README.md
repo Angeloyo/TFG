@@ -1,9 +1,10 @@
-# TFGv2
+# Clinical Dataset (MIMIC-IV) Visualization Platform
 
-## Frontend
+*Trabajo de fin de Grado Ángel Sánchez Guerrero*
 
-Realizado con NextJS desplegado en Vercel
 
-## Backend
+Dataset imported to MongoDB
 
-Realizado con FastAPI desplegado en servidor propio
+Backend made with FastAPI
+
+Frontend made with NextJS
