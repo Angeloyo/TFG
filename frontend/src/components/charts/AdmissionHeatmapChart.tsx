@@ -17,11 +17,6 @@ export default function AdmissionHeatmapChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Si no es la primera carga, activar loading del filtro
-        if (!loading) {
-          setLoadingFilter(true);
-        }
-        
         const url = `https://tfg-api.angeloyo.com/api/charts/admission-heatmap?filter_midnight=${filterMidnight}`;
         const response = await fetch(url);
         const result = await response.json();
@@ -104,7 +99,10 @@ export default function AdmissionHeatmapChart() {
           <p>
             Se han filtrado los ingresos registrados a las 00:00:00 por no ser informativos.{' '}
             <button 
-              onClick={() => setFilterMidnight(false)}
+              onClick={() => {
+                setLoadingFilter(true);
+                setFilterMidnight(false);
+              }}
               className="underline text-gray-700 hover:text-gray-900"
             >
               Mostrar todos los datos
@@ -114,7 +112,10 @@ export default function AdmissionHeatmapChart() {
           <p>
             Mostrando todos los ingresos.{' '}
             <button 
-              onClick={() => setFilterMidnight(true)}
+              onClick={() => {
+                setLoadingFilter(true);
+                setFilterMidnight(true);
+              }}
               className="underline text-gray-700 hover:text-gray-900"
             >
               Filtrar medianoche
