@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, Gauge } from "lucide-react";
+import { Search, Gauge, MessageSquare } from "lucide-react";
 
 export default function Header() {
   return (
@@ -18,6 +18,13 @@ export default function Header() {
             title="Dashboard"
           >
             <Gauge size={20} />
+          </Link>
+          <Link 
+            href="/chat" 
+            className="p-2 text-gray-600 hover:text-black transition-colors"
+            title="Chat"
+          >
+            <MessageSquare size={20} />
           </Link>
           <Link 
             href="/search" 
