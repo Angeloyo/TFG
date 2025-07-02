@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Plot from '@observablehq/plot';
 import { AdmissionHeatmapData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
 import { useChartTooltip } from '@/hooks/useChartTooltip';
 
 export default function AdmissionHeatmapChart() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<AdmissionHeatmapData>();
+  const { hoveredData, tooltipPosition, showTooltip, containerRef } = useChartTooltip<AdmissionHeatmapData>({ autoHide: true });
   const [data, setData] = useState<AdmissionHeatmapData[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingFilter, setLoadingFilter] = useState(false);
@@ -70,12 +69,12 @@ export default function AdmissionHeatmapChart() {
         cell.addEventListener('mousemove', (e) => {
           showTooltip(cellData, (e as MouseEvent).clientX, (e as MouseEvent).clientY);
         });
-        cell.addEventListener('mouseleave', hideTooltip);
+        // Eliminar mouseleave manual - ahora lo maneja autoHide
       }
     });
 
     return () => plot.remove();
-  }, [data, showTooltip, hideTooltip]);
+  }, [data, showTooltip]);
 
   if (loading) {
     return (

@@ -1,14 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Plot from '@observablehq/plot';
 import { ICUStayData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
 import { useChartTooltip } from '@/hooks/useChartTooltip';
 
 export default function ICUStayChart() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<ICUStayData>();
+  const { hoveredData, tooltipPosition, showTooltip, containerRef } = useChartTooltip<ICUStayData>({ autoHide: true });
   const [showAll, setShowAll] = useState(false);
   const [threshold, setThreshold] = useState(500);
   const [data, setData] = useState<ICUStayData[]>([]);
@@ -74,9 +73,7 @@ export default function ICUStayChart() {
         showTooltip(dataItem, e.clientX, e.clientY);
       });
       
-      bar.addEventListener('mouseleave', () => {
-        hideTooltip();
-      });
+      // Eliminar mouseleave manual - ahora lo maneja autoHide
     });
 
     return () => {

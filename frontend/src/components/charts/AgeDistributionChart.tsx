@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Plot from '@observablehq/plot';
 import { AgeDistributionData } from '@/types';
 import ChartTooltip from '@/components/ui/ChartTooltip';
@@ -11,8 +11,7 @@ interface AgeDistributionChartProps {
 }
 
 export default function AgeDistributionChart({ detailed }: AgeDistributionChartProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { hoveredData, tooltipPosition, showTooltip, hideTooltip } = useChartTooltip<AgeDistributionData>();
+  const { hoveredData, tooltipPosition, showTooltip, containerRef } = useChartTooltip<AgeDistributionData>({ autoHide: true });
   const [data, setData] = useState<AgeDistributionData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +105,7 @@ export default function AgeDistributionChart({ detailed }: AgeDistributionChartP
         const relativeY = mouseY - rect.top;
         const heightRatio = relativeY / rect.height;
         
-        // Encontrar el dato más cercano basado en la posición
+        // Encontrar el dato más cercado en la posición
         const sortedData = data.filter(d => d.gender === gender);
         const index = Math.round(heightRatio * (sortedData.length - 1));
         const dataItem = sortedData[index];
@@ -118,9 +117,7 @@ export default function AgeDistributionChart({ detailed }: AgeDistributionChartP
 
       area.addEventListener('mouseenter', handleMouseEvent);
       area.addEventListener('mousemove', handleMouseEvent);
-      area.addEventListener('mouseleave', () => {
-        hideTooltip();
-      });
+      // Eliminar mouseleave manual - ahora lo maneja autoHide
     });
 
     return () => {
