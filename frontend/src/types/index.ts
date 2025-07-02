@@ -51,19 +51,37 @@ export interface PatientsListData {
 }
 
 /**
- * Estadísticas completas del dashboard
+ * Estadísticas categorizadas del dashboard
  */
-export interface DashboardStats {
-  total_patients: number;
-  total_admissions: number;
-  mortality_rate: number;
-  total_icu_stays: number;
-  total_lab_tests: number;
-  male_percentage: number;
-  emergency_rate: number;
-  total_diagnoses: number;
-  avg_patient_age: number;
-  avg_length_of_stay: number;
+export interface DashboardCategorizedStats {
+  categories: {
+    demograficos_admisiones: {
+      total_patients: number;
+      total_admissions: number;
+      mortality_rate: number;
+    };
+    icu: {
+      total_icu_stays: number;
+      icu_mortality_rate: number;
+      avg_icu_stay: number;
+    };
+    laboratorio: {
+      total_lab_tests: number;
+      total_prescriptions: number;
+      avg_tests_per_patient: number;
+    };
+    diagnosticos: {
+      total_diagnoses: number;
+      total_procedures: number;
+      avg_diagnoses_per_patient: number;
+    };
+    flujos: {
+      transfer_rate: number;
+      avg_moves_per_admission: number;
+      most_common_destination: string;
+    };
+  };
+  last_updated: string;
 }
 
 // ====================================
