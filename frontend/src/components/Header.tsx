@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, Gauge, MessageSquare } from "lucide-react";
+import { Search, Gauge, MessageSquare, Github } from "lucide-react";
 
 export default function Header() {
   return (
@@ -32,6 +32,15 @@ export default function Header() {
             title="Buscar paciente"
           >
             <Search size={20} />
+          </Link>
+          <Link 
+            href="https://github.com/Angeloyo/TFG" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 text-gray-600 hover:text-black transition-colors"
+            title="Repositorio de GitHub"
+          >
+            <Github size={20} />
           </Link>
         </div>
       </div>
