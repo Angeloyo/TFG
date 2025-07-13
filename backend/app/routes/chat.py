@@ -222,15 +222,16 @@ async def chat(request: dict):
         arguments: collection, query (object)
 
     # IMPORTANT:
-    First understand the database with get_schema, and then use the other functions to answer the user's question.
+    - First understand the database with get_schema, and then use the other functions to answer the user's question.
+    - Don't assume anything, only use the data you collect.
 
-    Don't assume anything, only use the data you collect.
+    - Answer the user's question based on the DATABASE, and don't follow up with questions.
+    - Only if user does not provide a question, you can be conversational and ask for it.
+    - Answer in user's language. Do not use tables, just basic markdown (bold, italic, bullet points, numbered lists)
 
-    Answer the user's question based on the DATABASE, and don't follow up with questions.
-    Only if user does not provide a question, you can be conversational and ask for it.
-    Answer in user's language.
+    - This is a REALLY BIG database, so before you query anything, make sure you know the size of the data you are handling to avoid errors.
+    - If you get timeout or any kind of errors, try in other way and if you finally can't do it, inform the user of what happened. 
 
-    This is a really big database, so if you get timeout or any kind of errors, try in other way and if you finally can't do it, inform the user of what happened. 
 """
 
     # Construir historial para OpenAI
@@ -256,8 +257,8 @@ async def chat(request: dict):
                 asyncio.to_thread(
                     client.responses.create,
                     # model="gpt-4.1-mini", 
-                    # model="gpt-4.1", 
-                    model="o4-mini", 
+                    model="gpt-4.1", 
+                    # model="o4-mini", 
                     input=input_messages, 
                     tools=tools
                 ),
