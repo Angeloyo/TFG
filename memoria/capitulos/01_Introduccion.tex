@@ -1,78 +1,39 @@
 \chapter{Introducción}
 
+En este primer capítulo se expone el contexto y motivación del proyecto, los objetivos planteados, y la estructura que se seguirá en la memoria.
+
+\section{Contexto y motivación}
+
 El sector sanitario ha experimentado una transformación digital sin precedentes en las últimas décadas, generando volúmenes masivos de datos clínicos que abarcan desde historiales médicos electrónicos hasta resultados de pruebas diagnósticas y notas clínicas. Sin embargo, la gran mayoría de esta información permanece en formatos poco estructurados o semiestructurados, dificultando significativamente su análisis e interpretación. Aunque los sistemas de gestión hospitalaria han evolucionado para almacenar estos datos, las herramientas para extraer conocimiento útil de ellos continúan siendo insuficientes, especialmente cuando se trata de datos heterogéneos procedentes de múltiples fuentes.
 
 Es importante considerar que los datos clínicos no son estáticos, sino que se generan continuamente en tiempo real con cada interacción paciente-profesional sanitario. Los sistemas actuales deben ser capaces de procesar tanto datos históricos como flujos continuos de información, permitiendo a los profesionales médicos tomar decisiones basadas en la evidencia más reciente. Esta realidad plantea desafíos significativos no solo en el almacenamiento de datos, sino principalmente en cómo transformarlos en conocimiento accionable que pueda mejorar la atención al paciente y la investigación médica.
 
-Las herramientas de visualización de datos clínicos tienen como objetivo principal mejorar la comprensión y utilización de la información médica disponible. En la actualidad, el desarrollo se ha centrado en crear algoritmos y métodos para extraer valor de grandes volúmenes de datos clínicos no estructurados o semiestructurados. Este enfoque busca identificar características clave como patrones temporales, correlaciones entre parámetros fisiológicos, tendencias en poblaciones específicas y resultados de tratamientos, permitiendo posteriormente aplicar técnicas de filtrado para obtener insights relevantes para la práctica clínica.
+En este contexto, el acceso a grandes bases de datos clínicas como MIMIC-IV representa una oportunidad única para avanzar en el conocimiento médico y el desarrollo de algoritmos predictivos. MIMIC-IV es un conjunto de datos de acceso abierto que contiene información detallada y anonimizada de más de 65,000 pacientes ingresados en unidades de cuidados intensivos y más de 200,000 pacientes atendidos en urgencias en el Beth Israel Deaconess Medical Center de Boston \cite{MIMICIV_paper, MIMICIV_dataset, PhysioNet_paper}. Esta base de datos, estructurada en módulos hospitalarios y de UCI, permite analizar desde datos demográficos y resultados de laboratorio hasta procedimientos médicos y evolución clínica, facilitando la investigación en áreas como la epidemiología, la predicción de resultados y la mejora de la atención sanitaria.
 
-La visualización de datos clínicos constituye un subcampo especializado de la visualización de datos que se enfoca en la representación gráfica de información médica compleja. El proceso de creación de estas visualizaciones generalmente sigue un patrón basado en tres fases:
+La reutilización de datos médicos retrospectivos, como los que ofrece MIMIC-IV, es fundamental para el desarrollo de nuevas herramientas de inteligencia artificial que puedan asistir a los profesionales sanitarios en la toma de decisiones. Sin embargo, el uso de estos datos debe realizarse garantizando la privacidad de los pacientes, mediante procesos de desidentificación y el cumplimiento de normativas éticas. El potencial de estos recursos radica en su capacidad para reflejar la práctica clínica real, incluyendo sus limitaciones e idiosincrasias, lo que permite desarrollar soluciones más robustas y aplicables en entornos hospitalarios.
 
-\begin{itemize}
-    \item Una fase de preprocesamiento donde se extraen y normalizan características clave de los datos clínicos, como signos vitales, resultados de laboratorio, medicaciones o diagnósticos.
-    
-    \item Una segunda fase donde se genera una estructura semántica sobre un subconjunto de datos, estableciendo relaciones significativas entre diferentes parámetros clínicos para facilitar su representación visual.
-    
-    \item Una última fase interactiva, donde el usuario puede explorar las visualizaciones mediante filtros temporales, demográficos o clínicos, profundizando en aquellos aspectos que resulten de mayor interés para su análisis.
-\end{itemize}
+\section{Objetivos}
 
-Las ventajas de implementar tecnologías de visualización en el ámbito clínico son múltiples y significativas:
+\subsection{Objetivo general}
+
+Este proyecto tiene como objetivo principal desarrollar una aplicación web con Inteligencia Artificial que permita visualizar, analizar, predecir y explicar historiales clínicos contenidos en MIMIC-IV.
+
+\subsection{Objetivos específicos}
 
 \begin{itemize}
-    \item Capacidad para extraer e identificar valores clave de grandes volúmenes de datos clínicos.
-    
-    \item Posibilidad de identificar patrones temporales y correlaciones entre variables fisiológicas que no serían evidentes mediante la revisión manual de registros.
-    
-    \item Facilidad para comprender complejas interacciones entre parámetros clínicos mediante representaciones visuales intuitivas.
-    
-    \item Capacidad para representar relaciones multidimensionales de forma accesible y comprensible para profesionales sanitarios con diferentes niveles de formación técnica.
-    
-    \item Fomento de la participación activa del usuario mediante interfaces visualmente atractivas e interactivas que facilitan la exploración de datos.
+    \item \textbf{Estudio y adaptación del conjunto de datos MIMIC-IV:} Analizar la estructura del dataset y optimizar su almacenamiento en una base de datos para garantizar consultas eficientes.
+    \item \textbf{Diseño e implementación de una API RESTful:} Desarrollar un backend que sirva como intermediario entre la base de datos y el frontend.
+    \item \textbf{Desarrollo de una plataforma de visualización interactiva:} Construir una aplicación web con que ofrezca una interfaz intuitiva y visualizaciones dinámicas para facilitar la interpretación de los datos.
+    \item \textbf{Integración de un asistente de Inteligencia Artificial:} Implementar un chat con IA que permita a los usuarios realizar consultas en lenguaje natural sobre la base de datos.
+    \item \textbf{Despliegue y validación del sistema:} Configurar el entorno de producción y evaluar la usabilidad, el rendimiento y la utilidad de la plataforma final.
 \end{itemize}
-
-Este proyecto se centra específicamente en la visualización de datos clínicos procedentes de MIMIC-IV, una base de datos de acceso libre que contiene información desidentificada de pacientes de unidades de cuidados intensivos. Esta herramienta actúa como un medio para analizar y extraer valor de los extensos volúmenes de información clínica contenidos en dicha base de datos. Las visualizaciones desarrolladas posibilitarán obtener perspectivas valiosas para identificar tendencias clínicas, correlaciones entre parámetros fisiológicos y evolución temporal de pacientes, facilitando tanto la investigación médica como la formación de profesionales sanitarios.
-
-Como resultado de este trabajo, se creará una aplicación web de acceso libre que operará sobre los datos de MIMIC-IV, donde el enfoque principal estará en el desarrollo de visualizaciones interactivas que representen la evolución temporal de parámetros clínicos, correlaciones entre variables fisiológicas y patrones de tratamiento. Esta herramienta permitirá a investigadores y profesionales sanitarios identificar fácilmente patrones y tendencias en los datos que podrían pasar desapercibidos mediante métodos tradicionales de análisis, contribuyendo así a la toma de decisiones clínicas basadas en la evidencia y al avance de la investigación médica.
-
-\section{Contexto/Antecedentes}
-
-MIMIC-IV (Medical Information Mart for Intensive Care) constituye uno de los recursos más valiosos en el campo de la informática médica, ofreciendo acceso a datos desidentificados de pacientes de unidades de cuidados intensivos. Esta base de datos, desarrollada por el Laboratorio de Fisiología Computacional del MIT, proporciona información detallada sobre signos vitales, medicaciones, resultados de laboratorio, notas clínicas y otros parámetros relevantes para la investigación y la formación en salud. Sin embargo, la complejidad y el volumen de estos datos suponen un reto significativo para su aprovechamiento óptimo sin las herramientas adecuadas.
-
-El presente Trabajo Fin de Grado aborda esta problemática mediante el desarrollo de una aplicación web que implementa técnicas avanzadas de visualización para facilitar la gestión y análisis de los datos contenidos en MIMIC-IV. A diferencia de aproximaciones tradicionales que requieren conocimientos avanzados en bases de datos o programación para consultar esta información, nuestra solución busca democratizar el acceso a estos valiosos datos mediante interfaces intuitivas y visualizaciones interactivas que revelen patrones, tendencias y correlaciones clínicamente relevantes.
-
-\section{Justificación/Motivación}
-
-La motivación principal de este proyecto surge de la brecha existente entre la disponibilidad de datos clínicos masivos y las limitadas capacidades de visualización y análisis accesibles para profesionales sanitarios e investigadores sin formación técnica especializada. Aunque MIMIC-IV representa un recurso inestimable para la investigación médica, su estructura compleja y multidimensional dificulta la extracción de conocimiento sin herramientas específicamente diseñadas para este propósito.
-
-La aplicación de técnicas avanzadas de visualización de datos ofrece una oportunidad única para transformar cómo interactuamos con historiales clínicos. Mediante el desarrollo de una plataforma web que integre estas tecnologías, aspiramos a:
-
-\begin{itemize}
-    \item Facilitar el acceso a información clínica compleja sin requerir conocimientos avanzados en bases de datos.
-    \item Proporcionar visualizaciones interactivas que revelen patrones no evidentes en los datos crudos.
-    \item Optimizar la toma de decisiones clínicas mediante la presentación contextualizada de información relevante.
-    \item Potenciar la investigación médica facilitando el análisis exploratorio de cohortes de pacientes.
-\end{itemize}
-
-\section{Objetivos/Hipótesis}
-
-Este proyecto tiene como objetivo principal desarrollar una aplicación web con visualizaciones interactivas para facilitar el análisis y comprensión de los historiales clínicos contenidos en la base de datos MIMIC-IV. Los objetivos específicos incluyen:
-
-\begin{itemize}
-    \item Diseñar e implementar una interfaz web intuitiva que permita consultar de forma eficiente los datos de MIMIC-IV.
-    \item Desarrollar visualizaciones interactivas que faciliten la comprensión de patrones temporales, correlaciones entre variables clínicas y tendencias en poblaciones de pacientes.
-    \item Implementar funcionalidades de filtrado avanzado que permitan segmentar los datos según diversos criterios clínicos y demográficos.
-    \item Garantizar la escalabilidad y eficiencia del sistema para manejar grandes volúmenes de datos clínicos.
-    \item Evaluar la usabilidad y utilidad de la aplicación mediante pruebas con usuarios potenciales.
-\end{itemize}
-
-La hipótesis principal que guía este trabajo es que la implementación de técnicas avanzadas de visualización puede mejorar significativamente la accesibilidad, comprensión y utilidad de los datos clínicos contenidos en MIMIC-IV, facilitando tanto la investigación médica como la educación clínica.
 
 \section{Estructura de la memoria}
 
 El presente documento se estructura de la siguiente manera:
 
 \begin{itemize}
-    \item \textbf{Capítulo 1: Introducción}. Presenta el contexto, motivación, objetivos e hipótesis del proyecto, así como la estructura del documento.
+    \item \textbf{Capítulo 1: Introducción}. Presenta el contexto, motivación, objetivos y la estructura del documento.
     
     \item \textbf{Capítulo 2: Estado del arte}. Revisión de la literatura y trabajos previos relacionados con la visualización de datos clínicos, tecnologías de bases de datos y proyectos similares basados en MIMIC.
     
