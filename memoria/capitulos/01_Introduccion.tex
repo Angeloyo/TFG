@@ -4,13 +4,11 @@ En este primer capítulo se expone el contexto y motivación del proyecto, los o
 
 \section{Contexto y motivación}
 
-El sector sanitario ha experimentado una transformación digital sin precedentes en las últimas décadas, generando volúmenes masivos de datos clínicos que abarcan desde historiales médicos electrónicos hasta resultados de pruebas diagnósticas y notas clínicas. Sin embargo, la gran mayoría de esta información permanece en formatos poco estructurados o semiestructurados, dificultando significativamente su análisis e interpretación. Aunque los sistemas de gestión hospitalaria han evolucionado para almacenar estos datos, las herramientas para extraer conocimiento útil de ellos continúan siendo insuficientes, especialmente cuando se trata de datos heterogéneos procedentes de múltiples fuentes.
+La transformación digital del sector sanitario ha avanzado de forma decidida en las últimas décadas. En Estados Unidos, por ejemplo, cerca del 96\% de los hospitales ya habían adoptado sistemas de historiales clínicos electrónicos (EHR) para 2015 \cite{Henry2016_EHR}. Este crecimiento ha generado un volumen masivo de datos retrospectivos cruciales para la investigación \cite{Halevy2009_data}, pero ha traído consigo desafíos significativos: gran parte de la información permanece en formatos poco estructurados y su análisis requiere habilidades técnicas avanzadas. En este escenario, el éxito de la base de datos MIMIC-III (Medical Information Mart for Intensive Care) demostró el valor de un modelo de acceso permisivo a datos de-identificados, habilitando cientos de estudios que mejoraron la práctica clínica \cite{MIMICIII_paper}. El proyecto MIMIC-IV \cite{MIMICIV_paper, MIMICIV_dataset}, sobre el que se fundamenta este trabajo, nace para continuar y ampliar ese legado.
 
-Es importante considerar que los datos clínicos no son estáticos, sino que se generan continuamente en tiempo real con cada interacción paciente-profesional sanitario. Los sistemas actuales deben ser capaces de procesar tanto datos históricos como flujos continuos de información, permitiendo a los profesionales médicos tomar decisiones basadas en la evidencia más reciente. Esta realidad plantea desafíos significativos no solo en el almacenamiento de datos, sino principalmente en cómo transformarlos en conocimiento accionable que pueda mejorar la atención al paciente y la investigación médica.
+Este conjunto de datos de acceso abierto, alojado en la plataforma de investigación PhysioNet \cite{PhysioNet_paper}, contiene información clínica detallada y anonimizada del Beth Israel Deaconess Medical Center de Boston. Concretamente, en su versión 3.1, abarca los datos de más de 364.000 pacientes, correspondientes a casi 550.000 admisiones hospitalarias, de las cuales se derivan más de 94.000 estancias en Unidades de Cuidados Intensivos (UCI). La granularidad de esta información, que abarca desde datos demográficos y resultados de laboratorio hasta procedimientos médicos y evolución clínica, facilita la investigación en todo tipo de áreas.
 
-En este contexto, el acceso a grandes bases de datos clínicas como MIMIC-IV representa una oportunidad única para avanzar en el conocimiento médico y el desarrollo de algoritmos predictivos. MIMIC-IV es un conjunto de datos de acceso abierto que contiene información detallada y anonimizada de más de 65,000 pacientes ingresados en unidades de cuidados intensivos y más de 200,000 pacientes atendidos en urgencias en el Beth Israel Deaconess Medical Center de Boston \cite{MIMICIV_paper, MIMICIV_dataset, PhysioNet_paper}. Esta base de datos, estructurada en módulos hospitalarios y de UCI, permite analizar desde datos demográficos y resultados de laboratorio hasta procedimientos médicos y evolución clínica, facilitando la investigación en áreas como la epidemiología, la predicción de resultados y la mejora de la atención sanitaria.
-
-La reutilización de datos médicos retrospectivos, como los que ofrece MIMIC-IV, es fundamental para el desarrollo de nuevas herramientas de inteligencia artificial que puedan asistir a los profesionales sanitarios en la toma de decisiones. Sin embargo, el uso de estos datos debe realizarse garantizando la privacidad de los pacientes, mediante procesos de desidentificación y el cumplimiento de normativas éticas. El potencial de estos recursos radica en su capacidad para reflejar la práctica clínica real, incluyendo sus limitaciones e idiosincrasias, lo que permite desarrollar soluciones más robustas y aplicables en entornos hospitalarios.
+Sin embargo, a pesar de este inmenso potencial para la investigación, su aprovechamiento práctico por parte de los profesionales sanitarios sin conocimientos informáticos avanzados sigue siendo limitado. La motivación fundamental de este proyecto es derribar esa barrera, desarrollando una plataforma que aproveche las últimas tecnologías en Inteligencia Artificial. El objetivo es transformar los datos crudos en conocimiento clínico accionable, permitiendo a los usuarios sin perfil técnico no solo visualizar la información, sino también descubrir patrones complejos y obtener el máximo rendimiento de este valioso conjunto de datos para acelerar la generación de hipótesis y la toma de decisiones.
 
 \section{Objetivos}
 
@@ -24,7 +22,8 @@ Este proyecto tiene como objetivo principal desarrollar una aplicación web con 
     \item \textbf{Estudio y adaptación del conjunto de datos MIMIC-IV:} Analizar la estructura del dataset y optimizar su almacenamiento en una base de datos para garantizar consultas eficientes.
     \item \textbf{Diseño e implementación de una API RESTful:} Desarrollar un backend que sirva como intermediario entre la base de datos y el frontend.
     \item \textbf{Desarrollo de una plataforma de visualización interactiva:} Construir una aplicación web con que ofrezca una interfaz intuitiva y visualizaciones dinámicas para facilitar la interpretación de los datos.
-    \item \textbf{Integración de un asistente de Inteligencia Artificial:} Implementar un chat con IA que permita a los usuarios realizar consultas en lenguaje natural sobre la base de datos.
+    \item \textbf{Implementación de un asistente de Inteligencia Artificial:} Implementar un chat con IA que permita a los usuarios realizar consultas en lenguaje natural sobre la base de datos.
+    \item \textbf{Predicción de datos con Inteligencia Artificial} Implementar la predicción de datos futuros a partir de datos pasados para obtener indicadores de riesgo.
     \item \textbf{Despliegue y validación del sistema:} Configurar el entorno de producción y evaluar la usabilidad, el rendimiento y la utilidad de la plataforma final.
 \end{itemize}
 
@@ -35,13 +34,15 @@ El presente documento se estructura de la siguiente manera:
 \begin{itemize}
     \item \textbf{Capítulo 1: Introducción}. Presenta el contexto, motivación, objetivos y la estructura del documento.
     
-    \item \textbf{Capítulo 2: Estado del arte}. Revisión de la literatura y trabajos previos relacionados con la visualización de datos clínicos, tecnologías de bases de datos y proyectos similares basados en MIMIC.
+    \item \textbf{Capítulo 2: Estado del arte}. Revisión de la literatura y trabajos previos.
+
+    ...
     
-    \item \textbf{Capítulo 3: Diseño}. Descripción detallada de la arquitectura, modelos de datos y diseño de interfaces de la aplicación.
+    %\item \textbf{Capítulo 3: Diseño}. Descripción detallada de la arquitectura, modelos de datos y diseño de interfaces de la aplicación.
     
-    \item \textbf{Capítulo 4: Implementación}. Explicación del proceso de desarrollo de la aplicación, incluyendo tecnologías utilizadas, configuración del entorno y aspectos técnicos relevantes.
+    %\item \textbf{Capítulo 4: Implementación}. Explicación del proceso de desarrollo de la aplicación, incluyendo tecnologías utilizadas, configuración del entorno y aspectos técnicos relevantes.
     
-    \item \textbf{Capítulo 5: Resultados y evaluación}. Presentación de los resultados obtenidos y evaluación del desempeño de la aplicación en términos de usabilidad, eficiencia y utilidad.
+    %\item \textbf{Capítulo 5: Resultados y evaluación}. Presentación de los resultados obtenidos y evaluación del desempeño de la aplicación en términos de usabilidad, eficiencia y utilidad.
     
-    \item \textbf{Capítulo 6: Conclusiones y trabajo futuro}. Resumen de las contribuciones del proyecto, limitaciones encontradas y posibles líneas de trabajo futuro.
+    %\item \textbf{Capítulo 6: Conclusiones y trabajo futuro}. Resumen de las contribuciones del proyecto, limitaciones encontradas y posibles líneas de trabajo futuro.
 \end{itemize}
