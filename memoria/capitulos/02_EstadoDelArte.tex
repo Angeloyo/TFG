@@ -26,19 +26,29 @@ En conjunto, el panorama de datos clínicos abiertos ofrece múltiples alternati
 
 \section{Tecnologías para la Gestión y Almacenamiento de Datos Sanitarios}
 
-En esta sección justificamos la arquitectura tecnológica del backend.
-Bases de Datos NoSQL vs. SQL: Analizar por qué las bases de datos NoSQL como MongoDB son especialmente adecuadas para datos clínicos, que son heterogéneos y semi-estructurados, en comparación con las bases de datos relacionales tradicionales.
-Arquitecturas de Backend y APIs: Hablar sobre la tendencia de usar arquitecturas orientadas a servicios (como mencionaba tu tutor) y el papel de las APIs RESTful (usando FastAPI como ejemplo) para desacoplar el frontend del backend y servir datos de manera eficiente.
+
+
+
+En el plano tecnológico, la forma de almacenar y consultar la información marca las posibilidades reales de análisis. De forma general, los sistemas de gestión de bases de datos se dividen en dos grandes familias: relacionales y no relacionales. Las del primer grupo organizan la información en tablas de filas y columnas conectadas por claves y se consultan con SQL, siendo las más usadas MySQL, PostgreSQL, Oracle y SQL Server.  Las no relacionales, llamadas NoSQL, almacenan los datos como documentos, pares clave-valor, columnas o grafos y permiten esquemas flexibles y escalado horizontal; las más populares son MongoDB y Couchbase en la categoría de documentos, Cassandra en column-family, Redis en clave-valor y Neo4j en grafos \cite{DBEngines2025}.
+
+En el ámbito sanitario la mayoría de los sistemas de historia clínica electrónica se ha construido sobre gestores relacionales porque los registros se modelan de forma natural en tablas normalizadas y el lenguaje SQL facilita auditoría y trazabilidad.  Sin embargo, los hospitales también generan notas de texto libre, señales continuas, imágenes y estructuras jerárquicas como los recursos FHIR en JSON; ello ha impulsado el uso de bases documentales y de grafos, que aceptan datos heterogéneos y simplifican la ingesta sin migraciones de esquema cada vez que aparece un nuevo campo \cite{GAMAL2021103670,MongoFHIR}.
+
+A pesar de que MIMIC-IV se distribuye en un esquema relacional, para este proyecto cargaremos el conjunto en MongoDB. Este modelo documental nos permite agrupar los datos que se deseen en un único documento anidado, elimina la necesidad de combinar una veintena de tablas con uniones complejas y responde con menor latencia a las búsquedas interactivas que planteará el usuario desde la interfaz web.  Además, nos ofrece flexibilidad y escalabilidad si en el futuro se desea incorporar señales o imágenes, de modo que se adapta mejor a la naturaleza exploratoria y multimodal de nuestra aplicación.
+
+
+
+
+
 
 \section{Herramientas y Técnicas de Visualización Interactiva de Datos}
 
-Esta parte se centra en cómo vamos a "ver" los datos.
+(por hacer)Esta parte se centra en cómo vamos a "ver" los datos.
 Paradigmas de Visualización: Explicar la diferencia entre visualizaciones estáticas y dinámicas/interactivas, y por qué estas últimas son cruciales para la exploración de datos complejos.
 Librerías y Plataformas: Analizar las herramientas más potentes del mercado. Mencionar D3.js como la librería de bajo nivel que ofrece máxima flexibilidad, y herramientas de más alto nivel como Observable Plot (la que usaremos), Plotly, o incluso plataformas como Tableau, explicando las ventajas de nuestra elección para este proyecto.
 
 \section{Aplicaciones de Inteligencia Artificial en el Análisis Clínico}
 
-Aquí abordamos la parte más innovadora del proyecto. Podemos dividirla en dos sub-apartados que se corresponden con tus objetivos:
+(por hacer) Aquí abordamos la parte más innovadora del proyecto. Podemos dividirla en dos sub-apartados que se corresponden con tus objetivos:
 Modelos Predictivos para Indicadores de Riesgo: Revisar el estado del arte en la aplicación de modelos de machine learning (desde regresiones hasta redes neuronales) para predecir eventos clínicos como mortalidad, reingresos, etc., usando datos de EHR.
 Asistentes Conversacionales y Procesamiento de Lenguaje Natural (NLP): Hablar sobre la tendencia emergente de usar Modelos de Lenguaje Grandes (LLMs) para crear interfaces conversacionales que permitan a usuarios no técnicos "preguntar" a las bases de datos en lenguaje natural, justificando así la funcionalidad del chat con IA.
 También RAG vs MCP
