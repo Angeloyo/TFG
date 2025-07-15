@@ -1,2 +1,44 @@
-\chapter{Estado del Arte}
+\chapter{Estado del arte}
 
+En este capítulo se analizan los fundamentos teóricos y las tecnologías existentes que conforman la base de este proyecto. Se revisan las principales bases de datos clínicas abiertas, las arquitecturas de software para la gestión de datos sanitarios, las herramientas de visualización interactiva y las aplicaciones de la Inteligencia Artificial en el ámbito clínico.
+
+\section{El Movimiento hacia la Ciencia Abierta en la Investigación Médica}
+
+En las últimas décadas se ha consolidado un movimiento hacia los datos clínicos abiertos, promoviendo la disponibilidad de bases de datos sanitarias para la comunidad investigadora. La idea de ciencia abierta sostiene que la libre disponibilidad de datos y códigos favorece la transparencia, la reproducibilidad y la colaboración en la investigación biomédica \cite{Lvovs2025_balancing}. Sin embargo, históricamente los datos clínicos han estado protegidos en archivos hospitalarios, difíciles de acceder por razones legales, éticas y técnicas. En respuesta, iniciativas académicas y gubernamentales han impulsado la creación de conjuntos de datos clínicos de acceso abierto, debidamente anonimizados, que permiten a investigadores de todo el mundo analizar información real de pacientes sin vulnerar la privacidad. Estos recursos han transformado la investigación médica al reducir barreras de acceso y fomentar prácticas reproducibles en análisis de datos sanitarios
+
+\newpage
+Los datos clínicos se pueden clasificar en cuatro grandes modalidades complementarias:
+
+
+(i) \emph{Señales fisiológicas de alta frecuencia.} Series temporales de ECG, presión arterial invasiva, fotopletismografía o EEG. Podemos destacar la clásica MIT-BIH Arrhythmia Database (1980), patrón de referencia para algoritmos de ECG \cite{Impact_MIT-BIH}; el MIMIC Waveform Database, que enlaza miles de horas de señales con los datos clínicos de MIMIC \cite{Moody2022_MIMICIVWaveform}; y HiRID, con 712 variables registradas cada dos minutos en más de 30 000 estancias UCI \cite{Faltys2021HiRID}.
+
+(ii) \emph{Imágenes médicas con anotaciones diagnósticas.}  Abarcan radiografías, TC, RM, PET e incluso histopatología digital, cada una acompañada de etiquetas o informes de hallazgo.  Las bases más usadas en radiología son ChestXray14 y CheXpert, ambas con cientos de miles de radiografías torácicas etiquetadas para patologías pulmonares \cite{irvin2019chexpertlargechestradiograph}, y MIMIC-CXR por parte de la familia MIMIC \cite{Johnson2019_MIMICCXR}.  En oncología destacan las colecciones TCGA/TCIA \cite{TCGA,Clark2013_TCIA}, y en neuroimagen la iniciativa ADNI \cite{Petersen2010_ADNI}.  Estos recursos posibilitan evaluar modelos de visión computacional con criterios homogéneos.
+
+(iii) \emph{Texto clínico desidentificado.}  Incluye notas de evolución, informes radiológicos, resúmenes de alta, entre otros.  Representa alrededor del 80 \% de la información clínica, pero su liberación es más compleja por contener PHI (Protected Health Information).  Los desafíos i2b2/n2c2, pioneros al proveer corpora anonimizados, constituyen la plataforma estándar para comparar sistemas de procesamiento del lenguaje natural médico \cite{n2c2}.  El ecosistema MIMIC también complementa este dominio con millones de notas clínicas \cite{Johnson2023_MIMICIVNote}. 
+
+(iv) \emph{Datos estructurados de historias clínicas electrónicas (EHR).}  Comprenden tablas con demografía, diagnósticos (ICD-9/10), procedimientos, resultados de laboratorio, medicación y constantes vitales.  Son la base de estudios epidemiológicos y de la construcción de modelos pronósticos.  Entre los conjuntos abiertos más influyentes figuran NHANES \cite{NHANES}, UK Biobank \cite{Sudlow2015_UKBiobank}, eICU \cite{Pollard2018} y, sobre todo, la serie MIMIC en la que se enfoca este trabajo.
+
+Desde 1999 PhysioNet \cite{PhysioNet_paper} estableció un marco seguro y reproducible para compartir todo tipo de registros hospitalarios.  Bajo ese paraguas nació el ecosistema MIMIC: la primera versión (1996) contenía 90 pacientes UCI \cite{Moody1996_MIMIC}; MIMIC-II (2011) multiplicó tamaño y variables al extraer directamente de los sistemas clínicos \cite{Saeed2011_MIMICII}; MIMIC-III (2015) superó los 40 000 pacientes y se convirtió en la referencia mundial \cite{MIMICIII_paper}; MIMIC-IV \cite{MIMICIV_paper} amplía y moderniza el conjunto.  Esta trayectoria demuestra cómo los EHR han pasado a ser un recurso científico global, permitiendo investigar la fisiopatología crítica con una profundidad antes impensable.
+
+\newpage
+En conjunto, el panorama de datos clínicos abiertos ofrece múltiples alternativas, pero MIMIC-IV destaca como la más idónea para este trabajo: combina un gran volumen de datos reciente, buena documentación, y módulos complementarios. Sobre esta base, el proyecto diseñará una plataforma que haga de este conjunto de datos una fuente accesible de conocimiento, alineada con los principios de ciencia abierta que han guiado todo este repaso bibliográfico.
+
+
+\section{Tecnologías para la Gestión y Almacenamiento de Datos Sanitarios}
+
+En esta sección justificamos la arquitectura tecnológica del backend.
+Bases de Datos NoSQL vs. SQL: Analizar por qué las bases de datos NoSQL como MongoDB son especialmente adecuadas para datos clínicos, que son heterogéneos y semi-estructurados, en comparación con las bases de datos relacionales tradicionales.
+Arquitecturas de Backend y APIs: Hablar sobre la tendencia de usar arquitecturas orientadas a servicios (como mencionaba tu tutor) y el papel de las APIs RESTful (usando FastAPI como ejemplo) para desacoplar el frontend del backend y servir datos de manera eficiente.
+
+\section{Herramientas y Técnicas de Visualización Interactiva de Datos}
+
+Esta parte se centra en cómo vamos a "ver" los datos.
+Paradigmas de Visualización: Explicar la diferencia entre visualizaciones estáticas y dinámicas/interactivas, y por qué estas últimas son cruciales para la exploración de datos complejos.
+Librerías y Plataformas: Analizar las herramientas más potentes del mercado. Mencionar D3.js como la librería de bajo nivel que ofrece máxima flexibilidad, y herramientas de más alto nivel como Observable Plot (la que usaremos), Plotly, o incluso plataformas como Tableau, explicando las ventajas de nuestra elección para este proyecto.
+
+\section{Aplicaciones de Inteligencia Artificial en el Análisis Clínico}
+
+Aquí abordamos la parte más innovadora del proyecto. Podemos dividirla en dos sub-apartados que se corresponden con tus objetivos:
+Modelos Predictivos para Indicadores de Riesgo: Revisar el estado del arte en la aplicación de modelos de machine learning (desde regresiones hasta redes neuronales) para predecir eventos clínicos como mortalidad, reingresos, etc., usando datos de EHR.
+Asistentes Conversacionales y Procesamiento de Lenguaje Natural (NLP): Hablar sobre la tendencia emergente de usar Modelos de Lenguaje Grandes (LLMs) para crear interfaces conversacionales que permitan a usuarios no técnicos "preguntar" a las bases de datos en lenguaje natural, justificando así la funcionalidad del chat con IA.
+También RAG vs MCP
