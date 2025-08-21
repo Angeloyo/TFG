@@ -18,7 +18,7 @@ export function useBackendHealth() {
       } else {
         setIsBackendUp(false);
       }
-    } catch (error) {
+    } catch {
       setIsBackendUp(false);
     } finally {
       setLoading(false);
