@@ -1,9 +1,22 @@
+"use client";
+
 import Link from "next/link";
 import { Search, Gauge, MessageSquare, Github } from "lucide-react";
+import { useBackendHealth } from "@/hooks/useBackendHealth";
 
 export default function Header() {
+  const { isBackendUp, loading } = useBackendHealth();
+
   return (
-    <header className="w-full bg-white border-b border-gray-200">
+    <>
+      {/* Backend Status Banner */}
+      {!loading && !isBackendUp && (
+        <div className="w-full bg-red-600 text-white text-center py-2 text-sm font-medium">
+          Backend apagado
+        </div>
+      )}
+      
+      <header className="w-full bg-white border-b border-gray-200">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         {/* Título / Logo */}
         <Link href="/" className="text-lg sm:text-xl font-light text-black hover:text-gray-700 transition-colors">
@@ -45,5 +58,6 @@ export default function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 } 
