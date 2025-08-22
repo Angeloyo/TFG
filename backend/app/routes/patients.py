@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.db.mongo import get_db
+from app.utils.mongo import get_db
 import math
 
 router = APIRouter(prefix="/api/patients", tags=["patients"])

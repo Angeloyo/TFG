@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from app.db.mongo import get_db
+from app.utils.mongo import get_db
 
 router = APIRouter()
 

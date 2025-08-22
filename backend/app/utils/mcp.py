@@ -1,6 +1,3 @@
-# NOT IN USE
-# Ahora se usa FastAPI como server
-
 import logging
 from fastmcp import FastMCP
 from app.utils.mongo import get_db
@@ -115,10 +112,10 @@ def get_indexes(collection: str) -> dict:
         return {"error": f"Error getting indexes for {collection}: {str(e)}"}
 
 
-if __name__ == "__main__":
-    logging.info("Starting MIMIC-IV MCP Server...")
-    mcp.run(
-        transport="http", 
-        host="0.0.0.0", 
-        port=9000,
-    )
+# if __name__ == "__main__":
+#     logging.info("Starting MIMIC-IV MCP Server...")
+#     mcp.run(
+#         transport="http", 
+#         host="0.0.0.0", 
+#         port=9000,
+#     )

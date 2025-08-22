@@ -4,7 +4,7 @@
 
 from openai import OpenAI
 from fastapi import APIRouter
-from app.db.mongo import get_db
+from app.utils.mongo import get_db
 import json
 import os
 import asyncio

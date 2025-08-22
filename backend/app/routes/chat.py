@@ -98,7 +98,7 @@ async def chat(request: dict):
         {
             "type": "mcp",
             "server_label": "mimic-iv-mcp-server",
-            "server_url": "https://tfg-mcp.angeloyo.com/mcp/",
+            "server_url": "https://tfg-api.angeloyo.com/mcp/",
             "require_approval": "never"
         }
     ]
