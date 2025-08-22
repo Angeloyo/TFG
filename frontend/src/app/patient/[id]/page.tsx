@@ -1,4 +1,6 @@
-import { Admission, PatientData } from '@/types';
+import { PatientData } from '@/types';
+import PatientBasicInfo from '@/components/patient/PatientBasicInfo';
+import PatientAdmissions from '@/components/patient/PatientAdmissions';
 
 async function getPatient(id: string): Promise<PatientData> {
   const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
@@ -16,8 +18,19 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
   const resolvedParams = await params;
 
   try {
-    const data = await getPatient(resolvedParams.id);
-    const { patient, admissions, total_admissions } = data;
+    const { patient, admissions, diagnoses, total_admissions } = await getPatient(resolvedParams.id);
+    
+    // Obtener la admisión más reciente para datos demográficos adicionales
+    let latestAdmission = null;
+    if (admissions.length > 0) {
+      latestAdmission = admissions.reduce((latest, current) => {
+        if (new Date(current.admittime) > new Date(latest.admittime)) {
+          return current;
+        } else {
+          return latest;
+        }
+      });
+    }
 
     return (
       <div className="min-h-[calc(100vh-5rem)] bg-white py-8">
@@ -32,58 +45,17 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
             </p>
           </div>
 
-          {/* Datos básicos */}
-          <div className="bg-gray-50 p-4 sm:p-6 rounded-lg mb-8">
-            <h2 className="text-lg sm:text-xl font-medium text-black mb-4">Información básica</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Género</p>
-                <p className="font-medium">{patient.gender === 'M' ? 'Masculino' : 'Femenino'}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Edad</p>
-                <p className="font-medium">{patient.anchor_age} años</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Año de referencia</p>
-                <p className="font-medium">{patient.anchor_year}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Estado</p>
-                <p className="font-medium">{patient.dod ? '†' : 'Vivo'}</p>
-              </div>
-            </div>
-          </div>
+          {/* Información básica */}
+          <PatientBasicInfo 
+            patient={patient} 
+            latestAdmission={latestAdmission} 
+          />
 
           {/* Historial de ingresos */}
-          <div>
-            <h2 className="text-lg sm:text-xl font-medium text-black mb-4">Historial de ingresos</h2>
-            <div className="space-y-4">
-              {admissions.map((admission: Admission) => (
-                <div key={admission.hadm_id} className="border border-gray-200 p-4 rounded-lg">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600">Fechas</p>
-                      <p className="font-medium">{new Date(admission.admittime).toLocaleDateString()}</p>
-                      <p className="text-sm text-gray-500">→ {new Date(admission.dischtime).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Tipo</p>
-                      <p className="font-medium">{admission.admission_type}</p>
-                      <p className="text-sm text-gray-500">{admission.insurance}</p>
-                    </div>
-                    <div className="sm:col-span-2 lg:col-span-1">
-                      <p className="text-sm text-gray-600">Resultado</p>
-                      <p className="font-medium">{admission.discharge_location}</p>
-                      {admission.hospital_expire_flag === 1 && (
-                        <p className="text-sm text-red-600">Fallecimiento hospitalario</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <PatientAdmissions 
+            admissions={admissions} 
+            diagnoses={diagnoses} 
+          />
         </div>
       </div>
     );
@@ -97,4 +69,5 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
       </div>
     );
   }
-} 
+}
+ 

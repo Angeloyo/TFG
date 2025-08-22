@@ -34,11 +34,24 @@ export interface Admission {
 }
 
 /**
+ * Diagnóstico ICD de un paciente
+ */
+export interface Diagnosis {
+  subject_id: number;
+  hadm_id: number;
+  seq_num: number;
+  icd_code: string;
+  icd_version: number;
+  description?: string;
+}
+
+/**
  * Respuesta completa de la API para un paciente
  */
 export interface PatientData {
   patient: Patient;
   admissions: Admission[];
+  diagnoses: Diagnosis[];
   total_admissions: number;
 }
 
