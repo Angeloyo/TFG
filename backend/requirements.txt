@@ -3,3 +3,5 @@ pymongo
 uvicorn
 python-dotenv
 openai
+fastmcp
+# openai-agents
