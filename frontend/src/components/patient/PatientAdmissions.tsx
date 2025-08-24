@@ -1,14 +1,15 @@
 'use client';
 
-import { Admission, Diagnosis } from '@/types';
+import { Admission, Diagnosis, Procedure } from '@/types';
 import { useState } from 'react';
 
 interface PatientAdmissionsProps {
   admissions: Admission[];
   diagnoses: Diagnosis[];
+  procedures: Procedure[];
 }
 
-export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmissionsProps) {
+export default function PatientAdmissions({ admissions, diagnoses, procedures }: PatientAdmissionsProps) {
   const [expandedAdmissions, setExpandedAdmissions] = useState<Set<number>>(new Set());
 
   const toggleAdmission = (hadmId: number) => {
@@ -32,6 +33,7 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
         <div className="space-y-4">
           {admissions.map((admission: Admission) => {
           const admissionDiagnoses = diagnoses.filter(d => d.hadm_id === admission.hadm_id);
+          const admissionProcedures = procedures.filter(p => p.hadm_id === admission.hadm_id);
           const isExpanded = expandedAdmissions.has(admission.hadm_id);
 
           return (
@@ -56,6 +58,12 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
                         <>
                           <span>•</span>
                           <span>{admissionDiagnoses.length} diagnósticos</span>
+                        </>
+                      )}
+                      {admissionProcedures.length > 0 && (
+                        <>
+                          <span>•</span>
+                          <span>{admissionProcedures.length} procedimientos</span>
                         </>
                       )}
                     </div>
@@ -121,6 +129,35 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
                                 </p>
                               </div>
                               <span className="text-sm font-medium text-gray-600 ml-2">#{diagnosis.seq_num}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Procedimientos del ingreso */}
+                  {admissionProcedures.length > 0 && (
+                    <div className="mt-6">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">
+                        Procedimientos ({admissionProcedures.length})
+                      </h4>
+                      <div className="space-y-2">
+                        {admissionProcedures.map((procedure: Procedure) => (
+                          <div key={`${procedure.hadm_id}-${procedure.seq_num}`} 
+                               className="p-3 rounded bg-gray-50">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-black">
+                                  {procedure.description || `Código ICD ${procedure.icd_code}`}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  ICD-{procedure.icd_version}: {procedure.icd_code}
+                                </p>
+                              </div>
+                              {procedure.chartdate && (
+                                <span className="text-sm text-gray-500 ml-2">{new Date(procedure.chartdate).toLocaleDateString()}</span>
+                              )}
                             </div>
                           </div>
                         ))}

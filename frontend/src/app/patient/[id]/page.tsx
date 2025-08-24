@@ -18,7 +18,7 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
   const resolvedParams = await params;
 
   try {
-    const { patient, admissions, diagnoses, total_admissions } = await getPatient(resolvedParams.id);
+    const { patient, admissions, diagnoses, procedures, total_admissions } = await getPatient(resolvedParams.id);
     
     // Obtener la admisión más reciente para datos demográficos adicionales
     let latestAdmission = null;
@@ -55,6 +55,7 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
           <PatientAdmissions 
             admissions={admissions} 
             diagnoses={diagnoses} 
+            procedures={procedures}
           />
         </div>
       </div>

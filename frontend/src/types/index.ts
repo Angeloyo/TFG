@@ -46,12 +46,26 @@ export interface Diagnosis {
 }
 
 /**
+ * Procedimiento ICD de un paciente
+ */
+export interface Procedure {
+  subject_id: number;
+  hadm_id: number;
+  seq_num: number;
+  icd_code: string;
+  icd_version: number;
+  chartdate?: string;
+  description?: string;
+}
+
+/**
  * Respuesta completa de la API para un paciente
  */
 export interface PatientData {
   patient: Patient;
   admissions: Admission[];
   diagnoses: Diagnosis[];
+  procedures: Procedure[];
   total_admissions: number;
 }
 

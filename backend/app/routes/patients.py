@@ -65,15 +65,38 @@ def get_patient(subject_id: int):
     
     diagnoses = list(db["hosp_diagnoses_icd"].aggregate(diagnoses_pipeline))
     
+    # Buscar procedimientos con descripciones
+    procedures_pipeline = [
+        {"$match": {"subject_id": subject_id}},
+        {"$lookup": {
+            "from": "hosp_d_icd_procedures",
+            "let": {"code": "$icd_code", "version": "$icd_version"},
+            "pipeline": [
+                {"$match": {"$expr": {"$and": [
+                    {"$eq": [{"$toString": "$icd_code"}, "$$code"]},
+                    {"$eq": ["$icd_version", "$$version"]}
+                ]}}}
+            ],
+            "as": "description"
+        }},
+        {"$addFields": {
+            "description": {"$arrayElemAt": ["$description.long_title", 0]}
+        }},
+        {"$sort": {"hadm_id": 1, "chartdate": -1, "seq_num": 1}}
+    ]
+    procedures = list(db["hosp_procedures_icd"].aggregate(procedures_pipeline))
+    
     # Limpiar todos los datos
     clean_patient = clean_data(patient)
     clean_admissions = [clean_data(admission) for admission in admissions]
     clean_diagnoses = [clean_data(diagnosis) for diagnosis in diagnoses]
+    clean_procedures = [clean_data(procedure) for procedure in procedures]
     
     return {
         "patient": clean_patient,
         "admissions": clean_admissions,
         "diagnoses": clean_diagnoses,
+        "procedures": clean_procedures,
         "total_admissions": len(clean_admissions)
     }
 
