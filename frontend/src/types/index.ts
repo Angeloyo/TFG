@@ -66,7 +66,6 @@ export interface PatientData {
   admissions: Admission[];
   diagnoses: Diagnosis[];
   procedures: Procedure[];
-  total_admissions: number;
 }
 
 /**

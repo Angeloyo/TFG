@@ -4,6 +4,7 @@ from app.routes.patients import router as patients_router
 from app.routes.dashboard import router as dashboard_router
 from app.routes.charts.router import router as charts_router
 from app.routes.chat import router as chat_router
+from app.routes.summary import router as summary_router
 from app.utils.mcp import mcp
 
 mcp_app = mcp.http_app(path="/")
@@ -23,6 +24,7 @@ app.include_router(patients_router)
 app.include_router(dashboard_router)
 app.include_router(charts_router)
 app.include_router(chat_router)
+app.include_router(summary_router)
 
 app.add_middleware(
     CORSMiddleware,

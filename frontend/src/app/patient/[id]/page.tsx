@@ -1,6 +1,7 @@
 import { PatientData } from '@/types';
 import PatientBasicInfo from '@/components/patient/PatientBasicInfo';
 import PatientAdmissions from '@/components/patient/PatientAdmissions';
+import PatientAISummary from '@/components/patient/PatientAISummary';
 
 async function getPatient(id: string): Promise<PatientData> {
   const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
@@ -18,7 +19,7 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
   const resolvedParams = await params;
 
   try {
-    const { patient, admissions, diagnoses, procedures, total_admissions } = await getPatient(resolvedParams.id);
+    const { patient, admissions, diagnoses, procedures } = await getPatient(resolvedParams.id);
     
     // Obtener la admisión más reciente para datos demográficos adicionales
     let latestAdmission = null;
@@ -41,7 +42,7 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
               Paciente {patient.subject_id}
             </h1>
             <p className="text-gray-600">
-              {total_admissions} {total_admissions === 1 ? 'ingreso' : 'ingresos'} registrados
+              {admissions.length} {admissions.length === 1 ? 'ingreso' : 'ingresos'} registrados
             </p>
           </div>
 
@@ -50,6 +51,9 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
             patient={patient} 
             latestAdmission={latestAdmission} 
           />
+
+          {/* Resumen IA */}
+            <PatientAISummary data={{ patient, admissions, diagnoses, procedures }} />
 
           {/* Historial de ingresos */}
           <PatientAdmissions 

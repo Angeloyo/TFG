@@ -24,7 +24,7 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
 
   return (
     <div>
-      <h2 className="text-lg sm:text-xl font-medium text-black mb-4">Historial de ingresos</h2>
+      <h2 className="text-lg sm:text-xl font-medium text-black mb-4">Historial de ingresos ({admissions.length})</h2>
       {admissions.length === 0 ? (
         <div className="p-4 sm:p-6 border border-gray-200 rounded-lg text-gray-600">
           No hay ingresos registrados para este paciente.

@@ -97,7 +97,6 @@ def get_patient(subject_id: int):
         "admissions": clean_admissions,
         "diagnoses": clean_diagnoses,
         "procedures": clean_procedures,
-        "total_admissions": len(clean_admissions)
     }
 
 @router.get("/")
