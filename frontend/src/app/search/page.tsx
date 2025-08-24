@@ -5,13 +5,33 @@ import { useRouter } from "next/navigation";
 
 export default function SearchPage() {
   const [patientId, setPatientId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (patientId.trim() && /^\d+$/.test(patientId.trim())) {
-      router.push(`/patient/${patientId.trim()}`);
+    const id = patientId.trim();
+
+    if (!id || !/^\d+$/.test(id)) return;
+
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
+        method: "GET",
+        cache: "no-store"
+      });
+
+      if (res.ok) {
+        router.push(`/patient/${id}`);
+      } else {
+        setError("El ID no existe. Revisa el número e inténtalo de nuevo.");
+      }
+    } catch {
+      setError("No se pudo comprobar el ID. Inténtalo de nuevo más tarde.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,10 +67,10 @@ export default function SearchPage() {
             
             <button
               type="submit"
-              disabled={!patientId.trim() || !/^\d+$/.test(patientId.trim())}
+              disabled={loading || !patientId.trim() || !/^\d+$/.test(patientId.trim())}
               className="w-full py-3 px-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              Buscar Paciente
+              {loading ? "Buscando..." : "Buscar Paciente"}
             </button>
           </form>
 
@@ -59,6 +79,9 @@ export default function SearchPage() {
             <p className="mt-2 text-sm text-red-600">
               El ID debe contener solo números
             </p>
+          )}
+          {error && (
+            <p className="mt-2 text-sm text-red-600">{error}</p>
           )}
         </div>
       </div>
