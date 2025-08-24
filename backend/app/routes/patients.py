@@ -36,8 +36,12 @@ def get_patient(subject_id: int):
     if not patient:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
     
-    # Buscar historial de ingresos
-    admissions = list(db["hosp_admissions"].find({"subject_id": subject_id}))
+    # Buscar historial de ingresos (ordenado de más reciente a más antiguo)
+    admissions = list(
+        db["hosp_admissions"]
+        .find({"subject_id": subject_id})
+        .sort("admittime", -1)
+    )
     
     # Buscar diagnósticos con descripciones
     diagnoses_pipeline = [
