@@ -24,11 +24,16 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
   return (
     <div>
       <h2 className="text-lg sm:text-xl font-medium text-black mb-4">Historial de ingresos</h2>
-      <div className="space-y-4">
-        {admissions.map((admission: Admission) => {
+      {admissions.length === 0 ? (
+        <div className="p-4 sm:p-6 border border-gray-200 rounded-lg text-gray-600">
+          No hay ingresos registrados para este paciente.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {admissions.map((admission: Admission) => {
           const admissionDiagnoses = diagnoses.filter(d => d.hadm_id === admission.hadm_id);
           const isExpanded = expandedAdmissions.has(admission.hadm_id);
-          
+
           return (
             <div key={admission.hadm_id} className="border border-gray-200 rounded-lg">
               {/* Header clickeable */}
@@ -45,6 +50,8 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
                       <span>{admission.admission_type}</span>
                       <span>•</span>
                       <span>{admission.insurance}</span>
+                      <span>•</span>
+                      <span>{Math.max(1, Math.ceil((new Date(admission.dischtime).getTime() - new Date(admission.admittime).getTime()) / 86400000))} días</span>
                       {admissionDiagnoses.length > 0 && (
                         <>
                           <span>•</span>
@@ -124,8 +131,9 @@ export default function PatientAdmissions({ admissions, diagnoses }: PatientAdmi
               )}
             </div>
           );
-        })}
-      </div>
+          })}
+        </div>
+      )}
     </div>
   );
 }
