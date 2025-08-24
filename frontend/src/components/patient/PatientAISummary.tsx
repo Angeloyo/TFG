@@ -37,7 +37,7 @@ export default function PatientAISummary({ data }: PatientAISummaryProps) {
 
   return (
     <div className="bg-gray-50 p-4 sm:p-6 rounded-lg mb-8">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg sm:text-xl font-medium text-black">Resumen IA</h2>
         <button
           onClick={handleGenerate}
@@ -49,7 +49,7 @@ export default function PatientAISummary({ data }: PatientAISummaryProps) {
       </div>
       {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
       {summary ? (
-        <div className="prose prose-sm max-w-none whitespace-pre-wrap text-gray-800">{summary}</div>
+        <div className="prose prose-sm max-w-none whitespace-pre-wrap text-gray-800 text-justify">{summary}</div>
       ) : (
         <p className="text-sm text-gray-600">Pulsa el botón para generar un resumen automático de este paciente.</p>
       )}
