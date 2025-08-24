@@ -78,7 +78,7 @@ export default function AdmissionHeatmapChart() {
 
   if (loading) {
     return (
-      <div className="py-8 justify-center flex">
+      <div className="py-8 justify-center flex items-center w-[700px] mx-auto">
         <p className="text-gray-600">Cargando datos...</p>
       </div>
     );

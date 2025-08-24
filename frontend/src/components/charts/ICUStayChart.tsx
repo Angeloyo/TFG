@@ -81,7 +81,17 @@ export default function ICUStayChart() {
     };
   }, [filteredData]);
 
-  if (loading) return <div className="py-8 md:py-12 lg:py-16 xl:py-20 justify-center flex">Cargando...</div>;
+  if (loading) {
+    return (
+      <div className="relative">
+        <div className="flex justify-center" style={{ width: '640px' }}>
+          <div className="flex items-center justify-center w-full">
+            <p className="text-gray-600">Cargando datos...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (error) return <div className="py-8 md:py-12 lg:py-16 xl:py-20 justify-center flex text-red-600">Error: {error}</div>;
 
   const handleThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {

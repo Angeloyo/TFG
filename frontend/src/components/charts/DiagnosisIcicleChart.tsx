@@ -200,8 +200,12 @@ export default function DiagnosisIcicleChart() {
 
   if (loading) {
     return (
-      <div className="py-8 justify-center flex">
-        <p className="text-gray-600">Cargando datos...</p>
+      <div className="relative">
+        <div className="flex justify-center" style={{ width: '928px' }}>
+          <div className="flex items-center justify-center w-full">
+            <p className="text-gray-600">Cargando datos...</p>
+          </div>
+        </div>
       </div>
     );
   }
