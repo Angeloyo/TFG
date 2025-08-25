@@ -49,10 +49,10 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                       Ingreso {new Date(admission.admittime).toLocaleDateString()}
                     </h3>
                     <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span>{admission.admission_type}</span>
+                      {/* <span>{admission.admission_type}</span>
                       <span>•</span>
                       <span>{admission.insurance}</span>
-                      <span>•</span>
+                      <span>•</span> */}
                       <span>{Math.max(1, Math.ceil((new Date(admission.dischtime).getTime() - new Date(admission.admittime).getTime()) / 86400000))} días</span>
                       {admissionDiagnoses.length > 0 && (
                         <>
@@ -64,6 +64,12 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                         <>
                           <span>•</span>
                           <span>{admissionProcedures.length} procedimientos</span>
+                        </>
+                      )}
+                      {(admission.labevents?.length ?? 0) > 0 && (
+                        <>
+                          <span>•</span>
+                          <span>{admission.labevents?.length} tests</span>
                         </>
                       )}
                     </div>
@@ -161,6 +167,45 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                             </div>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Laboratorio del ingreso */}
+                  {Array.isArray(admission.labevents) && admission.labevents.length > 0 && (
+                    <div className="mt-6">
+                      <h4 className="text-sm font-medium text-gray-700 mb-3">
+                        Laboratorio ({admission.labevents.length})
+                      </h4>
+                      <div className="overflow-x-auto border border-gray-100 rounded-md">
+                        <table className="min-w-full text-sm table-fixed">
+                          <thead>
+                            <tr className="text-left text-gray-500">
+                              <th className="py-2 pr-4 w-40 pl-4">Fecha</th>
+                              <th className="py-2 pr-4 w-56 sm:w-72">Test</th>
+                              <th className="py-2 pr-4 w-24">Valor</th>
+                              <th className="py-2 pr-4 w-20">Unidad</th>
+                              <th className="py-2 pr-4 w-24 text-center">Estado</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {admission.labevents.slice(0, 20).map((ev) => (
+                              <tr key={ev.labevent_id} className="border-t border-gray-200">
+                                <td className="py-2 pr-4 pl-4 text-gray-700 whitespace-nowrap">{new Date(ev.charttime).toLocaleString()}</td>
+                                <td className="py-2 pr-4 text-gray-900 whitespace-nowrap max-w-[180px] sm:max-w-[280px] truncate">{ev.label || ev.itemid}</td>
+                                <td className="py-2 pr-4 text-gray-900 whitespace-nowrap">{(ev.valuenum ?? ev.value ?? '-').toString()}</td>
+                                <td className="py-2 pr-4 text-gray-700 whitespace-nowrap">{ev.valueuom || '-'}</td>
+                                <td className="py-2 pr-4 text-center whitespace-nowrap">
+                                  {ev.flag ? (
+                                    <span className="inline-block px-2 py-1 text-xs rounded bg-red-100 text-red-700">Anormal</span>
+                                  ) : (
+                                    <span className="inline-block px-2 py-1 text-xs rounded bg-green-100 text-green-700">Normal</span>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   )}

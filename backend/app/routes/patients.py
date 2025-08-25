@@ -86,9 +86,43 @@ def get_patient(subject_id: int):
     ]
     procedures = list(db["hosp_procedures_icd"].aggregate(procedures_pipeline))
     
+    # Obtener todos los eventos de laboratorio del paciente y anidarlos por ingreso (hadm_id)
+    labevents_pipeline = [
+        {"$match": {"subject_id": subject_id}},
+        {"$lookup": {
+            "from": "hosp_d_labitems",
+            "localField": "itemid",
+            "foreignField": "itemid",
+            "as": "item"
+        }},
+        {"$addFields": {
+            "label": {"$arrayElemAt": ["$item.label", 0]},
+            "fluid": {"$arrayElemAt": ["$item.fluid", 0]},
+            "category": {"$arrayElemAt": ["$item.category", 0]}
+        }},
+        {"$project": {"item": 0}},
+        {"$sort": {"charttime": -1}}
+    ]
+    labevents = list(db["hosp_labevents"].aggregate(labevents_pipeline))
+
+    # Mapear labevents por hadm_id
+    hadm_to_labs = {}
+    for ev in labevents:
+        key = ev.get("hadm_id")
+        if key is None:
+            continue
+        hadm_to_labs.setdefault(key, []).append(ev)
+
+    # Enriquecer admisiones con labevents
+    enriched_admissions = []
+    for admission in admissions:
+        adm = dict(admission)
+        adm["labevents"] = hadm_to_labs.get(adm.get("hadm_id"), [])
+        enriched_admissions.append(adm)
+
     # Limpiar todos los datos
     clean_patient = clean_data(patient)
-    clean_admissions = [clean_data(admission) for admission in admissions]
+    clean_admissions = [clean_data(admission) for admission in enriched_admissions]
     clean_diagnoses = [clean_data(diagnosis) for diagnosis in diagnoses]
     clean_procedures = [clean_data(procedure) for procedure in procedures]
     

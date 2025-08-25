@@ -31,6 +31,8 @@ export interface Admission {
   marital_status: string;
   race: string;
   hospital_expire_flag: 0 | 1;
+  // Eventos de laboratorio anidados si el backend los incluye
+  labevents?: LabEvent[];
 }
 
 /**
@@ -66,6 +68,27 @@ export interface PatientData {
   admissions: Admission[];
   diagnoses: Diagnosis[];
   procedures: Procedure[];
+  // labevents no forma parte de la respuesta base; se obtiene con endpoint específico
+}
+
+/**
+ * Evento de laboratorio enriquecido
+ */
+export interface LabEvent {
+  labevent_id: number;
+  subject_id: number;
+  hadm_id: number;
+  itemid: number;
+  charttime: string;
+  value?: string;
+  valuenum?: number;
+  valueuom?: string;
+  ref_range_lower?: number;
+  ref_range_upper?: number;
+  flag?: number;
+  label?: string;
+  fluid?: string;
+  category?: string;
 }
 
 /**
