@@ -7,6 +7,7 @@ export default function SearchPage() {
   const [patientId, setPatientId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("Buscando...");
   const router = useRouter();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -24,13 +25,16 @@ export default function SearchPage() {
       });
 
       if (res.ok) {
+        // cambiar mensaje de carga a: "Cargando datos del paciente..."
+        setMessage("Cargando datos del paciente...");
         router.push(`/patient/${id}`);
+        return;
       } else {
         setError("El ID no existe. Revisa el número e inténtalo de nuevo.");
+        setLoading(false);
       }
     } catch {
       setError("No se pudo comprobar el ID. Inténtalo de nuevo más tarde.");
-    } finally {
       setLoading(false);
     }
   };
@@ -70,7 +74,7 @@ export default function SearchPage() {
               disabled={loading || !patientId.trim() || !/^\d+$/.test(patientId.trim())}
               className="w-full py-3 px-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? "Buscando..." : "Buscar Paciente"}
+              {loading ? message : "Buscar Paciente"}
             </button>
           </form>
 
