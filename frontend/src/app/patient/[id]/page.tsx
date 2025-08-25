@@ -41,9 +41,9 @@ export default async function PatientPage({ params }: { params: Promise<{ id: st
             <h1 className="text-2xl sm:text-3xl font-light text-black mb-2">
               Paciente {patient.subject_id}
             </h1>
-            <p className="text-gray-600">
+            {/* <p className="text-gray-600">
               {admissions.length} {admissions.length === 1 ? 'ingreso' : 'ingresos'} registrados
-            </p>
+            </p> */}
           </div>
 
           {/* Información básica */}
