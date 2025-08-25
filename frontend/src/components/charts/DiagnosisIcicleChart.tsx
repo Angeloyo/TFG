@@ -11,13 +11,8 @@ interface IcicleNode {
   children?: IcicleNode[];
 }
 
-interface IcicleData {
-  name: string;
-  children: Array<{
-    name: string;
-    value: number;
-  }>;
-}
+// Usamos una estructura recursiva para el árbol completo
+// (los nodos internos tienen children; las hojas tienen value)
 
 interface ExtendedHierarchyNode extends d3.HierarchyRectangularNode<IcicleNode> {
   target?: {
@@ -36,23 +31,28 @@ interface TooltipData {
 
 export default function DiagnosisIcicleChart() {
   const { hoveredData, tooltipPosition, showTooltip, hideTooltip, updateTooltipPosition, containerRef } = useChartTooltip<TooltipData>({ autoHide: true });
-  const [data, setData] = useState<IcicleData | null>(null);
+  const [originalData, setOriginalData] = useState<IcicleNode | null>(null);
+  const [data, setData] = useState<IcicleNode | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [minCount, setMinCount] = useState<number>(50);
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://tfg-api.angeloyo.com/api/charts/diagnosis-icicle');
-        // const response = await fetch('http://localhost:8088/api/charts/diagnosis-icicle');
-        
+        setLoading(true);
+        setError(null);
+        // Un solo fetch inicial con umbral bajo para permitir filtrar en local
+        const url = `https://tfg-api.angeloyo.com/api/charts/diagnosis-icicle?min_count=1`;
+        // const url = `http://localhost:8088/api/charts/diagnosis-icicle?min_count=1`;
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Error al cargar datos');
         }
-
         const result = await response.json();
-        setData(result.data);
+        setOriginalData(result.data as IcicleNode);
+        setData(result.data as IcicleNode);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido');
       } finally {
@@ -62,6 +62,35 @@ export default function DiagnosisIcicleChart() {
 
     fetchData();
   }, []);
+
+  // Filtrado local del árbol según minCount
+  useEffect(() => {
+    if (!originalData) return;
+
+    function filterTree(node: IcicleNode, threshold: number): IcicleNode | null {
+      const hasChildren = Array.isArray(node.children) && node.children.length > 0;
+      if (hasChildren) {
+        const filteredChildren = (node.children as IcicleNode[])
+          .map(child => filterTree(child, threshold))
+          .filter((c): c is IcicleNode => c !== null);
+        if (filteredChildren.length === 0) return null;
+        return { name: node.name, children: filteredChildren };
+      }
+      const nodeValue = node.value || 0;
+      return nodeValue >= threshold ? { name: node.name, value: nodeValue } : null;
+    }
+
+    const filteredRootChildren = (originalData.children || [])
+      .map(child => filterTree(child, minCount))
+      .filter((c): c is IcicleNode => c !== null);
+
+    const filtered: IcicleNode = {
+      name: originalData.name,
+      children: filteredRootChildren
+    };
+
+    setData(filtered);
+  }, [originalData, minCount]);
 
   useEffect(() => {
     if (!data || !svgRef.current) return;
@@ -74,7 +103,8 @@ export default function DiagnosisIcicleChart() {
     const height = 1200;
     const format = d3.format(",d");
 
-    const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1));
+    const childCount = Array.isArray((data as IcicleNode).children) ? ((data as IcicleNode).children as IcicleNode[]).length : 0;
+    const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, Math.max(1, childCount + 1)));
 
     // Compute the layout
     const hierarchy = d3.hierarchy(data as IcicleNode)
@@ -193,9 +223,11 @@ export default function DiagnosisIcicleChart() {
 
     // CONECTAR EL CLICK DESPUÉS DE DEFINIR LA FUNCIÓN
     rect.on("click", clicked);
+    cell.on("click", clicked);
 
 
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (loading) {
@@ -236,6 +268,19 @@ export default function DiagnosisIcicleChart() {
           </div>
         )}
       </ChartTooltip>
+
+      {/* Controles de filtrado debajo del gráfico */}
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <label htmlFor="minCount" className="text-gray-700">Umbral mínimo de casos:</label>
+        <input
+          id="minCount"
+          type="number"
+          min={1}
+          value={minCount}
+          onChange={(e) => setMinCount(Math.max(1, parseInt(e.target.value || '1', 10)))}
+          className="w-24 px-2 py-1 border border-gray-300 rounded text-center"
+        />
+      </div>
     </div>
   );
 }
