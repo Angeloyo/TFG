@@ -13,6 +13,9 @@ interface PatientAdmissionsProps {
 export default function PatientAdmissions({ admissions, diagnoses, procedures }: PatientAdmissionsProps) {
   const [expandedAdmissions, setExpandedAdmissions] = useState<Set<number>>(new Set());
   const [expandedCharts, setExpandedCharts] = useState<Set<string>>(new Set());
+  const [expandedDiagnoses, setExpandedDiagnoses] = useState<Set<number>>(() => new Set());
+  const [expandedLabs, setExpandedLabs] = useState<Set<number>>(() => new Set());
+  const [expandedProcedures, setExpandedProcedures] = useState<Set<number>>(() => new Set());
 
   const toggleAdmission = (hadmId: number) => {
     const newExpanded = new Set(expandedAdmissions);
@@ -32,6 +35,24 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
       newExpanded.add(chartKey);
     }
     setExpandedCharts(newExpanded);
+  };
+
+  const toggleDiagnosesSection = (hadmId: number) => {
+    const next = new Set(expandedDiagnoses);
+    if (next.has(hadmId)) next.delete(hadmId); else next.add(hadmId);
+    setExpandedDiagnoses(next);
+  };
+
+  const toggleLabSection = (hadmId: number) => {
+    const next = new Set(expandedLabs);
+    if (next.has(hadmId)) next.delete(hadmId); else next.add(hadmId);
+    setExpandedLabs(next);
+  };
+
+  const toggleProceduresSection = (hadmId: number) => {
+    const next = new Set(expandedProcedures);
+    if (next.has(hadmId)) next.delete(hadmId); else next.add(hadmId);
+    setExpandedProcedures(next);
   };
 
   return (
@@ -127,69 +148,113 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                     <p className="text-xs text-gray-400">ID: {admission.hadm_id}</p>
                   </div>
                   
-                  {/* Diagnósticos del ingreso */}
+                  {/* Diagnósticos del ingreso (toggle) */}
                   {admissionDiagnoses.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">
-                        Diagnósticos ({admissionDiagnoses.length})
-                      </h4>
-                      <div className="space-y-2">
-                        {admissionDiagnoses.map((diagnosis: Diagnosis) => (
-                          <div key={`${diagnosis.hadm_id}-${diagnosis.seq_num}`} 
-                               className="p-3 rounded bg-gray-50">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-medium text-black">
-                                  {diagnosis.description || `Código ICD ${diagnosis.icd_code}`}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                  ICD-{diagnosis.icd_version}: {diagnosis.icd_code}
-                                </p>
+                      <button
+                        onClick={() => toggleDiagnosesSection(admission.hadm_id)}
+                        className="w-full text-left flex items-center justify-between py-2"
+                      >
+                        <h4 className="text-sm font-medium text-gray-700">
+                          Diagnósticos ({admissionDiagnoses.length})
+                        </h4>
+                        <svg
+                          className={`w-4 h-4 text-gray-400 transition-transform ${expandedDiagnoses.has(admission.hadm_id) ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {expandedDiagnoses.has(admission.hadm_id) && (
+                        <div className="space-y-2 mt-2">
+                          {admissionDiagnoses.map((diagnosis: Diagnosis) => (
+                            <div key={`${diagnosis.hadm_id}-${diagnosis.seq_num}`} 
+                                 className="p-3 rounded bg-gray-50">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium text-black">
+                                    {diagnosis.description || `Código ICD ${diagnosis.icd_code}`}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    ICD-{diagnosis.icd_version}: {diagnosis.icd_code}
+                                  </p>
+                                </div>
+                                <span className="text-sm font-medium text-gray-600 ml-2">#{diagnosis.seq_num}</span>
                               </div>
-                              <span className="text-sm font-medium text-gray-600 ml-2">#{diagnosis.seq_num}</span>
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  {/* Procedimientos del ingreso */}
+                  {/* Procedimientos del ingreso (toggle) */}
                   {admissionProcedures.length > 0 && (
                     <div className="mt-6">
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">
-                        Procedimientos ({admissionProcedures.length})
-                      </h4>
-                      <div className="space-y-2">
-                        {admissionProcedures.map((procedure: Procedure) => (
-                          <div key={`${procedure.hadm_id}-${procedure.seq_num}`} 
-                               className="p-3 rounded bg-gray-50">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-medium text-black">
-                                  {procedure.description || `Código ICD ${procedure.icd_code}`}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                  ICD-{procedure.icd_version}: {procedure.icd_code}
-                                </p>
+                      <button
+                        onClick={() => toggleProceduresSection(admission.hadm_id)}
+                        className="w-full text-left flex items-center justify-between py-2"
+                      >
+                        <h4 className="text-sm font-medium text-gray-700">
+                          Procedimientos ({admissionProcedures.length})
+                        </h4>
+                        <svg
+                          className={`w-4 h-4 text-gray-400 transition-transform ${expandedProcedures.has(admission.hadm_id) ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {expandedProcedures.has(admission.hadm_id) && (
+                        <div className="space-y-2 mt-2">
+                          {admissionProcedures.map((procedure: Procedure) => (
+                            <div key={`${procedure.hadm_id}-${procedure.seq_num}`} 
+                                 className="p-3 rounded bg-gray-50">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium text-black">
+                                    {procedure.description || `Código ICD ${procedure.icd_code}`}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    ICD-{procedure.icd_version}: {procedure.icd_code}
+                                  </p>
+                                </div>
+                                {procedure.chartdate && (
+                                  <span className="text-sm text-gray-500 ml-2">{new Date(procedure.chartdate).toLocaleDateString()}</span>
+                                )}
                               </div>
-                              {procedure.chartdate && (
-                                <span className="text-sm text-gray-500 ml-2">{new Date(procedure.chartdate).toLocaleDateString()}</span>
-                              )}
                             </div>
-                          </div>
-                        ))}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  {/* Laboratorio del ingreso */}
+                  {/* Laboratorio del ingreso (toggle) */}
                   {Array.isArray(admission.labevents) && admission.labevents.length > 0 && (
                     <div className="mt-6">
-                      <h4 className="text-sm font-medium text-gray-700 mb-3">
-                        Laboratorio ({admission.labevents.length})
-                      </h4>
-                      
+                      <button
+                        onClick={() => toggleLabSection(admission.hadm_id)}
+                        className="w-full text-left flex items-center justify-between py-2"
+                      >
+                        <h4 className="text-sm font-medium text-gray-700">
+                          Laboratorio ({admission.labevents.length})
+                        </h4>
+                        <svg
+                          className={`w-4 h-4 text-gray-400 transition-transform ${expandedLabs.has(admission.hadm_id) ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {expandedLabs.has(admission.hadm_id) && (
+                        <div className="mt-3">
                       {/* Tabla de eventos recientes */}
                       {/* <div className="overflow-x-auto border border-gray-100 rounded-md mb-4">
                         <table className="min-w-full text-sm table-fixed">
@@ -302,6 +367,8 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                           </div>
                         );
                       })()}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
