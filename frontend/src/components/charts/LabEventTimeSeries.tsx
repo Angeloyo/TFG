@@ -35,7 +35,7 @@ export default function LabEventTimeSeries({ labevents, testName }: LabEventTime
     const unit = numericEvents.find(e => e.valueuom)?.valueuom || '';
 
     const plot = Plot.plot({
-      title: `Serie temporal: ${testName}`,
+    //   title: `Serie temporal: ${testName}`,
       width: 750,
       height: 350,
       marginLeft: 60,
