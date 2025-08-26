@@ -222,10 +222,7 @@ export default function DiagnosisIcicleChart() {
     }
 
     // CONECTAR EL CLICK DESPUÉS DE DEFINIR LA FUNCIÓN
-    rect.on("click", clicked);
     cell.on("click", clicked);
-
-
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
