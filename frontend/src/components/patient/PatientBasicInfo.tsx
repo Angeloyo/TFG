@@ -24,7 +24,7 @@ export default function PatientBasicInfo({ patient, latestAdmission }: PatientBa
         </div>
         <div>
           <p className="text-sm text-gray-600">Estado</p>
-          <p className="font-medium">{patient.dod ? '†' : 'Vivo'}</p>
+          <p className="font-medium">{patient.dod ? 'Fallecido' : 'Vivo'}</p>
         </div>
         {latestAdmission && (
           <>
