@@ -8,7 +8,6 @@ import { useChartTooltip } from '@/hooks/useChartTooltip';
 
 export default function ICUStayChart() {
   const { hoveredData, tooltipPosition, showTooltip, containerRef } = useChartTooltip<ICUStayData>({ autoHide: true });
-  const [showAll, setShowAll] = useState(false);
   const [threshold, setThreshold] = useState(500);
   const [data, setData] = useState<ICUStayData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +31,7 @@ export default function ICUStayChart() {
   }, []);
 
   // Filtrar datos según el threshold
-  const filteredData = showAll ? data : data.filter(d => d.total_stays >= threshold);
+  const filteredData = data.filter(d => d.total_stays >= threshold);
   const hiddenCount = data.length - filteredData.length;
 
   useEffect(() => {
@@ -105,30 +104,11 @@ export default function ICUStayChart() {
       
       {/* Controles de filtrado */}
       <div className="mt-4 text-sm text-gray-600 space-y-2">
-        {!showAll && hiddenCount > 0 && (
+        {hiddenCount > 0 && (
           <p>
-            Se han ocultado {hiddenCount} unidades con menos de {threshold} estancias.{' '}
-            <button 
-              onClick={() => setShowAll(true)}
-              className="underline text-gray-700 hover:text-gray-900"
-            >
-              Ver todas
-            </button>
+            Se han ocultado {hiddenCount} unidades con menos de {threshold} estancias.
           </p>
         )}
-        
-        {showAll && (
-          <p>
-            Mostrando todas las {data.length} unidades.{' '}
-            <button 
-              onClick={() => setShowAll(false)}
-              className="underline text-gray-700 hover:text-gray-900"
-            >
-              Ocultar unidades pequeñas
-            </button>
-          </p>
-        )}
-        
         <div className="flex items-center gap-2">
           <label htmlFor="threshold" className="text-gray-700">
             Threshold mínimo:
