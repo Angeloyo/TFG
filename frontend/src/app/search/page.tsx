@@ -7,7 +7,7 @@ export default function SearchPage() {
   const [patientId, setPatientId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("Buscando...");
+  // const [message, setMessage] = useState("Buscando...");
   const router = useRouter();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -17,16 +17,16 @@ export default function SearchPage() {
     if (!id || !/^\d+$/.test(id)) return;
 
     setError("");
-    setLoading(true);
+    // setLoading(true);
     try {
-      const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
-        method: "GET",
+      const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}/exists`, {
+        method: "HEAD",
         cache: "no-store"
       });
 
       if (res.ok) {
-        // cambiar mensaje de carga a: "Cargando datos del paciente..."
-        setMessage("Cargando datos del paciente...");
+        setLoading(true);
+        // setMessage("Cargando datos del paciente...");
         router.push(`/patient/${id}`);
         return;
       } else {
@@ -74,7 +74,8 @@ export default function SearchPage() {
               disabled={loading || !patientId.trim() || !/^\d+$/.test(patientId.trim())}
               className="w-full py-3 px-4 bg-black text-white font-medium rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? message : "Buscar Paciente"}
+              {/* {loading ? message : "Buscar Paciente"} */}
+              {loading ? "Cargando datos del paciente..." : "Buscar Paciente"}
             </button>
           </form>
 
