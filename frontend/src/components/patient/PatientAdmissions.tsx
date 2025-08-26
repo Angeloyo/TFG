@@ -2,6 +2,7 @@
 
 import { Admission, Diagnosis, Procedure } from '@/types';
 import { useState } from 'react';
+import LabEventTimeSeries from '@/components/charts/LabEventTimeSeries';
 
 interface PatientAdmissionsProps {
   admissions: Admission[];
@@ -11,6 +12,7 @@ interface PatientAdmissionsProps {
 
 export default function PatientAdmissions({ admissions, diagnoses, procedures }: PatientAdmissionsProps) {
   const [expandedAdmissions, setExpandedAdmissions] = useState<Set<number>>(new Set());
+  const [expandedCharts, setExpandedCharts] = useState<Set<string>>(new Set());
 
   const toggleAdmission = (hadmId: number) => {
     const newExpanded = new Set(expandedAdmissions);
@@ -20,6 +22,16 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
       newExpanded.add(hadmId);
     }
     setExpandedAdmissions(newExpanded);
+  };
+
+  const toggleChart = (chartKey: string) => {
+    const newExpanded = new Set(expandedCharts);
+    if (newExpanded.has(chartKey)) {
+      newExpanded.delete(chartKey);
+    } else {
+      newExpanded.add(chartKey);
+    }
+    setExpandedCharts(newExpanded);
   };
 
   return (
@@ -177,7 +189,9 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                       <h4 className="text-sm font-medium text-gray-700 mb-3">
                         Laboratorio ({admission.labevents.length})
                       </h4>
-                      <div className="overflow-x-auto border border-gray-100 rounded-md">
+                      
+                      {/* Tabla de eventos recientes */}
+                      {/* <div className="overflow-x-auto border border-gray-100 rounded-md mb-4">
                         <table className="min-w-full text-sm table-fixed">
                           <thead>
                             <tr className="text-left text-gray-500">
@@ -206,7 +220,88 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                             ))}
                           </tbody>
                         </table>
-                      </div>
+                      </div> */}
+
+                      {/* Gráficos de series temporales */}
+                      {(() => {
+                        // Agrupar eventos por test name y filtrar los que tienen datos numéricos suficientes
+                        const eventsByTest = new Map<string, typeof admission.labevents>();
+                        admission.labevents.forEach(event => {
+                          if (event.label && event.valuenum !== null && event.valuenum !== undefined) {
+                            if (!eventsByTest.has(event.label)) {
+                              eventsByTest.set(event.label, []);
+                            }
+                            eventsByTest.get(event.label)!.push(event);
+                          }
+                        });
+
+                        // Filtrar tests con al menos 2 puntos de datos
+                        const validTests = Array.from(eventsByTest.entries()).filter(([, events]) => events.length >= 2);
+
+                        if (validTests.length === 0) return null;
+
+                        return (
+                          <div>
+                            {/* <h5 className="text-sm font-medium text-gray-700 mb-3">
+                              Series temporales ({validTests.length} tests)
+                            </h5> */}
+                            <div className="space-y-2">
+                              {validTests.map(([testName, testEvents]) => {
+                                const chartKey = `${admission.hadm_id}-${testName}`;
+                                const isChartExpanded = expandedCharts.has(chartKey);
+                                
+                                // Calcular porcentaje de normalidad
+                                const normalCount = testEvents.filter(event => !event.flag).length;
+                                const normalPercentage = Math.round((normalCount / testEvents.length) * 100);
+                                
+                                // Color basado en el porcentaje
+                                const getColorClasses = (percentage: number) => {
+                                  if (percentage >= 80) return "bg-green-100 text-green-700 border-green-200";
+                                  if (percentage >= 60) return "bg-yellow-100 text-yellow-700 border-yellow-200";
+                                  if (percentage >= 40) return "bg-orange-100 text-orange-700 border-orange-200";
+                                  return "bg-red-100 text-red-700 border-red-200";
+                                };
+                                
+                                return (
+                                  <div key={chartKey} className="border border-gray-100 rounded-md">
+                                    <button
+                                      onClick={() => toggleChart(chartKey)}
+                                      className="w-full p-3 text-left hover:bg-gray-50 transition-colors flex items-center justify-between"
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <span className="text-sm font-medium text-gray-900">
+                                          {testName}
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                          ({testEvents.length} puntos)
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-3">
+                                        <span className={`inline-block px-2 py-1 text-xs rounded border w-24 text-center ${getColorClasses(normalPercentage)}`}>
+                                          {normalPercentage}% normal
+                                        </span>
+                                        <svg
+                                          className={`w-4 h-4 text-gray-400 transition-transform ${isChartExpanded ? 'rotate-180' : ''}`}
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                      </div>
+                                    </button>
+                                    {isChartExpanded && (
+                                      <div className="p-4 border-t border-gray-100">
+                                        <LabEventTimeSeries labevents={admission.labevents || []} testName={testName} />
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
                 </div>
