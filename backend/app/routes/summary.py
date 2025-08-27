@@ -54,7 +54,7 @@ async def summarize_patient(request: dict):
         user_content = "\n".join(prompt_parts)
 
         messages = [
-            {"role": "system", "content": "Eres un asistente clínico. Se te adjuntan datos clínicos de un paciente, debes resumirlos para ayudar a un médico a entender el caso rápidamente. No inventes. Responde en un párrafo, sin bullet points, y en español."},
+            {"role": "system", "content": "Eres un asistente clínico. Se te adjuntan datos clínicos de un paciente, debes resumirlos para ayudar a un médico a entender el caso rápidamente. No inventes. Responde en un párrafo, sin bullet points, sin dar códigos ICD, y en español."},
             {"role": "user", "content": user_content},
         ]
 
@@ -63,8 +63,8 @@ async def summarize_patient(request: dict):
             response = await asyncio.wait_for(
                 asyncio.to_thread(
                     client.responses.create,
-                    # model="gpt-4.1",
-                    model="gpt-5",
+                    model="gpt-4.1",
+                    # model="gpt-5",
                     input=messages,
                 ),
                 timeout=120.0,
