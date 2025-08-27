@@ -4,6 +4,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 
+\usepackage{float}
+
+
 % \usepackage[style=list, number=none]{glossary} %
 %\usepackage{titlesec}
 %\usepackage{pailatino}
@@ -184,13 +187,11 @@ pdfproducer = {pdflatex}
 \mainmatter
 \setlength{\parskip}{5pt}
 
-\input{capitulos/01_Introduccion}
+\input{capitulos/Introduccion}
 
-\input{capitulos/02_EstadoDelArte}
+\input{capitulos/EstadoDelArte}
 
-\input{capitulos/03_Diseño}
-
-\input{capitulos/04_Implementacion}
+\input{capitulos/Implementacion}
 
 %
 %\input{capitulos/02_EspecificacionRequisitos}
@@ -210,7 +211,7 @@ pdfproducer = {pdflatex}
 %%\chapter{Conclusiones y Trabajos Futuros}
 %
 %
-%\nocite{*}
+%%\nocite{*}
 \bibliography{bibliografia/bibliografia}\addcontentsline{toc}{chapter}{Bibliografía}
 \bibliographystyle{unsrturl}
 %
