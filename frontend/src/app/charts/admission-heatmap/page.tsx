@@ -20,20 +20,34 @@ export default function AdmissionHeatmapPage() {
           </Link>
         </div>
         
-        {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-xl sm:text-2xl font-light text-black mb-2">
-            Ingresos por Hora y Día de la Semana
+            Patrones de Ingreso Hospitalario
           </h1>
-          <p className="text-gray-600 text-sm mb-8">
-            Heatmap
+          <p className="text-gray-600 text-sm">
+            Heatmaps
           </p>
+        </div>
 
-
-          <div className="space-y-4">
-            <AdmissionHeatmapChart />
-          </div>
+        {/* Charts */}
+        <div className="space-y-16">
           
+          {/* Chart 1: Hourly */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-light text-center text-gray-800">
+              Por Hora y Día de la Semana
+            </h3>
+            <AdmissionHeatmapChart viewType="hourly" />
+          </div>
+
+          {/* Chart 2: Monthly */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-light text-center text-gray-800">
+              Por Mes y Día del Mes
+            </h3>
+            <AdmissionHeatmapChart viewType="monthly" />
+          </div>
+
         </div>
       </div>
     </div>

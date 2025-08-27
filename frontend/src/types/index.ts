@@ -170,10 +170,20 @@ export interface AgeDistributionData {
 }
 
 /**
- * Datos del heatmap de ingresos por hora y día
+ * Datos del heatmap de ingresos (dos variantes)
  */
-export interface AdmissionHeatmapData {
+export interface AdmissionHeatmapHourlyData {
   hour: number;
   dayOfWeek: number;
   count: number;
 }
+
+export interface AdmissionHeatmapMonthlyData {
+  month: number;
+  dayOfMonth: number;
+  count: number;
+}
+
+export type AdmissionHeatmapData =
+  | AdmissionHeatmapHourlyData
+  | AdmissionHeatmapMonthlyData;
