@@ -89,6 +89,7 @@ export interface LabEvent {
   label?: string;
   fluid?: string;
   category?: string;
+  comments?: string;
 }
 
 /**
