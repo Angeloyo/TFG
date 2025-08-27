@@ -26,7 +26,6 @@ async def summarize_patient(request: dict):
 
         # Construir prompt conciso con los datos recibidos
         prompt_parts = []
-        prompt_parts.append("Resume de forma objetiva y clara el historial del paciente. No inventes datos. Usa viñetas, máximo 8. No des recomendaciones clínicas.")
         prompt_parts.append(f"Demografía: género={patient.get('gender')}, edad={patient.get('anchor_age')}, año_ref={patient.get('anchor_year')}")
 
         if admissions:
