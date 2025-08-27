@@ -300,7 +300,7 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                           }
                         });
 
-                        const allTests = Array.from(eventsByTestAll.entries());
+                        const allTests = Array.from(eventsByTestAll.entries()).sort((a, b) => b[1].length - a[1].length);
                         if (allTests.length === 0) return null;
 
                         return (
