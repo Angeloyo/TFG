@@ -80,16 +80,20 @@ export interface LabEvent {
   hadm_id: number;
   itemid: number;
   charttime: string;
+  storetime?: string;
   value?: string;
   valuenum?: number;
   valueuom?: string;
   ref_range_lower?: number;
   ref_range_upper?: number;
   flag?: number;
+  priority?: string;
   label?: string;
   fluid?: string;
   category?: string;
   comments?: string;
+  specimen_id?: number;
+  order_provider_id?: string;
 }
 
 /**

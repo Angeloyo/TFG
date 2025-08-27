@@ -16,6 +16,7 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
   const [expandedDiagnoses, setExpandedDiagnoses] = useState<Set<number>>(() => new Set());
   const [expandedLabs, setExpandedLabs] = useState<Set<number>>(() => new Set());
   const [expandedProcedures, setExpandedProcedures] = useState<Set<number>>(() => new Set());
+  const [selectedCategories, setSelectedCategories] = useState<Map<number, string>>(new Map());
 
   const toggleAdmission = (hadmId: number) => {
     const newExpanded = new Set(expandedAdmissions);
@@ -255,6 +256,37 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                       </button>
                       {expandedLabs.has(admission.hadm_id) && (
                         <div className="mt-3">
+                          {(() => {
+                            const categoriesMap = new Map<string, number>();
+                            admission.labevents.forEach((ev) => {
+                              const key = ev.category || 'Sin categoría';
+                              categoriesMap.set(key, (categoriesMap.get(key) || 0) + 1);
+                            });
+                            const categories = Array.from(categoriesMap.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+                            const current = selectedCategories.get(admission.hadm_id) || 'Ver todas';
+
+                            return (
+                              <div className="mb-3 flex items-center gap-3">
+                                <label className="text-sm text-gray-600">Categoría:</label>
+                                <select
+                                  className="border border-gray-200 rounded px-2 py-1 text-sm bg-white"
+                                  value={current}
+                                  onChange={(e) => {
+                                    const next = new Map(selectedCategories);
+                                    next.set(admission.hadm_id, e.target.value);
+                                    setSelectedCategories(next);
+                                  }}
+                                >
+                                  <option value="Ver todas">Ver todas</option>
+                                  {categories.map(([name, count]) => (
+                                    <option key={name} value={name}>
+                                      {name} ({count})
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            );
+                          })()}
                       {/* Tabla de eventos recientes */}
                       {/* <div className="overflow-x-auto border border-gray-100 rounded-md mb-4">
                         <table className="min-w-full text-sm table-fixed">
@@ -289,9 +321,15 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
 
                       {/* Gráficos de series temporales */}
                       {(() => {
+                        // Filtrado por categoría seleccionada
+                        const currentCategory = selectedCategories.get(admission.hadm_id) || 'Ver todas';
+                        const filteredEvents = currentCategory === 'Ver todas'
+                          ? admission.labevents
+                          : admission.labevents.filter(ev => (ev.category || 'Sin categoría') === currentCategory);
+
                         // Agrupar eventos por test name (incluyendo no numéricos)
-                        const eventsByTestAll = new Map<string, typeof admission.labevents>();
-                        admission.labevents.forEach(event => {
+                        const eventsByTestAll = new Map<string, typeof filteredEvents>();
+                        filteredEvents.forEach(event => {
                           if (event.label) {
                             if (!eventsByTestAll.has(event.label)) {
                               eventsByTestAll.set(event.label, []);
@@ -328,20 +366,51 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                                 if (testEventsAll.length === 1) {
                                   const ev = testEventsAll[0]!;
                                   return (
-                                    <div key={chartKey} className="px-3 py-2 flex items-center justify-between min-h-12">
-                                      <div className="flex items-center gap-3">
-                                        <span className="text-sm font-medium text-gray-900">{testName}</span>
-                                        <span className="text-xs text-gray-500">(1 punto)</span>
-                                        <span className="text-xs text-gray-500">
-                                          {new Date(ev.charttime).toLocaleString()} · {(ev.valuenum ?? ev.value ?? '-').toString()} {ev.valueuom || ''}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center gap-3">
-                                        <span className={`inline-block px-2 py-1 text-xs rounded border w-24 text-center ${ev.flag ? 'bg-red-100 text-red-700 border-red-200' : 'bg-green-100 text-green-700 border-green-200'}`}>
-                                          {ev.flag ? 'Anormal' : 'Normal'}
-                                        </span>
-                                        <div className="w-4 h-4 opacity-0" />
-                                      </div>
+                                    <div key={chartKey}>
+                                      <button
+                                        onClick={() => toggleChart(chartKey)}
+                                        className={`w-full px-3 py-2 text-left transition-colors flex items-center justify-between hover:bg-gray-50 min-h-12`}
+                                      >
+                                        <div className="flex items-center gap-3">
+                                          <span className="text-sm font-medium text-gray-900">{testName}</span>
+                                          <span className="text-xs text-gray-500">(1 punto)</span>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                          <span className={`inline-block px-2 py-1 text-xs rounded border w-24 text-center ${getColorClasses(normalPercentage)}`}>
+                                            {normalPercentage}% normal
+                                          </span>
+                                          <svg
+                                            className={`w-4 h-4 text-gray-400 transition-transform ${isChartExpanded ? 'rotate-180' : ''}`}
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                          </svg>
+                                        </div>
+                                      </button>
+                                      {isChartExpanded && (
+                                        <div className="p-4 border-t border-gray-100">
+                                          <div className="px-3 py-2 flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
+                                              <span className="text-xs text-gray-500">{new Date(ev.charttime).toLocaleString()}</span>
+                                            </div>
+                                            <span className="text-sm text-gray-900">
+                                              {String(ev.valuenum ?? ev.value ?? ev.comments ?? '-')}
+                                              {ev.valueuom ? ` ${ev.valueuom}` : ''}
+                                              {(() => {
+                                                const lower = ev.ref_range_lower;
+                                                const upper = ev.ref_range_upper;
+                                                if (lower == null && upper == null) return '';
+                                                const rangeStr = `${lower ?? '–'}–${upper ?? '–'}`;
+                                                return ` · rango: ${rangeStr}`;
+                                              })()}
+                                              {ev.comments ? ` · ${ev.comments}` : ''}
+                                              {ev.flag === 1 ? ' · Anormal' : ev.flag === 0 ? ' · Normal' : ''}
+                                            </span>
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                   );
                                 }
