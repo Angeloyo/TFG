@@ -138,7 +138,7 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                       </div>
                       <div className="sm:col-span-2 lg:col-span-1">
                         <p className="text-sm text-gray-600">Discharge Location</p>
-                        <p className="font-medium">{admission.discharge_location}</p>
+                        <p className="font-medium">{admission.discharge_location || "No definido"}</p>
                         {admission.hospital_expire_flag === 1 && (
                           <p className="text-sm text-red-600">Fallecimiento hospitalario</p>
                         )}
