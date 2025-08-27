@@ -58,7 +58,7 @@ export default function LabEventTimeSeries({ labevents, testName }: LabEventTime
           stroke: "#6b7280", // gris
           strokeWidth: 2,
           tip: true,
-          title: d => `${new Date(d.charttime).toLocaleString()}\n${d.valuenum} ${d.valueuom || ''}\n${d.flag ? 'Anormal' : 'Normal'}`
+          title: d => `${new Date(d.charttime).toLocaleString()}\n${d.valuenum} ${d.valueuom || ''}\n${d.flag ? 'Anormal' : 'Normal'}\n${d.comments || 'No comments'}`
         }),
         // Bandas de referencia si existen
         ...(numericEvents[0]?.ref_range_lower !== null && numericEvents[0]?.ref_range_upper !== null 
