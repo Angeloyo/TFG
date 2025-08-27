@@ -27,7 +27,7 @@ async def summarize_patient(request: dict):
 
         # Construir prompt conciso con los datos recibidos
         prompt_parts = []
-        prompt_parts.append(f"Demografía: género={patient.get('gender')}, edad={patient.get('anchor_age')}, año_ref={patient.get('anchor_year')}")
+        prompt_parts.append(f"Demografía: género={patient.get('gender')}, edad={patient.get('anchor_age')}, año_ref={patient.get('anchor_year')}, dod={patient.get('dod')}")
 
         if admissions:
             for a in admissions:
@@ -36,8 +36,8 @@ async def summarize_patient(request: dict):
                 )
                 # Añadir labevents para este ingreso (si existen)
                 labevents = a.get("labevents") or []
-                if labevents:
-                    prompt_parts.append("Labevents (JSON):\n" + json.dumps(labevents, ensure_ascii=False))
+                # if labevents:
+                    # prompt_parts.append("Labevents (JSON):\n" + json.dumps(labevents, ensure_ascii=False))
 
         if diagnoses:
             dx_lines = [
