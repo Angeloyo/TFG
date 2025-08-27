@@ -375,18 +375,44 @@ export default function PatientAdmissions({ admissions, diagnoses, procedures }:
                                         </div>
                                       </button>
                                     ) : (
-                                      <div className="px-3 py-2 flex items-center justify-between min-h-12">
-                                        <div className="flex items-center gap-3">
-                                          <span className="text-sm font-medium text-gray-900">{testName}</span>
-                                          <span className="text-xs text-gray-500">({testEventsAll.length} puntos)</span>
-                                        </div>
-                                        <div className="flex items-center gap-3">
-                                          <span className="inline-block px-2 py-1 text-xs rounded border w-32 text-center bg-gray-100 text-gray-700 border-gray-200">
-                                            Sin serie temporal
-                                          </span>
-                                          <div className="w-4 h-4 opacity-0" />
-                                        </div>
-                                      </div>
+                                      <>
+                                        <button
+                                          onClick={() => toggleChart(chartKey)}
+                                          className={`w-full px-3 py-2 text-left transition-colors flex items-center justify-between hover:bg-gray-50 min-h-12`}
+                                        >
+                                          <div className="flex items-center gap-3">
+                                            <span className="text-sm font-medium text-gray-900">{testName}</span>
+                                            <span className="text-xs text-gray-500">({testEventsAll.length} puntos)</span>
+                                          </div>
+                                          <div className="flex items-center gap-3">
+                                            <span className="inline-block px-2 py-1 text-xs rounded border w-32 text-center bg-gray-100 text-gray-700 border-gray-200">
+                                              Sin serie temporal
+                                            </span>
+                                            <svg
+                                              className={`w-4 h-4 text-gray-400 transition-transform ${isChartExpanded ? 'rotate-180' : ''}`}
+                                              fill="none"
+                                              stroke="currentColor"
+                                              viewBox="0 0 24 24"
+                                            >
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                          </div>
+                                        </button>
+                                        {isChartExpanded && (
+                                          <div className="p-4 border-t border-gray-100">
+                                            <div className="rounded-md border border-gray-100 divide-y divide-gray-100">
+                                              {testEventsAll.map((ev, idx) => (
+                                                <div key={idx} className="px-3 py-2 flex items-center justify-between">
+                                                  <div className="flex items-center gap-3">
+                                                    <span className="text-xs text-gray-500">{new Date(ev.charttime).toLocaleString()}</span>
+                                                  </div>
+                                                  <span>{(ev.comments ?? '-').toString()}</span>
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+                                      </>
                                     )}
                                     {canPlot && isChartExpanded && (
                                       <div className="p-4 border-t border-gray-100">
