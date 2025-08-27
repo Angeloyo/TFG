@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 import asyncio
+import json
 
 # Cargar variables de entorno desde app/.env
 env_path = Path(__file__).parent.parent / ".env"
@@ -33,6 +34,10 @@ async def summarize_patient(request: dict):
                 prompt_parts.append(
                     f"Ingreso hadm_id={a.get('hadm_id')}: {a.get('admission_type')} | {a.get('admittime')} → {a.get('dischtime')} | alta={a.get('discharge_location')} | fallec_hosp={a.get('hospital_expire_flag')}"
                 )
+                # Añadir labevents para este ingreso (si existen)
+                labevents = a.get("labevents") or []
+                if labevents:
+                    prompt_parts.append("Labevents (JSON):\n" + json.dumps(labevents, ensure_ascii=False))
 
         if diagnoses:
             dx_lines = [
@@ -58,7 +63,8 @@ async def summarize_patient(request: dict):
             response = await asyncio.wait_for(
                 asyncio.to_thread(
                     client.responses.create,
-                    model="gpt-4.1",
+                    # model="gpt-4.1",
+                    model="gpt-5",
                     input=messages,
                 ),
                 timeout=120.0,
