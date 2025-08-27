@@ -1,5 +1,6 @@
 from openai import OpenAI
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 import os
 import asyncio
 from dotenv import load_dotenv
@@ -103,25 +104,36 @@ async def chat(request: dict):
         }
     ]
     
-    try:
-        # Usar OpenAI Responses API con MCP
-        response = await asyncio.wait_for(
-            asyncio.to_thread(
-                client.responses.create,
-                model="gpt-4.1", 
-                input=input_messages, 
-                tools=mcp_tools
-            ),
-            timeout=300.0
-        )
-        
-        print(f"✅ Respuesta MCP de OpenAI: {response}")
-        print(f"🟢 CHAT COMPLETADO")
-        return {"response": response.output_text}
-        
-    except asyncio.TimeoutError:
-        print(f"⏰ TIMEOUT en llamada a OpenAI con MCP")
-        return {"response": "La consulta esta tardando demasiado. Por favor, intenta con una pregunta mas especifica o con menos datos."}
-    except Exception as e:
-        print(f"❌ Error en chat: {str(e)}")
-        return {"response": f"Error al procesar la consulta con MCP: {str(e)}"}
+    # Streaming con keep-alives para evitar timeouts del proxy (Cloudflare Tunnel)
+    import json
+
+    async def stream():
+        print("⏳ Iniciando procesamiento con keep-alive")
+        task = asyncio.create_task(asyncio.to_thread(
+            client.responses.create,
+            # model="gpt-4.1",
+            model="gpt-5",
+            input=input_messages,
+            tools=mcp_tools
+        ))
+        try:
+            while not task.done():
+                # Enviar un pequeño keep-alive para que la conexión no esté idle
+                yield b" \n"
+                await asyncio.sleep(10)
+
+            response = await task
+            print(f"✅ Respuesta MCP de OpenAI: {response}")
+            print(f"🟢 CHAT COMPLETADO")
+            payload = {"response": response.output_text}
+            yield json.dumps(payload).encode("utf-8")
+        except asyncio.TimeoutError:
+            print(f"⏰ TIMEOUT en llamada a OpenAI con MCP")
+            payload = {"response": "La consulta esta tardando demasiado. Por favor, intenta con una pregunta mas especifica o con menos datos."}
+            yield json.dumps(payload).encode("utf-8")
+        except Exception as e:
+            print(f"❌ Error en chat: {str(e)}")
+            payload = {"response": f"Error al procesar la consulta con MCP: {str(e)}"}
+            yield json.dumps(payload).encode("utf-8")
+
+    return StreamingResponse(stream(), media_type="application/json", headers={"Cache-Control": "no-cache"})
