@@ -13,8 +13,8 @@ export default function HospitalTransfersChord() {
   const ref = useRef<SVGSVGElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<ApiData | null>(null);
-  const [minCount, setMinCount] = useState<number>(1000);
-  const [maxCount, setMaxCount] = useState<number>(100000);
+  const [minCount, setMinCount] = useState<number>(10000);
+  const [maxCount, setMaxCount] = useState<number>(1000000);
   const { hoveredData, tooltipPosition, showTooltip, hideTooltip, updateTooltipPosition, containerRef } = useChartTooltip<TooltipData>({ autoHide: true });
   const rafIdRef = useRef<number | null>(null);
 
