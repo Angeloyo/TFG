@@ -192,3 +192,19 @@ export interface AdmissionHeatmapMonthlyData {
 export type AdmissionHeatmapData =
   | AdmissionHeatmapHourlyData
   | AdmissionHeatmapMonthlyData;
+
+// ====================================
+// Medications Treemap Types
+// ====================================
+
+export interface MedicationsTreemapRoute {
+  route: string;
+  total: number;
+  drugs: { drug: string; count: number }[];
+}
+
+export interface MedicationsTreemapResponse {
+  data: MedicationsTreemapRoute[];
+  total_routes: number;
+  description: string;
+}

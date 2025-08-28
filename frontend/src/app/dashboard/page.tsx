@@ -205,11 +205,17 @@ export default function DashboardPage() {
                 </div>
                 
                 {/* Enlaces a gráficos */}
-                {/* <div className="pt-2 space-y-2 border-t border-gray-100">
-                  <span className="text-sm font-light text-gray-400">
-                    Próximamente: gráficos de laboratorio
-                  </span>
-                </div> */}
+                <div className="pt-2 space-y-2 border-t border-gray-100">
+                  <a 
+                    href="/charts/medications-sunburst"
+                    className="flex justify-between items-center group"
+                  >
+                    <span className="text-sm font-light text-gray-600 group-hover:text-gray-800">
+                      Medicamentos más prescritos por vía
+                    </span>
+                    <ArrowRight className="w-3 h-3 text-gray-400 group-hover:text-gray-600 group-hover:translate-x-1 transition-all duration-200" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
