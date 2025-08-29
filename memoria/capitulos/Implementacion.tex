@@ -75,47 +75,90 @@ Un aspecto fundamental para trabajar con MIMIC-IV es la correcta utilización de
     \item Otros identificadores secundarios: \texttt{specimen\_id} (muestras de laboratorio), \texttt{pharmacy\_id}, \texttt{order\_provider\_id} (profesional que ordena una prueba o medicación), \texttt{itemid} (tipo de medición o concepto registrado), entre otros.
 \end{itemize}
 
-Toda esta estructura modular nos permite, a nivel de paciente, reconstruir de forma detallada la trayectoria clínica, desde su ingreso hasta el alta, pasando por episodios críticos, pruebas, tratamientos y evolución. A nivel global, las posibilidades son enormes, para calcular estadísticas, visualizaciones, y todo tipo de agregaciones de las que se pueda extraer conocimiento. Para más detalles sobre los datos, puede consultarse la documentación oficial de MIMIC-IV \cite{MIMICIV_docs}.
+Además de todos estos datos, los tutores del trabajo proporcionaron otro archivo \texttt{icd\_equivalencias}, el cual
+
+@todo: acabar lo de icd equivalencias
+
+En conclusión, toda esta estructura modular nos permite, a nivel de paciente, reconstruir de forma detallada la trayectoria clínica, desde su ingreso hasta el alta, pasando por episodios críticos, pruebas, tratamientos y evolución. A nivel global, las posibilidades son enormes, para calcular estadísticas, visualizaciones, y todo tipo de agregaciones de las que se pueda extraer conocimiento. Para más detalles sobre los datos, puede consultarse la documentación oficial de MIMIC-IV \cite{MIMICIV_docs}.
+
+\subsubsection{Desplegando MongoDB}
+
+Para el despliegue de MongoDB se utilizan dos contenedores Docker, en distintos puertos, uno para la versión completa del conjunto de datos, y otro para la versión demo, facilitando así la realización de pruebas sin tener que lidiar con los cientos de millones de datos de la versión completa. Como apoyo al desarrollo, y también en forma de contenedores, se despliegan las herramientas de interfaz gráfica: Portainer para Docker\cite{portainer_ce} y Mongo Express para las bases de datos\cite{mongo_express}. 
+
+
+\begin{figure}[H]
+  \centering
+  %\fbox{\includegraphics[width=1\textwidth]{imagenes/screenshot1.png}}
+  {\includegraphics[width=1\textwidth]{imagenes/screenshot3.png}}
+  \caption{Captura de pantalla de Portainer}
+  \label{fig:screenshot3}
+\end{figure}
 
 
 % --------------------
 \subsubsection{El proceso de migración}
 
-Este se realizó mediante scripts de Python utilizando la librería \texttt{pandas} para la lectura de archivos CSV y \texttt{pymongo} para la inserción en MongoDB. Cada fila del CSV se convierte en un archivo JSON en MongoDB, donde cada columna es un campo del documento, y cada archivo CSV completo acaba siendo una colección de documentos. El procesamiento se hizo por chuncks para evitar el desbordamiento de memoria, que fue un problema recurrente debido a la cantidad masiva de datos.
+Una vez entendida la estructura de MIMIC-IV, y ejecutandose MongoDB, es momento de realizar la migración. Esta se realizó mediante scripts de Python utilizando la librería \texttt{pandas} para la lectura de archivos CSV y \texttt{pymongo} para la inserción en MongoDB. Cada fila del CSV se convierte en un archivo JSON/BSON \cite{mongojsonbson} en MongoDB, donde cada columna es un campo del documento, y cada archivo CSV completo acaba siendo una colección de documentos. Podemos entenderlo mejor, pensando que cada archivo CSV es equivalente a una tabla de una base de datos relacional, y mirando a la siguiente figura \ref{fig:equivalenciasql}.
+
+\begin{figure}[H]
+  \centering
+  {\includegraphics[width=0.8\textwidth]{imagenes/mongodb-vs-sql-1.png}}
+  \caption{Equivalencia entre conceptos SQL y NoSQL}
+  \label{fig:equivalenciasql}
+\end{figure}
+
+Los nombres de las colecciones recibieron el formato \texttt{\textless módulo\textgreater\_\textless tabla\textgreater}. Por ejemplo: \texttt{hosp\_patients}, \texttt{icu\_procedureevents}, etc.
+
+\begin{figure}[H]
+  \centering
+  {\includegraphics[width=0.6\textwidth]{imagenes/ej_admission.png}}
+  \caption{Ejemplo de un documento de \texttt{hosp\_admissions}}
+  \label{fig:screenshot3}
+\end{figure}
+
+Todo este proceso se realizó para dos versiones de MIMIC-IV: la versión completa, cuyo acceso está restringido y contiene múltiples GBs de información, y la versión demo, que es un subset de 100 pacientes y es de acceso libre \cite{MIMICIV_Demo}.
+
+Para la versión completa, el procesamiento se tuvo que realizar por chuncks para evitar el desbordamiento de memoria, que fue un problema recurrente debido a la cantidad masiva de datos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{imagenes/db_full_list.png}
+    \caption{Colecciones resultantes tras la importacion. Captura de pantalla de la interfaz de Mongo Express.}
+    \label{fig:db_full_list}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{imagenes/stats_demo.png}
+    \caption{Estadísticas de la versión demo de la base de datos.}
+    \label{fig:stats_demo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{imagenes/stats_full.png}
+    \caption{Estadísticas de la versión completa de la base de datos.}
+    \label{fig:stats_full}
+\end{figure}
 
 
-Tras la importación, resultaron las siguientes colecciones:
+@todo: hablar de los indices, lo que son, pq son importantes y necesarios en nuestro caso -> hablar de eso aki tb 
 
-@todo: mostrar captura de todas las colecciones de mongo express
-
-@todo: quitar entonces la captura q ya hay de mongo express, y quizas poner otra de portainer? 
-
-@todo: mostrar stats de la bd, tanto demo como full
-
-@todo: hablar de los indices, lo que son, pq son importantes y necesarios en nuestro caso
-
-@todo: en que punto voy a hablar de las colecciones nuevas que he añadido yo? 
+@todo: en que punto voy a hablar de las colecciones nuevas que he añadido yo -> aqui mismo 
 
 @todo:
 
 @todo:
 
-Para el despliegue de MongoDB se utilizan dos contenedores Docker, en distintos puertos, uno para la versión completa del conjunto de datos, y otro para la versión demo \cite{MIMICIV_Demo}, que es un subset de 100 pacientes, de acceso libre, facilitando así la realización de pruebas sin tener que lidiar con los cientos de millones de datos de la versión completa. Como apoyo al desarrollo, y también en forma de contenedores, se despliegan las herramientas de interfaz gráfica: Portainer para Docker\cite{portainer_ce} y Mongo Express para las bases de datos\cite{mongo_express}. 
-
-\begin{figure}[H]
-  \centering
-  \fbox{\includegraphics[width=1\textwidth]{imagenes/screenshot1.png}}
-  \caption{Captura de pantalla de Portainer}
-  \label{fig:screenshot1s}
-\end{figure}
 
 
-\begin{figure}[H]
-  \centering
-  \fbox{\includegraphics[width=1\textwidth]{imagenes/screenshot2.png}}
-  \caption{Captura de pantalla de Mongo Express}
-  \label{fig:screenshot2}
-\end{figure}
+
+%\begin{figure}[H]
+%  \centering
+%  \fbox{\includegraphics[width=1\textwidth]{imagenes/screenshot2.png}}
+%  \caption{Captura de pantalla de Mongo Express}
+%  \label{fig:screenshot2}
+%\end{figure}
 
 
 \subsection{API RESTful}
