@@ -11,24 +11,96 @@ En este capítulo se detalla la implementación de la plataforma desarrollada, d
 
 \section{Backend}
 
-El backend constituye el núcleo de la lógica de este trabajo. Se puede dividir en dos elementos: la base de datos MIMIC-IV almacenada en MongoDB con Docker, y la API RESTful con FastAPI que consulta datos, los procesa y los devuelve al cliente. Todo se aloja en un servidor personal y se accede por HTTPS gracias a Cloudflare Tunnels.
+El backend constituye el núcleo de la lógica de este trabajo. Se puede dividir en dos elementos: la base de datos MIMIC-IV almacenada en MongoDB con Docker, y la API RESTful con FastAPI que consulta datos, los procesa y los devuelve al cliente. También se encarga de llamar a los LLMs y a ejecutar el servidor MCP. Todo se aloja en un servidor personal y se accede por HTTPS gracias a Cloudflare Tunnels. A continuación profundizamos en esta parte del proyecto.
 
 %\subsection{Almacenamiento de MIMIC-IV en MongoDB}
 \subsection{MIMIC-IV en MongoDB}
 
 
-Una de las tareas técnicas fundamentales del proyecto ha sido la migración del conjunto de datos desde su formato original en CSV a una base de datos MongoDB. MIMIC-IV se distribuye como un conjunto de archivos CSV comprimidos organizados en dos módulos principales: \texttt{hosp} (datos hospitalarios) e \texttt{icu} (datos de cuidados intensivos), junto con diccionarios de códigos y metadatos complementarios.
+Una de las tareas técnicas fundamentales del proyecto ha sido la migración del conjunto de datos, desde su formato original en archivos CSV comprimidos a una base de datos MongoDB. A continuación se explica todo el proceso.
+
+\subsubsection{Entendiendo los datos}
+
+MIMIC-IV recoge sus datos de distintas fuentes, y realiza todo un complejo proceso de conversión, transformación, anonimización, clasificación y corrección de los datos hasta obtener el resultado final \cite{MIMICIV_paper}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{imagenes/desarrolloMIMIC-IV.png}
+    \caption{Resumen del proceso de desarrollo de MIMIC-IV.}
+    \label{fig:desarrollo_mimiciv}
+\end{figure}
 
 
-El proceso de migración se implementó mediante scripts de Python utilizando la librería \texttt{pandas} para la lectura de archivos CSV y \texttt{pymongo} para la inserción en MongoDB. Cada fila del CSV se convierte en un archivo JSON en MongoDB, cada columna es un campo del documento, y cada archivo CSV completo acaba siendo una colección de documentos. El procesamiento se hizo por chuncks para evitar el desbordamiento de memoria, que fue un problema recurrente debido a la cantidad masiva de datos.
+Los datos, tal y como se han recibido, se estructuran módulos o ``carpetas", cada uno compuesto por diferentes tablas o ``archivos" que recogen distintos aspectos de la estancia hospitalaria del paciente. A continuación se resumen los dos módulos que se utilizan en el proyecto y sus tablas más relevantes:
+
+\begin{itemize}
+    \item \textbf{hosp}: Información hospitalaria general procedente del sistema de historia clínica electrónica. Incluye:
+    \begin{itemize}
+        \item \texttt{patients}: datos demográficos como sexo, edad y fecha de fallecimiento.
+        \item \texttt{admissions}: detalles de los ingresos hospitalarios.
+        \item \texttt{transfers}: movimientos de los pacientes entre distintas unidades.
+        \item \texttt{labevents} y \texttt{d\_labitems}: resultados de laboratorio y su descripción.
+        \item \texttt{microbiologyevents}: cultivos microbiológicos.
+        \item \texttt{prescriptions}, \texttt{pharmacy}, \texttt{emar}, \texttt{emar\_detail}: información sobre prescripciones y administración de medicamentos.
+        \item \texttt{diagnoses\_icd}, \texttt{d\_icd\_diagnoses}: diagnósticos realizados y codificados (ICD-9/10).
+        \item \texttt{procedures\_icd}, \texttt{d\_icd\_procedures}: procedimientos realizados y codificados (ICD-9/10).
+        \item \texttt{hcpcsevents}, \texttt{d\_hcpcs}, \texttt{drgcodes}: información de facturación y codificación hospitalaria.
+        \item \texttt{services}: servicios hospitalarios responsables del paciente.
+        \item \texttt{poe}, \texttt{poe\_detail}: órdenes médicas realizadas por los profesionales.
+        \item \texttt{provider}, \texttt{omr}: información sobre proveedores y registros médicos online.
+    \end{itemize}
+    \item \textbf{icu}: Datos recogidos específicamente durante la estancia en la UCI, provenientes del sistema clínico MetaVision. Incluye:
+    \begin{itemize}
+        \item \texttt{icustays}: información sobre las estancias en UCI.
+        \item \texttt{chartevents}: registros detallados de constantes, procedimientos, observaciones y eventos clínicos.
+        \item \texttt{inputevents}, \texttt{ingredientevents}: administración de fluidos, nutrición y medicamentos intravenosos.
+        \item \texttt{outputevents}: registros de salidas del paciente (orina, drenajes, etc.).
+        \item \texttt{procedureevents}: procedimientos realizados en UCI.
+        \item \texttt{datetimeevents}: eventos documentados con fecha y hora.
+        \item \texttt{d\_items}: diccionario de variables y conceptos registrados en los eventos.
+        \item \texttt{caregiver}: identificadores de los profesionales sanitarios en UCI.
+    \end{itemize}
+\end{itemize}
+
+
+
+En nuestro caso, utilizamos estos dos módulos pero hay más, como \textbf{ed} (emergency department), \textbf{cxr} (radiografías de tórax) y \textbf{note} (notas clínicas desidentificadas), que amplían la información disponible para cada paciente.
+
+Un aspecto fundamental para trabajar con MIMIC-IV es la correcta utilización de los campos identificadores que permiten relacionar la información entre tablas y reconstruir la trayectoria clínica de cada paciente:
+
+\begin{itemize}
+    \item \texttt{subject\_id}: identificador único de paciente, presente en prácticamente todas las tablas. Permite agrupar toda la información relativa a una misma persona a lo largo de distintas estancias y episodios.
+    \item \texttt{hadm\_id}: identificador único de cada ingreso hospitalario. Cada hospitalización de un paciente tiene uno distinto, lo que permite diferenciar varios ingresos de la misma persona y asociar eventos, pruebas y tratamientos concretos a cada episodio.
+    \item \texttt{stay\_id} (en ICU): identifica de forma única cada estancia en la UCI, permitiendo enlazar los eventos críticos de cuidados intensivos.
+    \item Otros identificadores secundarios: \texttt{specimen\_id} (muestras de laboratorio), \texttt{pharmacy\_id}, \texttt{order\_provider\_id} (profesional que ordena una prueba o medicación), \texttt{itemid} (tipo de medición o concepto registrado), entre otros.
+\end{itemize}
+
+Toda esta estructura modular nos permite, a nivel de paciente, reconstruir de forma detallada la trayectoria clínica, desde su ingreso hasta el alta, pasando por episodios críticos, pruebas, tratamientos y evolución. A nivel global, las posibilidades son enormes, para calcular estadísticas, visualizaciones, y todo tipo de agregaciones de las que se pueda extraer conocimiento. Para más detalles sobre los datos, puede consultarse la documentación oficial de MIMIC-IV \cite{MIMICIV_docs}.
+
+
+% --------------------
+\subsubsection{El proceso de migración}
+
+Este se realizó mediante scripts de Python utilizando la librería \texttt{pandas} para la lectura de archivos CSV y \texttt{pymongo} para la inserción en MongoDB. Cada fila del CSV se convierte en un archivo JSON en MongoDB, donde cada columna es un campo del documento, y cada archivo CSV completo acaba siendo una colección de documentos. El procesamiento se hizo por chuncks para evitar el desbordamiento de memoria, que fue un problema recurrente debido a la cantidad masiva de datos.
 
 
 Tras la importación, resultaron las siguientes colecciones:
 
+@todo: mostrar captura de todas las colecciones de mongo express
 
+@todo: quitar entonces la captura q ya hay de mongo express, y quizas poner otra de portainer? 
 
+@todo: mostrar stats de la bd, tanto demo como full
 
-Para el despliegue de MongoDB se utilizan dos contenedores Docker, en distintos puertos, uno para la versión demo del conjunto de datos, y otro para la versión completa, facilitando la realización de pruebas. Como apoyo al desarrollo, y también en forma de contenedores, se despliegan las herramientas de interfaz gráfica: Portainer para Docker\cite{portainer_ce} y Mongo Express para las bases de datos\cite{mongo_express}. 
+@todo: hablar de los indices, lo que son, pq son importantes y necesarios en nuestro caso
+
+@todo: en que punto voy a hablar de las colecciones nuevas que he añadido yo? 
+
+@todo:
+
+@todo:
+
+Para el despliegue de MongoDB se utilizan dos contenedores Docker, en distintos puertos, uno para la versión completa del conjunto de datos, y otro para la versión demo \cite{MIMICIV_Demo}, que es un subset de 100 pacientes, de acceso libre, facilitando así la realización de pruebas sin tener que lidiar con los cientos de millones de datos de la versión completa. Como apoyo al desarrollo, y también en forma de contenedores, se despliegan las herramientas de interfaz gráfica: Portainer para Docker\cite{portainer_ce} y Mongo Express para las bases de datos\cite{mongo_express}. 
 
 \begin{figure}[H]
   \centering
@@ -123,6 +195,8 @@ El frontend está desarrollado utilizando Next.js 15 y TypeScript. Se aloja la w
 
 @todo: hablar de la clasificación de los datos en categorías: demográficos y admisiones, cuidados intensivos, laboratorio y medicamentos, diagnósticos y procedimientos, y flujos hospitalarios.
 
+@todo: hablar de CI/CD con github
+
 \subsection{Arquitectura de Componentes}
 
 La estructura del frontend sigue las convenciones de Next.js con el nuevo App Router, organizando el código en:
@@ -144,8 +218,6 @@ Se ha implementado una estrategia progresiva utilizando múltiples librerías se
 \item \textbf{Observable Plot:} Para gráficos estándar como distribuciones de edad y estadísticas básicas, aprovechando su API declarativa y soluciones preestablecidas.
 \item \textbf{D3.js:} Para visualizaciones complejas que requieren control granular sobre el renderizado y la interactividad.
 \end{itemize}
-
-(...esto habra que revisarlo y cambiarlo cuando esten hechos ya todos los graficos acabados....)
 
 Los componentes de visualización están diseñados como elementos autónomos que consumen datos de la API y manejan sus propios estados de carga y error. Esta aproximación facilita la reutilización y el testing individual de cada visualización.
 
