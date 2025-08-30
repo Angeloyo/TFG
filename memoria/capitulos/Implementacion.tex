@@ -1,6 +1,6 @@
 \chapter{Implementación}
 
-En este capítulo se detalla la implementación de la plataforma desarrollada, describiendo las decisiones técnicas, herramientas y metodologías empleadas para materializar los objetivos planteados. La arquitectura del sistema se fundamenta en la separación clara entre el backend, responsable del procesamiento de datos y la lógica principal de la aplicación, y el frontend, encargado de la presentación e interacción con el usuario. Esta aproximación modular facilita el mantenimiento, escalabilidad y futuras extensiones del sistema.
+En este capítulo se detalla la implementación de la plataforma desarrollada, describiendo las decisiones técnicas, herramientas y metodologías empleadas para materializar los objetivos planteados. La arquitectura del sistema se fundamenta en la separación clara entre el backend, responsable del procesamiento de datos y la lógica principal de la aplicación, y el frontend, encargado de la presentación e interacción con el usuario. Esta aproximación modular facilita el mantenimiento, escalabilidad y futuras extensiones del sistema. 
 
 \begin{figure}[H]
   \centering
@@ -180,6 +180,7 @@ Utilizamos Uvicorn como servidor ASGI (Asynchronous Server Gateway Interface) qu
 
 (...poner imagen esquemita de los archivos orden y tal?)
 
+(...explicar los endpoints implementados?)
 
 \subsection{Inteligencia Artificial}
 
@@ -234,15 +235,33 @@ El servidor MCP se integra con el sistema principal montándose en el endpoint \
 
 (... hablar sobre tema legal de proteccion de datos... todaviia no se si se puede...)
 
+\subsection{Despliegue}
+
+%hablar de el servidor por algun lado? specs de la vm, hablar de proxmox, del SO de la maquina, yoese?
+
+Una vez que tanto la base de datos como la API funcionaban correctamente en el entorno local, era necesario desplegarlos para permitir el acceso público desde el frontend. Para esta tarea se utilizó Cloudflare Tunnels \cite{cloudflaretunnels}, que permite exponer servicios locales a Internet sin abrir puertos en el firewall ni configurar port forwarding. Cloudflare \cite{cloudflare} es una empresa que actúa como intermediario proporcionando servicios de CDN, DNS y seguridad web entre los usuarios finales y los servidores.
+
+El despliegue se realizó mediante un contenedor Docker adicional que ejecuta el cliente \texttt{cloudflared}, estableciendo una conexión cifrada entre el servidor local y la infraestructura de Cloudflare. Esta implementación permite que la API sea accesible públicamente a través de un dominio o subdominio de nuestra elección, en nuestro caso \texttt{https://tfg-api.angeloyo.com}, proporcionando automáticamente certificados SSL/TLS, protección DDoS y optimizaciones de red.
+
+Las principales ventajas de esta aproximación son su simplicidad y que mantiene el servidor completamente privado, ofreciendo una URL HTTPS estable consumible desde cualquier ubicación. Sin embargo, esta solución, aunque perfecta para el contexto de este TFG, no sería adecuada para entornos de producción profesionales donde se requerirían arquitecturas más robustas con balanceadores de carga, alta disponibilidad y redundancia geográfica.  
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{imagenes/cloudflared.png}
+  \caption{Esquema del funcionamiento de Cloudflare Tunnels \cite{cloudflaretunnels}.}
+  \label{fig:cloudflared}
+\end{figure}
+
 
 \newpage
 \section{Frontend}
 
+%\subsection{Tecnologías}
+
 El frontend está desarrollado utilizando Next.js 15 y TypeScript. Se aloja la web en Vercel por su extrema facilidad de uso, plan gratuito, auto-deploy desde GitHub, gran optimización y CDN global. La arquitectura se basa en componentes reutilizables y páginas especializadas que consumen la API del backend.
 
-@todo: hablar de la clasificación de los datos en categorías: demográficos y admisiones, cuidados intensivos, laboratorio y medicamentos, diagnósticos y procedimientos, y flujos hospitalarios.
 
-@todo: hablar de CI/CD con github
 
 \subsection{Arquitectura de Componentes}
 
@@ -268,7 +287,26 @@ Se ha implementado una estrategia progresiva utilizando múltiples librerías se
 
 Los componentes de visualización están diseñados como elementos autónomos que consumen datos de la API y manejan sus propios estados de carga y error. Esta aproximación facilita la reutilización y el testing individual de cada visualización.
 
-Estos son los gráficos que se han implementado:
+
+\subsection{Páginas implementadas}
+
+A continuación se detallan todas las páginas del Frontend que se han implementado, 
+
+\subsubsection{Página principal}
+
+\subsubsection{Página del dashboard}
+
+@todo: hablar de la clasificación de los datos en categorías: demográficos y admisiones, cuidados intensivos, laboratorio y medicamentos, diagnósticos y procedimientos, y flujos hospitalarios.
+
+\subsubsection{Página del chat}
+
+\subsubsection{Página de búsqueda de pacientes}
+
+\subsubsection{Página del paciente individual}
+
+\subsubsection{}
+
+
 
 
 
@@ -317,3 +355,19 @@ Estos son los gráficos que se han implementado:
 @todo: hablar de cada grafico la info que aporta?
 
 @todo: explicar como seria el proceso de agregar un grafico nuevo?
+
+\subsection{Despliegue}
+
+El frontend se ha desplegado en la plataforma Vercel
+
+@todo: que es vercel, blabla, plan gratuito, blabla
+
+Para el frontend se ha implementado un pipeline de CI/CD (Continuous Integration/Continuous Deployment) utilizando GitHub Actions y Vercel. CI/CD es una metodología de desarrollo que automatiza la integración, testing y despliegue de código, permitiendo entregar actualizaciones de software de forma rápida, segura y consistente. Cada vez que se realiza un push al repositorio principal en GitHub, Vercel detecta automáticamente los cambios y ejecuta el proceso de construcción y despliegue, aplicando las nuevas funcionalidades en tiempo real sin intervención manual. Esto garantiza que la versión en producción refleje siempre el estado actual del código, facilita la colaboración y reduce significativamente el riesgo de errores humanos durante el despliegue.
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{imagenes/cicd.png}
+  \caption{Esquema del depliegue con Vercel}
+  \label{fig:cicd}
+\end{figure}
