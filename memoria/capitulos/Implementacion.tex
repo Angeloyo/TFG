@@ -206,7 +206,7 @@ MCP opera bajo una arquitectura cliente-servidor compuesta por tres componentes 
 
 El flujo de comunicación se inicia cuando el modelo de IA necesita acceder a información externa. El anfitrión envía una solicitud al cliente MCP, quien la encamina al servidor correspondiente. Este último procesa la petición, accede a los datos requeridos y devuelve la información siguiendo el protocolo establecido. Esta arquitectura modular garantiza que los modelos de IA tengan acceso a contexto actualizado y relevante sin comprometer la seguridad o integridad de los datos subyacentes.
 
-En el contexto de esta plataforma, se ha desarrollado un servidor MCP especializado para interactuar con la base de datos MIMIC-IV almacenada en MongoDB. La implementación utiliza la librería \texttt{fastmcp} de Python y expone seis herramientas fundamentales:
+En el contexto de esta plataforma, se ha desarrollado un servidor MCP especializado para interactuar con la base de datos MIMIC-IV almacenada en MongoDB. Para ello, se utilizó FastMCP \cite{fastmcp}, un framework Python diseñado específicamente para simplificar la creación de servidores que implementan el Model Context Protocol. Con esta herramienta, nuestra tarea únicamente se reduce a definir las herramientas a las que podrán acceder los LLMs. En nuestro caso, se han implementado las siguientes seis herramientas que permiten la interacción con la base de datos:
 
 \begin{itemize}
 \item \texttt{get\_schema}: Obtiene la estructura de cualquier colección MongoDB, permitiendo al modelo entender los campos disponibles y sus tipos de datos.
@@ -216,6 +216,16 @@ En el contexto de esta plataforma, se ha desarrollado un servidor MCP especializ
 \item \texttt{list\_collections}: Enumera todas las colecciones disponibles en la base de datos.
 \item \texttt{get\_indexes}: Obtiene información sobre índices de rendimiento de las colecciones.
 \end{itemize}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.4\textwidth]{imagenes/fastmpc.png}
+  \caption{Logo del framework FastMCP.}
+  \label{fig:fastmcp}
+\end{figure}
+
+
 
 El servidor MCP se integra con el sistema principal montándose en el endpoint \texttt{/mcp} de la API principal, mientras que el cliente de chat utiliza OpenAI Response API configurado con herramientas MCP que apuntan al servidor local. Esta arquitectura permite que el modelo GPT-4.1 acceda directamente a los datos clínicos de MIMIC-IV de forma estructurada y segura.
 
@@ -237,9 +247,23 @@ El servidor MCP se integra con el sistema principal montándose en el endpoint \
 
 \subsection{Despliegue}
 
-%hablar de el servidor por algun lado? specs de la vm, hablar de proxmox, del SO de la maquina, yoese?
+Para la implementación del backend, era necesario considerar los importantes requisitos de hardware que impone el conjunto de datos MIMIC-IV. Específicamente, se requería almacenamiento considerable para albergar los múltiples gigabytes de información clínica, así como múltiples núcleos de procesamiento para gestionar eficientemente las consultas paralelas a la base de datos y las peticiones simultáneas de la API.
 
-Una vez que tanto la base de datos como la API funcionaban correctamente en el entorno local, era necesario desplegarlos para permitir el acceso público desde el frontend. Para esta tarea se utilizó Cloudflare Tunnels \cite{cloudflaretunnels}, que permite exponer servicios locales a Internet sin abrir puertos en el firewall ni configurar port forwarding. Cloudflare \cite{cloudflare} es una empresa que actúa como intermediario proporcionando servicios de CDN, DNS y seguridad web entre los usuarios finales y los servidores.
+En lugar de alquilar un VPS (Virtual Private Server) con estas especificaciones técnicas, lo que representaría un coste económico significativo para un proyecto académico, se optó por utilizar un servidor personal disponible. Este servidor ejecuta Proxmox VE \cite{proxmox}, un hipervisor de código abierto basado en Debian que combina virtualización de máquinas (KVM) y contenedores (LXC), proporcionando una plataforma completa para la gestión de infraestructura virtualizada.
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{imagenes/proxmox2.png}
+  \caption{Captura de pantalla de la interfaz de Proxmox.}
+  \label{fig:proxmox2}
+\end{figure}
+
+
+
+Se creó una máquina virtual con Ubuntu 24.04 Desktop como sistema operativo guest. Los recursos asignados a esta máquina virtual se fueron incrementando iterativamente según las necesidades observadas durante las pruebas de carga y la importación de datos. La configuración final establecida fue de 10 núcleos de CPU, 26 GB de memoria RAM y 128 GB de almacenamiento SSD, especificaciones que proporcionaron el rendimiento adecuado para gestionar tanto la base de datos MongoDB como la API.
+
+Una vez que tanto la base de datos como la API funcionaban correctamente en el entorno local, era necesario desplegarlos para permitir el acceso público desde el frontend. Para esta tarea se utilizó Cloudflare Tunnels \cite{cloudflaretunnels}, que permite exponer servicios locales a Internet sin abrir puertos en el firewall ni configurar redirección de puertos. Cloudflare \cite{cloudflare} es una empresa que actúa como intermediario proporcionando servicios de CDN, DNS y seguridad web entre los usuarios finales y los servidores.
 
 El despliegue se realizó mediante un contenedor Docker adicional que ejecuta el cliente \texttt{cloudflared}, estableciendo una conexión cifrada entre el servidor local y la infraestructura de Cloudflare. Esta implementación permite que la API sea accesible públicamente a través de un dominio o subdominio de nuestra elección, en nuestro caso \texttt{https://tfg-api.angeloyo.com}, proporcionando automáticamente certificados SSL/TLS, protección DDoS y optimizaciones de red.
 
@@ -368,6 +392,6 @@ Para el frontend se ha implementado un pipeline de CI/CD (Continuous Integration
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{imagenes/cicd.png}
-  \caption{Esquema del depliegue con Vercel}
+  \caption{Esquema del depliegue con Vercel \cite{cicdfoto}.}
   \label{fig:cicd}
 \end{figure}
