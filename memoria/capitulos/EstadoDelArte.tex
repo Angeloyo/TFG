@@ -1,6 +1,6 @@
 \chapter{Estado del arte}
 
-En este capítulo se analizan los fundamentos teóricos y las tecnologías existentes que conforman la base de este proyecto. Se revisan las principales bases de datos clínicas abiertas, las arquitecturas de software para la gestión de datos sanitarios, las herramientas de visualización interactiva y las aplicaciones de la Inteligencia Artificial en el ámbito clínico.
+Este capítulo ofrece una visión actualizada de los recursos, tecnologías y enfoques más relevantes para la gestión y análisis de datos clínicos. Se abordan las principales bases de datos abiertas, los modelos de almacenamiento y consulta, las arquitecturas de software más empleadas, las herramientas de visualización y el impacto de la Inteligencia Artificial en el ámbito sanitario, situando el proyecto dentro del contexto de la innovación digital en salud.
 
 %\section{El Movimiento hacia la Ciencia Abierta en la Investigación Médica}
 \section{Ciencia abierta y bases de datos clínicas}
@@ -29,7 +29,7 @@ Desde 1999 PhysioNet \cite{PhysioNet_paper} estableció un marco seguro y reprod
 \end{figure}
 
 \newpage
-En conjunto, el panorama de datos clínicos abiertos ofrece múltiples alternativas, pero MIMIC-IV destaca como la más idónea para este trabajo: combina un gran volumen de datos reciente, buena documentación, y módulos complementarios. Sobre esta base, el proyecto diseñará una plataforma que haga de este conjunto de datos una fuente accesible de conocimiento, alineada con los principios de ciencia abierta que han guiado todo este repaso bibliográfico.
+En conjunto, el panorama de datos clínicos abiertos ofrece múltiples alternativas, pero MIMIC-IV destaca como la más idónea para este trabajo: combina un gran volumen de datos reciente, buena documentación, y módulos complementarios. Sobre esta base, el proyecto diseñará una plataforma que haga de este conjunto de datos una fuente accesible de conocimiento, alineada con los principios de ciencia abierta.
 
 
 %\section{Tecnologías para la Gestión y Almacenamiento de Datos Sanitarios}
@@ -40,7 +40,15 @@ En conjunto, el panorama de datos clínicos abiertos ofrece múltiples alternati
 
 En el plano tecnológico, la forma de almacenar y consultar la información marca las posibilidades reales de análisis. De forma general, los sistemas de gestión de bases de datos se dividen en dos grandes familias: relacionales y no relacionales. Las del primer grupo organizan la información en tablas de filas y columnas conectadas por claves y se consultan con SQL, siendo las más usadas MySQL, PostgreSQL, Oracle y SQL Server.  Las no relacionales, llamadas NoSQL, almacenan los datos como documentos, pares clave-valor, columnas o grafos y permiten esquemas flexibles y escalado horizontal; las más populares son MongoDB y Couchbase en la categoría de documentos, Cassandra en column-family, Redis en clave-valor y Neo4j en grafos \cite{DBEngines2025}.
 
-En el ámbito sanitario la mayoría de los sistemas de historia clínica electrónica se ha construido sobre gestores relacionales porque los registros se modelan de forma natural en tablas normalizadas y el lenguaje SQL facilita auditoría y trazabilidad.  Sin embargo, los hospitales también generan notas de texto libre, señales continuas, imágenes y estructuras jerárquicas como los recursos FHIR en JSON; ello ha impulsado el uso de bases documentales y de grafos, que aceptan datos heterogéneos y simplifican la ingesta sin migraciones de esquema cada vez que aparece un nuevo campo \cite{GAMAL2021103670,MongoFHIR}.
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.75\textwidth]{imagenes/sqlvsnosql.jpg}}
+    %\includegraphics[width=0.4\textwidth]{imagenes/physionet-logo.png}
+    \caption{SQL vs NoSQL \cite{sqlvsnosqlfoto}.}
+\end{figure}
+
+
+En el ámbito sanitario la mayoría de los sistemas de historia clínica electrónica se ha construido sobre gestores relacionales porque los registros se modelan de forma natural en tablas normalizadas y el lenguaje SQL facilita auditoría y trazabilidad.  Sin embargo, los hospitales también generan notas de texto libre, señales continuas, imágenes y estructuras jerárquicas; ello ha impulsado el uso de bases documentales y de grafos, que aceptan datos heterogéneos y simplifican la ingesta sin migraciones de esquema cada vez que aparece un nuevo campo \cite{GAMAL2021103670,MongoFHIR}.
 
 A pesar de que MIMIC-IV se distribuye en un esquema relacional, para este proyecto cargaremos el conjunto en MongoDB. Este modelo documental nos permite agrupar los datos que se deseen en un único documento anidado, elimina la necesidad de combinar una veintena de tablas con uniones complejas y responde con menor latencia a las búsquedas interactivas que planteará el usuario desde la interfaz web.  Además, nos ofrece flexibilidad y escalabilidad si en el futuro se desea incorporar señales o imágenes, de modo que se adapta mejor a la naturaleza exploratoria y multimodal de nuestra aplicación.
 
@@ -49,6 +57,15 @@ A pesar de que MIMIC-IV se distribuye en un esquema relacional, para este proyec
 \section{Arquitecturas de Software y  Stack Web}
 
 La evolución del desarrollo de software ha experimentado una transformación radical desde las aplicaciones de escritorio tradicionales hacia ecosistemas web distribuidos. En los años 90, la Web se caracterizaba por páginas estáticas servidas directamente desde servidores, pero la creciente demanda de interactividad y funcionalidad dinámica impulsó el desarrollo de tecnologías como CGI, PHP y posteriormente frameworks más sofisticados \cite{Ritesh2023_WebEvolution}. Esta evolución culminó en las aplicaciones web contemporáneas, que se fundamentan en la arquitectura cliente-servidor, donde el frontend ejecutado en el navegador del usuario se comunica con un backend que procesa la lógica y gestiona el acceso a los datos \cite{Nyabuto2024_ClientServer}. Esta separación de responsabilidades permite que cada componente evolucione independientemente, facilita el mantenimiento del código y posibilita la escalabilidad según las necesidades específicas de cada capa. En el contexto de aplicaciones de análisis de datos como la que nos ocupa, esta arquitectura resulta especialmente ventajosa al permitir que el procesamiento computacionalmente intensivo se realice en el servidor mientras el cliente se centra en la presentación interactiva de los resultados.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\includegraphics[width=0.75\textwidth]{imagenes/Cliente-Servidor.png}}
+    %\includegraphics[width=0.4\textwidth]{imagenes/physionet-logo.png}
+    \caption{Diagrama cliente-servidor \cite{clienteservidorfoto}.}
+\end{figure}
+
+
 
 En cuanto a las tecnologías de servidor, existe un amplio abanico de alternativas consolidadas, cada una con fortalezas específicas según el contexto de aplicación. Node.js con frameworks como Express o Fastify permite utilizar JavaScript en el servidor, facilitando el desarrollo full-stack y ofreciendo excelente rendimiento para aplicaciones I/O intensivas. Python, con opciones como Django, Flask y FastAPI, destaca en proyectos que requieren análisis de datos o integración con librerías científicas \cite{Castro2023_PythonDataScience}. Java con Spring Boot sigue siendo una opción robusta para aplicaciones empresariales de gran escala, mientras que lenguajes como Go y Rust están ganando adopción por su rendimiento superior en sistemas distribuidos. En el contexto de este proyecto, donde el procesamiento de datos biomédicos y la futura integración de modelos de inteligencia artificial son requisitos centrales, se ha optado por FastAPI con Python, aprovechando tanto su ecosistema maduro para análisis de datos como su capacidad para generar APIs modernas y eficientes.
 
@@ -67,10 +84,18 @@ Por otro lado, las tecnologías frontend han experimentado una evolución signif
 %\section{Herramientas y Técnicas de Visualización Interactiva de Datos}
 \section{Herramientas de Visualización Interactiva de Datos}
 
-Para la visualización de datos en aplicaciones web existen principalmente dos tipos de herramientas: plataformas de business intelligence (Tableau, Power BI, Metabase) y librerías de programación para desarrolladores. Entre las librerías más utilizadas destacan D3.js, Chart.js, Plotly.js, ECharts, Recharts, Nivo, Vega-Lite y Observable Plot \cite{Monterail2024_JSViz}. En el contexto de este proyecto, se ha optado por Observable Plot para gráficos sencillos debido a su API intuitiva y soluciones preestablecidas que aceleran el desarrollo, complementándolo con Nivo para visualizaciones más complejas que Observable Plot pero sin necesitar recurrir a D3.js, y reservando D3.js para visualizaciones altamente personalizadas que requieren máximo control granular, manteniendo así un enfoque progresivo en complejidad que maximiza tanto la rapidez de implementación como la flexibilidad de diseño.
+Para la visualización de datos en aplicaciones web existen principalmente dos tipos de herramientas: plataformas de business intelligence (Tableau, Power BI, Metabase) y librerías de programación para desarrolladores. Las plataformas de business intelligence permiten a usuarios no técnicos explorar y analizar datos mediante interfaces gráficas intuitivas, facilitando la creación de dashboards interactivos y la generación de informes sin necesidad de programar. Sin embargo, estas plataformas suelen estar más orientadas al análisis empresarial general y pueden presentar limitaciones cuando se requiere una personalización avanzada o la integración directa con aplicaciones web personalizadas.
 
+Por otro lado, las librerías de programación ofrecen a los desarrolladores un control total sobre la visualización y permiten crear gráficos completamente adaptados a las necesidades de cada proyecto. Entre las librerías más utilizadas para Javascript destacan D3, Chart.js, Plotly.js y ECharts, por nombrar algunas, aunque el ecosistema es muy amplio y en constante evolución \cite{Monterail2024_JSViz}. Estas herramientas permiten desde la creación de gráficos básicos hasta visualizaciones interactivas complejas, integrándose perfectamente en aplicaciones web modernas y proporcionando una experiencia de usuario más dinámica y personalizada.
 
+\newpage
+En el contexto de este proyecto, se ha optado por usar dos librerías distintas, dependiendo de la complejidad del gráfico, pero que son desarrolladas por la misma compañía denominada Observable \cite{observable}. Se utiliza D3 \cite{d3} para visualizaciones altamente personalizadas que requieren máximo control granular sobre cada elemento gráfico, lo que resulta especialmente útil para representar datos clínicos complejos o relaciones no convencionales. Por otro lado, se reserva Plot \cite{observableplot} para las visualizaciones más sencillas y habituales, aprovechando sus soluciones preestablecidas que aceleran el desarrollo y reducen la carga de trabajo en la implementación. Esta combinación permite mantener un enfoque progresivo en complejidad, acelerando la rapidez de implementación y manteniendo una coherencia estética y técnica al permanecer dentro del mismo ecosistema de herramientas.
 
+\begin{figure}[H]
+    \centering    \fbox{\includegraphics[width=0.85\textwidth]{imagenes/d3.png}}
+    %\includegraphics[width=0.4\textwidth]{imagenes/physionet-logo.png}
+    \caption{Visualizaciones realizadas con D3 \cite{d3foto}.}
+\end{figure}
 
 
 
@@ -79,6 +104,7 @@ Para la visualización de datos en aplicaciones web existen principalmente dos t
 
 Los grandes modelos de lenguaje basados en Transformers han irrumpido en la práctica clínica porque ofrecen comprensión contextual y generación de texto con una fluidez cercana a la humana. A diferencia de los modelos supervisados tradicionales, los LLMs aprenden a partir de preentrenamiento masivo y pueden adaptarse con pocos ejemplos, rasgo que resulta valioso cuando los conjuntos de datos clínicos etiquetados son escasos. Este cambio de paradigma coincide con la disponibilidad de texto sanitario desidentificado, lo que ha catalizado su adopción en investigación biomédica.
 
+\newpage
 Después de la aparición de modelos generalistas como GPT-3 \cite{Brown2020GPT3} se publicaron variantes especializadas en biomedicina entrenadas sobre literatura científica y notas de pacientes. ClinicalBERT \cite{Boag2020_ClinicalBERT} y BioGPT \cite{Lee2020_BioBERT} demostraron que un preentrenamiento adicional en dominio mejora la extracción de entidades médicas y la clasificación de relaciones. Más recientemente, GatorTron \cite{Yang2022_GatorTron}, Med-PaLM 2 \cite{Singhal2023_MedPaLM2} y Llama-Med \cite{Xie2024_MeLLaMA} ampliaron el tamaño de parámetros y el repertorio de instrucciones clínicas, acercándose al rendimiento de especialistas humanos en tareas de respuesta a preguntas complejas.
 
 La integración de estos modelos en sistemas hospitalarios adopta varias estrategias. La más extendida es la generación aumentada por recuperación, en la que el LLM consulta primero una base indexada de guías clínicas o registros electrónicos y después compone la respuesta citando la información recuperada \cite{RAGSurvey2023}. Otra línea es el ajuste fino con instrucciones específicas que enseñan al modelo a traducir preguntas en lenguaje natural a consultas estructuradas sobre bases de datos; ChatEHR es un ejemplo que opera sobre historiales electrónicos \cite{Stanford2025_ChatEHR}. El Model Context Protocol (MCP) propone una capa intermedia para que el modelo invoque herramientas, agentes o bases de datos de forma segura, lo que facilita operaciones más complejas que la simple generación de texto \cite{AnthropicMCP2024}.
@@ -88,7 +114,7 @@ El éxito de estas técnicas depende de corpus clínicos abiertos que permitan l
 A pesar de su potencial, los LLMs plantean riesgos significativos. Pueden generar afirmaciones verosímiles pero erróneas, lo que compromete la seguridad clínica; además, arrastran sesgos demográficos si los datos de entrenamiento son incompletos y pueden filtrar información protegida si no se controla el \textit{fine-tuning}. La comunidad trabaja en métricas de evaluación específicas y en detectores de alucinaciones, pero todavía no existe un consenso regulatorio sobre su despliegue en entornos asistenciales \cite{Bommasani2022_FoundationModels}. Estos retos marcan la agenda de investigación actual y condicionan las directrices éticas para cualquier sistema que integre LLMs con datos reales de pacientes.
 
 
-
+\newpage
 \section{Aplicaciones existentes similares}\
 
 En el ámbito hospitalario existen numerosas soluciones comerciales consolidadas para la gestión y análisis de datos clínicos. Sistemas como Epic Systems integran módulos de visualización de indicadores, generación de informes y cuadros de mando en tiempo real, con funcionalidades que incluyen predicción de riesgos, alertas clínicas y exploración de cohortes directamente sobre la historia clínica electrónica \cite{Epic}. Este tipo de plataformas están diseñadas para su uso en entornos de producción con pacientes reales y representan el estándar en hospitales de gran escala, aunque se trata de soluciones cerradas y de acceso restringido al entorno clínico que las contrata.

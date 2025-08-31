@@ -181,13 +181,59 @@ La API que obtiene, procesa y sirve los datos está construida sobre FastAPI \ci
 \item \textbf{Capa de aplicación:} El archivo principal \texttt{main.py} configura la aplicación, middleware CORS y el enrutamiento.
 \end{itemize}
 
-Utilizamos Uvicorn como servidor ASGI (Asynchronous Server Gateway Interface) que escuchará las peticiones a los endpoints. 
+Utilizamos Uvicorn como servidor ASGI (Asynchronous Server Gateway Interface) que escuchará las peticiones a los endpoints.
 
-(...completar con las demas cosas que se usen para la IA)
+\subsubsection{ASGI y Uvicorn}
 
-(...poner imagen esquemita de los archivos orden y tal?)
+ASGI (Asynchronous Server Gateway Interface) representa la evolución natural de WSGI hacia aplicaciones Python asíncronas. A diferencia de WSGI, que maneja solicitudes de forma síncrona una por una, ASGI permite el procesamiento concurrente de múltiples solicitudes en un solo hilo mediante programación basada en eventos. Esta arquitectura resulta fundamental para aplicaciones web de alto rendimiento que requieren comunicación en tiempo real, como las funcionalidades de chat implementadas en esta plataforma.
 
-(...explicar los endpoints implementados?)
+La especificación ASGI define tres componentes principales en cada aplicación: el \textit{scope} (diccionario con información de la conexión y protocolo), \textit{receive} (callable asíncrono que recibe eventos) y \textit{send} (callable asíncrono que envía respuestas). Esta estructura permite soportar múltiples protocolos como HTTP, WebSocket y HTTP/2 de manera unificada.
+
+Uvicorn es el servidor ASGI seleccionado para ejecutar la aplicación FastAPI. Sus principales ventajas incluyen alto rendimiento (construido sobre uvloop y httptools), eficiencia de recursos (aproximadamente 20MB de memoria base por worker) y capacidad de manejar gran número de conexiones concurrentes. El comando utilizado para ejecutar el servidor es:
+
+\begin{verbatim}
+python -m uvicorn app.main:app --reload --port 8088 --host 0.0.0.0
+\end{verbatim}
+
+\subsubsection{Endpoints implementados}
+
+La API está estructurada modularmente mediante routers de FastAPI, organizados por funcionalidad:
+
+\textbf{Endpoints de pacientes (\texttt{/api/patients}):}
+\begin{itemize}
+\item \texttt{GET /api/patients/\{subject\_id\}}: Obtiene información completa de un paciente específico mediante múltiples agregaciones MongoDB que incluyen datos demográficos, historial de ingresos, diagnósticos con descripciones ICD, procedimientos y eventos de laboratorio agrupados por ingreso.
+\item \texttt{HEAD /api/patients/\{subject\_id\}/exists}: Verificación rápida de existencia de paciente (HTTP 200/404).
+\item \texttt{GET /api/patients/}: Lista los primeros pacientes disponibles del dataset demo.
+\end{itemize}
+
+\textbf{Endpoints del dashboard (\texttt{/api/dashboard}):}
+\begin{itemize}
+\item \texttt{GET /api/dashboard/stats}: Obtiene estadísticas categorizadas pre-calculadas desde la colección \texttt{dashboard\_stats\_categorized} para máximo rendimiento, organizadas en cinco categorías: Demographics \& Admissions, Diagnoses \& Procedures, ICU Care, Lab \& Medications, y Hospital Flows.
+\end{itemize}
+
+\textbf{Endpoints de gráficos (\texttt{/api/charts}):}
+\begin{itemize}
+\item \texttt{GET /api/charts/admission-heatmap}: Genera datos para mapas de calor de ingresos hospitalarios con opciones de filtrado y vistas horarias/mensuales.
+\item \texttt{GET /api/charts/age-distribution}: Distribución de pacientes por edad y género para pirámides poblacionales.
+\item \texttt{GET /api/charts/icu-stay-duration}: Duración promedio de estancias en UCI por unidad.
+\item \texttt{GET /api/charts/diagnosis-icicle}: Datos para diagramas icicle de diagnósticos categorizados.
+\item \texttt{GET /api/charts/medications-sunburst}: Visualización sunburst de medicamentos prescritos por vía.
+\item \texttt{GET /api/charts/hospital-transfers-chord}: Datos para diagramas chord de transferencias hospitalarias.
+\end{itemize}
+
+\textbf{Endpoints de inteligencia artificial:}
+\begin{itemize}
+\item \texttt{POST /chat/}: Interfaz de chat con streaming response que integra OpenAI GPT-5 con herramientas MCP para consultas en lenguaje natural sobre datos MIMIC-IV.
+\item \texttt{POST /api/summary/patient}: Genera resúmenes clínicos automatizados utilizando OpenAI GPT-4.1.
+\end{itemize}
+
+\textbf{Endpoints de monitoreo:}
+\begin{itemize}
+\item \texttt{GET /health}: Verificación de estado del servidor.
+\item \texttt{GET /}: Endpoint raíz con información básica de la API.
+\end{itemize}
+
+La API incluye middleware CORS configurado para permitir peticiones desde cualquier origen durante el desarrollo, y implementa una función \texttt{clean\_data()} que elimina valores NaN, null e infinitos de las respuestas, garantizando datos válidos para el frontend.
 
 \subsection{Inteligencia Artificial}
 
@@ -460,7 +506,7 @@ Este gráfico, un Horizontal Bar Chart \cite{hbarchart} de Observable Plot, mues
 %-----------------
 \subsubsection{Página de gráfico: medicamentos más prescritos por vía}
 
-Esta visualización es más compleja que las anteriores, por lo que se hace uso de la librería D3. Se trata de un gráfico Sunburst interactivo \cite{sunburst}, que permite hacer zoom para moverse por la información. Se muestran los medicamentos más prescritos por vía de administración. Para este gráfico, debido a la enorme cantidad de documentos (más de 20 millones) en la colección donde se aloja esta información \texttt{hosp\_prescriptions}, en lugar de obtener los datos en cada llamada al endpoint del backend, se ha realizado una colección nueva mediante un script Python, que contiene los datos ya pre-agregados. De nuevo, debido a la cantidad masiva de datos, se implementan unos filtros de umbral mínimo y máximo para facilitar la visualización.
+Esta visualización es más compleja que las anteriores, por lo que se hace uso de la librería D3. Se trata de un gráfico Sunburst interactivo \cite{sunburst}, que permite hacer zoom para moverse por la información. Se muestran los medicamentos más prescritos por vía de administración. Para este gráfico, debido a la enorme cantidad de documentos (más de 20 millones) en la colección donde se aloja esta información \texttt{hosp\_prescriptions}, en lugar de obtener los datos en cada llamada al endpoint del backend, se ha realizado una colección nueva mediante un script Python, que contiene los datos ya pre-agregados, consiguiendo así obtener los datos mucho más rápido. También se implementan unos filtros de umbral mínimo y máximo para facilitar la visualización.
 
 \begin{figure}[H]
   \centering
@@ -476,8 +522,9 @@ Esta visualización es más compleja que las anteriores, por lo que se hace uso 
 %-----------------
 \subsubsection{Página de gráfico: número de diagnósticos por categorías}
 
+En este caso se presenta de nuevo un gráfico interactivo realizado con D3, denominado Icicle \cite{icicle}. El gráfico muestra todos los diagnósticos, con la opción de aplicar un filtro por umbral mínimo, y están organizados jerárquicamente según la tabla \texttt{icd\_equivalencias}, mencionada previamente. Esto permite visualizar no solo los diagnósticos más frecuentes, sino también las categorías superiores que los agrupan, haciendo zoom para ver la información detallada cuando se necesite. 
 
-
+Para esta visualización también se necesitó implementar un script que realiza las agregaciones necesarias y las almacena en una colección de MongoDB nueva, debido a la imposibilidad de agregar todos los datos en cada petición, el tiempo de espera era demasiado alto.
 
 \begin{figure}[H]
   \centering
@@ -493,7 +540,7 @@ Esta visualización es más compleja que las anteriores, por lo que se hace uso 
 %-----------------
 \subsubsection{Página de gráficos: flujos hospitalarios entre unidades}
 
-
+Este gráfico, al igual que los dos anteriores, utiliza D3 y en este caso, se trata de un Directed Chord Diagram \cite{chord}. Para su implementación, se crea una nueva colección con los datos pre-agregados. El gráfico representa la información de \texttt{hosp\_transfers}, mostrando la cantidad de transferencias hospitalarias entre unidades. Al pasar el cursor sobre cada conexión, se ven la unidad de origen, la de destino, y el recuento de transferencias de ese tipo.
 
 
 \begin{figure}[H]
@@ -505,50 +552,23 @@ Esta visualización es más compleja que las anteriores, por lo que se hace uso 
 \end{figure}
 
 
-
-
-@todo: hablar de cada grafico la info que aporta?
-
-@todo: explicar como seria el proceso de agregar un grafico nuevo?
+%@todo: explicar como seria el proceso de agregar un grafico nuevo?
 
 \subsection{Despliegue}
 
-El frontend de la aplicación se ha desplegado utilizando la plataforma Vercel, una solución en la nube especializada en el despliegue de aplicaciones web moderna. LLa elección se fundamenta en varias ventajas clave para este proyecto:
+El frontend de la aplicación se ha desplegado públicamente utilizando la plataforma Vercel \cite{vercel}, una solución en la nube especializada en el despliegue de aplicaciones web modernas. 
 
-\begin{itemize}
-    \item \textbf{Integración nativa con Next.js}: Al ser Vercel la empresa creadora de Next.js, la plataforma ofrece soporte optimizado y características específicas para este framework, incluyendo optimización automática de bundles, Server-Side Rendering (SSR) y Static Site Generation (SSG).
-    
-    \item \textbf{Red de distribución global (CDN)}: Vercel distribuye automáticamente la aplicación a través de su red global de servidores edge, garantizando tiempos de carga mínimos desde cualquier ubicación geográfica.
-    
-    \item \textbf{Despliegues instantáneos}: El tiempo de despliegue es típicamente inferior a 30 segundos, permitiendo iteraciones rápidas durante el desarrollo.
-    
-    \item \textbf{Plan gratuito generoso}: Para proyectos académicos y de desarrollo, Vercel ofrece un tier gratuito que incluye 100GB de bandwidth mensual, despliegues ilimitados y dominio personalizado.
-\end{itemize}
+Esta elección responde a varias ventajas clave para el proyecto. Por un lado, Vercel ofrece una integración nativa con Next.js, ya que es la empresa creadora de este framework. Esto permite contar con soporte optimizado y características específicas, como la optimización automática de bundles, el Server-Side Rendering (SSR) y la Static Site Generation (SSG). Además, la plataforma distribuye la aplicación a través de su red global de servidores edge, lo que garantiza tiempos de carga mínimos desde cualquier ubicación geográfica. Otro aspecto relevante es la rapidez en los despliegues, que suelen completarse en menos de 30 segundos y facilitan iteraciones ágiles durante el desarrollo. Finalmente, Vercel dispone de un plan gratuito generoso, ideal para entornos académicos y de desarrollo, que incluye 100GB de ancho de banda mensual, despliegues ilimitados y la posibilidad de utilizar un dominio personalizado.
 
-\subsubsection{Implementación de CI/CD}
+El proceso de despliegue se gestiona de manera automática gracias a la integración por defecto entre Vercel y GitHub. Al importar el repositorio del proyecto Next.js, Vercel configura automáticamente un flujo de integración y entrega continua (CI/CD), sin necesidad de implementarlo manualmente. De este modo, cada vez que se realiza un push al repositorio principal, Vercel detecta los cambios y ejecuta los comandos de construcción de Next.js (\texttt{npm run build}), optimizando el código para producción. Durante este proceso, también se realizan las validaciones de TypeScript y ESLint configuradas en el proyecto. Una vez completada la construcción, la nueva versión se despliega de forma atómica, garantizando que no exista tiempo de inactividad, y se invalida automáticamente la caché de la CDN para asegurar que los usuarios reciban de inmediato la versión actualizada.
 
-Se ha implementado un pipeline de CI/CD (Continuous Integration/Continuous Deployment) que automatiza completamente el proceso de despliegue. CI/CD es una metodología de desarrollo que automatiza la integración, testing y despliegue de código, permitiendo entregar actualizaciones de software de forma rápida, segura y consistente.
-
-El flujo de trabajo implementado funciona de la siguiente manera:
-
-\begin{enumerate}
-    \item \textbf{Detección automática de cambios}: Cada vez que se realiza un push al repositorio principal en GitHub, Vercel detecta automáticamente los cambios mediante webhooks.
-    
-    \item \textbf{Proceso de construcción}: Vercel ejecuta automáticamente los comandos de build de Next.js (\texttt{npm run build}), optimizando el código para producción, incluyendo tree-shaking, minificación y code-splitting.
-    
-    \item \textbf{Validación y testing}: Durante el proceso de build, se ejecutan las validaciones de TypeScript y ESLint configuradas en el proyecto.
-    
-    \item \textbf{Despliegue atómico}: Una vez completada la construcción exitosamente, Vercel despliega la nueva versión de forma atómica, garantizando que no hay tiempo de inactividad.
-    
-    \item \textbf{Invalidación de caché}: Se invalida automáticamente la caché de CDN para asegurar que los usuarios reciban inmediatamente la nueva versión.
-\end{enumerate}
-
-Esta implementación garantiza que la versión en producción refleje siempre el estado actual del código en el repositorio principal, facilita la colaboración en el desarrollo y reduce significativamente el riesgo de errores humanos durante el despliegue. La aplicación frontend está accesible en producción a través de la URL \url{https://tfg.angeloyo.com}.
+Gracias a este sistema, la versión en producción refleja siempre el estado más reciente del código en el repositorio principal, lo que facilita la colaboración en el desarrollo y reduce significativamente el riesgo de errores humanos durante el despliegue. La aplicación frontend está accesible en producción a través de la URL \url{https://tfg.angeloyo.com}.
 
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{imagenes/cicd.png}
+  \fbox{\includegraphics[width=0.8\textwidth]{imagenes/cicd.png}}
+  %\includegraphics[width=0.8\textwidth]{imagenes/cicd.png}
   \caption{Esquema del depliegue con Vercel \cite{cicdfoto}.}
   \label{fig:cicd}
 \end{figure}
