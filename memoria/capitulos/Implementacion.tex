@@ -176,36 +176,22 @@ En resumen, con esta implementación, se ha logrado transformar exitosamente el 
 La API que obtiene, procesa y sirve los datos está construida sobre FastAPI \cite{fastapi}, un framework moderno que combina alto rendimiento con una sintaxis intuitiva y generación automática de documentación. Para separar responsabilidades, el código se estructura de la siguiente forma:
 
 \begin{itemize}
-\item \textbf{Capa de datos:} El módulo \texttt{db/mongo.py} encapsula la conexión a MongoDB y proporciona funciones de utilidad.
+\item \textbf{Capa de utilidades:} El módulo \texttt{utils/mongo.py} encapsula la conexión a MongoDB y proporciona funciones de utilidad, y \texttt{utils/mcp.py} contiene el código para el servidor MCP.
 \item \textbf{Capa de rutas:} Organizadas por funcionalidad en el directorio \texttt{routes/}, incluyen endpoints para pacientes, dashboard, gráficos y chat.
 \item \textbf{Capa de aplicación:} El archivo principal \texttt{main.py} configura la aplicación, middleware CORS y el enrutamiento.
 \end{itemize}
 
-Utilizamos Uvicorn como servidor ASGI (Asynchronous Server Gateway Interface) que escuchará las peticiones a los endpoints.
-
-\subsubsection{ASGI y Uvicorn}
-
-ASGI (Asynchronous Server Gateway Interface) representa la evolución natural de WSGI hacia aplicaciones Python asíncronas. A diferencia de WSGI, que maneja solicitudes de forma síncrona una por una, ASGI permite el procesamiento concurrente de múltiples solicitudes en un solo hilo mediante programación basada en eventos. Esta arquitectura resulta fundamental para aplicaciones web de alto rendimiento que requieren comunicación en tiempo real, como las funcionalidades de chat implementadas en esta plataforma.
-
-La especificación ASGI define tres componentes principales en cada aplicación: el \textit{scope} (diccionario con información de la conexión y protocolo), \textit{receive} (callable asíncrono que recibe eventos) y \textit{send} (callable asíncrono que envía respuestas). Esta estructura permite soportar múltiples protocolos como HTTP, WebSocket y HTTP/2 de manera unificada.
-
-Uvicorn es el servidor ASGI seleccionado para ejecutar la aplicación FastAPI. Sus principales ventajas incluyen alto rendimiento (construido sobre uvloop y httptools), eficiencia de recursos (aproximadamente 20MB de memoria base por worker) y capacidad de manejar gran número de conexiones concurrentes. El comando utilizado para ejecutar el servidor es:
-
-\begin{verbatim}
-python -m uvicorn app.main:app --reload --port 8088 --host 0.0.0.0
-\end{verbatim}
-
-\subsubsection{Endpoints implementados}
-
-La API está estructurada modularmente mediante routers de FastAPI, organizados por funcionalidad:
+Utilizamos Uvicorn \cite{uvicorn} como servidor que escuchará las peticiones a los endpoints. La API está estructurada modularmente mediante routers de FastAPI, organizados por funcionalidad:
 
 \textbf{Endpoints de pacientes (\texttt{/api/patients}):}
 \begin{itemize}
 \item \texttt{GET /api/patients/\{subject\_id\}}: Obtiene información completa de un paciente específico mediante múltiples agregaciones MongoDB que incluyen datos demográficos, historial de ingresos, diagnósticos con descripciones ICD, procedimientos y eventos de laboratorio agrupados por ingreso.
 \item \texttt{HEAD /api/patients/\{subject\_id\}/exists}: Verificación rápida de existencia de paciente (HTTP 200/404).
-\item \texttt{GET /api/patients/}: Lista los primeros pacientes disponibles del dataset demo.
+%\item \texttt{GET /api/patients/}: Lista los primeros pacientes disponibles del dataset demo.
 \end{itemize}
 
+
+\newpage
 \textbf{Endpoints del dashboard (\texttt{/api/dashboard}):}
 \begin{itemize}
 \item \texttt{GET /api/dashboard/stats}: Obtiene estadísticas categorizadas pre-calculadas desde la colección \texttt{dashboard\_stats\_categorized} para máximo rendimiento, organizadas en cinco categorías: Demographics \& Admissions, Diagnoses \& Procedures, ICU Care, Lab \& Medications, y Hospital Flows.
@@ -233,8 +219,7 @@ La API está estructurada modularmente mediante routers de FastAPI, organizados 
 \item \texttt{GET /}: Endpoint raíz con información básica de la API.
 \end{itemize}
 
-La API incluye middleware CORS configurado para permitir peticiones desde cualquier origen durante el desarrollo, y implementa una función \texttt{clean\_data()} que elimina valores NaN, null e infinitos de las respuestas, garantizando datos válidos para el frontend.
-
+\newpage
 \subsection{Inteligencia Artificial}
 
 La integración de inteligencia artificial en esta plataforma se fundamenta en la utilización de grandes modelos de lenguaje (LLMs) para facilitar la consulta y análisis de datos clínicos en lenguaje natural. Esta aproximación permite que usuarios sin conocimientos técnicos avanzados puedan extraer información valiosa de la base de datos MIMIC-IV mediante conversaciones naturales, eliminando la barrera técnica que tradicionalmente requería conocimientos de SQL o programación.
@@ -248,6 +233,14 @@ Una de las innovaciones técnicas más relevantes incorporadas en este proyecto 
 
 Tradicionalmente, la conexión entre modelos de IA y bases de datos requería el desarrollo de integraciones personalizadas para cada caso específico. Técnicas como RAG (Retrieval-Augmented Generation), aunque efectivas para enriquecer las respuestas de los modelos con información externa, demandaban implementaciones ad-hoc para cada fuente de datos. Esta aproximación resultaba en arquitecturas complejas, propensas a errores y difíciles de mantener. Cada nueva fuente de datos o herramienta externa requería desarrollo personalizado, generando fragmentación tecnológica y duplicación de esfuerzos. MCP aborda estos problemas proporcionando una interfaz universal que estandariza la comunicación entre sistemas de IA y recursos externos, incluyendo bases de datos, APIs, sistemas de archivos y herramientas especializadas.
 
+\begin{figure}[H]
+  \centering
+  \fbox{\includegraphics[width=1\textwidth]{imagenes/mcp1.jpg}}
+  %\includegraphics[width=0.6\textwidth]{imagenes/ej_admission.png}
+  \caption{Integración tradicional vs el enfoque MCP \cite{mcp1foto}.}
+  \label{fig:mcp1}
+\end{figure}
+
 
 MCP opera bajo una arquitectura cliente-servidor compuesta por tres componentes principales \cite{mcp_arch}:
 
@@ -257,7 +250,19 @@ MCP opera bajo una arquitectura cliente-servidor compuesta por tres componentes 
 \item \textbf{MCP Server:} Programas especializados que se conectan a fuentes de datos específicas y exponen funcionalidades a través del protocolo MCP estandarizado.
 \end{itemize}
 
+\begin{figure}[H]
+  \centering
+  \fbox{\includegraphics[width=1\textwidth]{imagenes/mcp2.png}}
+  %\includegraphics[width=0.6\textwidth]{imagenes/ej_admission.png}
+  \caption{Arquitectura MCP.}
+  \label{fig:mcp2}
+\end{figure}
+
 El flujo de comunicación se inicia cuando el modelo de IA necesita acceder a información externa. El anfitrión envía una solicitud al cliente MCP, quien la encamina al servidor correspondiente. Este último procesa la petición, accede a los datos requeridos y devuelve la información siguiendo el protocolo establecido. Esta arquitectura modular garantiza que los modelos de IA tengan acceso a contexto actualizado y relevante sin comprometer la seguridad o integridad de los datos subyacentes.
+
+
+
+
 
 En el contexto de esta plataforma, se ha desarrollado un servidor MCP especializado para interactuar con la base de datos MIMIC-IV almacenada en MongoDB. Para ello, se utilizó FastMCP \cite{fastmcp}, un framework Python diseñado específicamente para simplificar la creación de servidores que implementan el Model Context Protocol. Con esta herramienta, nuestra tarea únicamente se reduce a definir las herramientas a las que podrán acceder los LLMs. En nuestro caso, se han implementado las siguientes seis herramientas que permiten la interacción con la base de datos:
 
@@ -281,7 +286,7 @@ En el contexto de esta plataforma, se ha desarrollado un servidor MCP especializ
 
 
 
-El servidor MCP se integra con el sistema principal montándose en el endpoint \texttt{/mcp} de la API principal, mientras que el cliente de chat utiliza OpenAI Response API configurado con herramientas MCP que apuntan al servidor local. Esta arquitectura permite que el modelo GPT-4.1 acceda directamente a los datos clínicos de MIMIC-IV de forma estructurada y segura.
+El servidor MCP se integra con el sistema principal montándose en el endpoint \texttt{/mcp} de la API principal.
 
 %La adopción de MCP en esta plataforma aporta múltiples beneficios técnicos y funcionales:
 
@@ -297,7 +302,8 @@ El servidor MCP se integra con el sistema principal montándose en el endpoint \
 
 %La implementación de MCP representa así un paso hacia la madurez tecnológica en el campo de la integración de sistemas de IA con infraestructuras de datos complejas, posicionando este proyecto como un ejemplo práctico de las mejores prácticas emergentes en el desarrollo de aplicaciones sanitarias inteligentes.
 
-(... hablar sobre tema legal de proteccion de datos... todaviia no se si se puede...)
+%(... hablar sobre tema legal de proteccion de datos... todaviia no se si se puede...)
+
 
 \subsection{Despliegue}
 

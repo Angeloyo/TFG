@@ -16,33 +16,26 @@ A continuación se presenta una evaluación detallada del cumplimiento de los ob
 
 \textbf{OE5. Implementar funcionalidades con IA para consultas en lenguaje natural y resúmenes de pacientes (100\% completado).} Se integró GPT-4.1 mediante el protocolo MCP (Model Context Protocol), permitiendo consultas directas sobre la base de datos en lenguaje natural. Además, se implementó la generación automática de resúmenes de historiales clínicos. Esta funcionalidad, explicada en la Sección 3.1.2, representa una innovación técnica al utilizar uno de los estándares más recientes para la integración de LLMs con sistemas de datos.
 
-\textbf{OE6. Configurar el entorno de producción (100\% completado).} Se desplegó exitosamente la plataforma completa: el backend mediante Cloudflare Tunnels y el frontend en Vercel con CI/CD automatizado desde GitHub. La configuración, detallada en las secciones de despliegue, garantiza alta disponibilidad y actualizaciones automáticas.
+\textbf{OE6. Configurar el entorno de producción (100\% completado).} Se desplegó exitosamente la plataforma completa: el backend mediante Cloudflare Tunnels y el frontend en Vercel con CI/CD automatizado desde GitHub. 
 
 \textbf{OE7. Redacción de la memoria (100\% completado).} Se completó la documentación técnica del proyecto, incluyendo contexto teórico, decisiones de implementación y resultados obtenidos, siguiendo las directrices académicas establecidas.
 
-\subsection{Aspectos éticos y sostenibilidad}
 
-El proyecto ha prestado especial atención a los aspectos éticos relacionados con el manejo de datos clínicos. Aunque MIMIC-IV es un conjunto de datos desidentificado y de acceso público, se han implementado medidas de protección adicionales, evitando almacenar o procesar información que pudiera comprometer la privacidad. En términos de sostenibilidad, la plataforma contribuye a los Objetivos de Desarrollo Sostenible, específicamente al ODS 3 (Salud y Bienestar) al facilitar el acceso a datos clínicos para investigación y al ODS 9 (Industria, Innovación e Infraestructura) mediante el desarrollo de tecnologías innovadoras para el sector sanitario.
-
-\subsection{Competencias y aprendizaje técnico}
-
-El desarrollo de este TFG ha requerido la aplicación y ampliación de conocimientos adquiridos durante el grado. Las asignaturas de bases de datos, programación web y gestión de proyectos proporcionaron la base fundamental. Sin embargo, fue necesario profundizar en tecnologías específicas no vistas en el plan de estudios: MongoDB para el manejo de bases de datos NoSQL, FastAPI para APIs modernas, Next.js para desarrollo frontend avanzado, y especialmente la integración de LLMs mediante MCP, una tecnología emergente en el momento del desarrollo.
-
-El proyecto también desarrolló competencias transversales importantes: la gestión autónoma de un proyecto complejo a lo largo de varios meses, la toma de decisiones técnicas fundamentadas, la documentación detallada de sistemas software y la comunicación efectiva de resultados técnicos.
-
-\subsection{Valoración personal}
 
 Personalmente, me siento muy satisfecho con los resultados obtenidos en este TFG. Ha sido especialmente gratificante poder combinar mis intereses en tecnología y salud, desarrollando una herramienta que puede tener un impacto real en la democratización del acceso a datos clínicos. El aprendizaje ha sido intenso y continuo: desde dominar nuevas tecnologías hasta comprender la complejidad de los sistemas sanitarios.
 
-La gestión temporal del proyecto ha sido en general efectiva, aunque reconozco que la integración de IA requirió más tiempo del inicialmente previsto debido a la novedad del protocolo MCP. Esta experiencia me ha enseñado la importancia de reservar tiempo adicional para tecnologías emergentes en proyectos futuros.
+
+
 
 El trabajo me ha permitido desarrollar significativamente mis habilidades de resolución de problemas, especialmente al enfrentar desafíos técnicos complejos como la optimización de consultas en bases de datos masivas o la implementación de visualizaciones interactivas avanzadas. También he mejorado mis capacidades de comunicación técnica, tanto en la documentación del código como en la redacción de esta memoria.
 
+
+\newpage
 \section{Trabajo futuro}
 
 A partir del trabajo desarrollado, se identifican múltiples líneas de mejora y extensión que podrían implementarse en el futuro:
 
-\subsection{Extensiones de funcionalidad}
+
 
 \textbf{Integración de módulos adicionales de MIMIC-IV.} Actualmente la plataforma utiliza los módulos \texttt{hosp} e \texttt{icu}. La incorporación de los módulos \texttt{ed} (urgencias), \texttt{note} (notas clínicas) y \texttt{cxr} (radiografías) ampliaría significativamente las posibilidades de análisis. Para el módulo de notas, sería necesario implementar técnicas avanzadas de procesamiento de lenguaje natural, mientras que las radiografías requerirían capacidades de análisis de imágenes médicas.
 
@@ -50,31 +43,31 @@ A partir del trabajo desarrollado, se identifican múltiples líneas de mejora y
 
 \textbf{Exportación de datos y visualizaciones.} Añadir capacidades para exportar tanto los datos consultados como las visualizaciones generadas en formatos estándar (CSV, PDF, PNG). Esta funcionalidad sería valiosa para investigadores que necesiten integrar los resultados en publicaciones o presentaciones.
 
-\subsection{Mejoras técnicas}
 
-\textbf{Optimización de rendimiento para consultas complejas.} Aunque el sistema funciona correctamente, algunas consultas sobre las colecciones más grandes pueden optimizarse mediante técnicas como la agregación precomputada de estadísticas frecuentes o la implementación de cachés inteligentes para consultas recurrentes.
 
-\textbf{Sistema de autenticación y perfiles de usuario.} Implementar un sistema de registro y autenticación que permita a los usuarios guardar consultas favoritas, crear dashboards personalizados y mantener un historial de análisis realizados. Esto requeriría diseñar una base de datos adicional para gestionar usuarios y sus preferencias.
+%\textbf{Optimización de rendimiento para consultas complejas.} Aunque el sistema funciona correctamente, algunas consultas sobre las colecciones más grandes pueden optimizarse mediante técnicas como la agregación precomputada de estadísticas frecuentes o la implementación de cachés inteligentes para consultas recurrentes.
 
-\textbf{API más robusta con documentación interactiva.} Expandir la API actual con más endpoints especializados y generar documentación interactiva completa que facilite su uso por parte de desarrolladores externos que deseen integrar la plataforma en sus propios sistemas.
+%\textbf{Sistema de autenticación y perfiles de usuario.} Implementar un sistema de registro y autenticación que permita a los usuarios guardar consultas favoritas, crear dashboards personalizados y mantener un historial de análisis realizados. Esto requeriría diseñar una base de datos adicional para gestionar usuarios y sus preferencias.
 
-\subsection{Innovaciones con IA}
+%\textbf{API más robusta con documentación interactiva.} Expandir la API actual con más endpoints especializados y generar documentación interactiva completa que facilite su uso por parte de desarrolladores externos que deseen integrar la plataforma en sus propios sistemas.
+
+
 
 \textbf{Modelos predictivos especializados.} Desarrollar e integrar modelos de machine learning específicos para predicción de riesgos clínicos, como predicción de mortalidad hospitalaria, duración de estancias o riesgo de readmisión. Estos modelos podrían entrenarse directamente sobre los datos de MIMIC-IV y ofrecer predicciones explicables.
 
-\textbf{Asistente de análisis estadístico.} Extender las capacidades de IA para que el sistema pueda sugerir automáticamente análisis estadísticos relevantes basándose en los datos consultados, generar hipótesis de investigación y proponer visualizaciones apropiadas según el tipo de datos.
+%\textbf{Asistente de análisis estadístico.} Extender las capacidades de IA para que el sistema pueda sugerir automáticamente análisis estadísticos relevantes basándose en los datos consultados, generar hipótesis de investigación y proponer visualizaciones apropiadas según el tipo de datos.
 
-\textbf{Integración multimodal.} Si se incorporan las imágenes del módulo CXR, desarrollar capacidades de análisis multimodal que combinen datos estructurados, texto libre y radiografías para generar resúmenes más completos de los pacientes.
+%\textbf{Integración multimodal.} Si se incorporan las imágenes del módulo CXR, desarrollar capacidades de análisis multimodal que combinen datos estructurados, texto libre y radiografías para generar resúmenes más completos de los pacientes.
 
-\subsection{Escalabilidad y arquitectura}
 
-\textbf{Migración a arquitectura de microservicios.} Para facilitar el mantenimiento y escalabilidad del sistema, se podría refactorizar la aplicación hacia una arquitectura de microservicios, separando las funcionalidades de visualización, IA, y acceso a datos en servicios independientes.
+
+%\textbf{Migración a arquitectura de microservicios.} Para facilitar el mantenimiento y escalabilidad del sistema, se podría refactorizar la aplicación hacia una arquitectura de microservicios, separando las funcionalidades de visualización, IA, y acceso a datos en servicios independientes.
 
 \textbf{Soporte para múltiples bases de datos clínicas.} Generalizar la arquitectura para soportar otros conjuntos de datos clínicos además de MIMIC-IV, como eICU, MIMIC-III o bases de datos locales que sigan estándares como OMOP-CDM. Esto requeriría desarrollar adaptadores de datos y abstraer la lógica de acceso a datos.
 
-\subsection{Modelo de negocio y sostenibilidad}
 
-\textbf{Plataforma como servicio (SaaS).} El sistema desarrollado podría evolucionar hacia una plataforma comercial que ofrezca servicios de análisis de datos clínicos para hospitales e instituciones de investigación. Esto requeriría implementar funcionalidades empresariales como facturación, multi-tenancy y acuerdos de nivel de servicio.
+
+%\textbf{Plataforma como servicio (SaaS).} El sistema desarrollado podría evolucionar hacia una plataforma comercial que ofrezca servicios de análisis de datos clínicos para hospitales e instituciones de investigación. Esto requeriría implementar funcionalidades empresariales como facturación, multi-tenancy y acuerdos de nivel de servicio.
 
 \textbf{Marketplace de visualizaciones.} Crear un ecosistema donde desarrolladores puedan contribuir con nuevas visualizaciones y análisis, estableciendo una comunidad activa alrededor de la plataforma. Esto podría incluir un sistema de plugins y una tienda de extensiones.
 
