@@ -8,7 +8,7 @@ export default function Header() {
   const { isBackendUp, loading } = useBackendHealth();
 
   return (
-    <>
+    <div className="fixed top-0 left-0 right-0 z-50">
       {/* Backend Status Banner */}
       {!loading && !isBackendUp && (
         <div className="w-full bg-red-600 text-white text-center py-2 text-sm font-medium">
@@ -58,6 +58,6 @@ export default function Header() {
         </div>
       </div>
     </header>
-    </>
+    </div>
   );
 } 

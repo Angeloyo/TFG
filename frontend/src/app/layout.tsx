@@ -26,7 +26,9 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased`}
       >
         <Header />
-        {children}
+        <main className="pt-20">
+          {children}
+        </main>
         {process.env.NODE_ENV === 'production' && (
           <Script
             defer
