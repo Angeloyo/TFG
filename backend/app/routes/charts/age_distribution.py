@@ -12,7 +12,7 @@ def get_age_distribution(detailed: bool = False):
     """
     try:
         # Conectar a la base de datos completa
-        db = get_db(demo=False)
+        db = get_db()
         
         if detailed:
             # Agregación detallada: por edad específica

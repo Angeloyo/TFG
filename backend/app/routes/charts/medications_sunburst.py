@@ -12,7 +12,7 @@ def get_medications_sunburst():
     Lee de la colección `prescription_counts_by_route`.
     """
     try:
-        db = get_db(demo=False)
+        db = get_db()
 
         cursor = db["prescription_counts_by_route"].find(
             {}, {"_id": 1, "total": 1, "drugs": 1}

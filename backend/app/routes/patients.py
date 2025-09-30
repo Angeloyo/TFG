@@ -29,7 +29,7 @@ def clean_data(obj):
 @router.head("/{subject_id}/exists")
 def patient_exists_head(subject_id: int):
     """Comprueba si existe un paciente por subject_id (HEAD 200/404)."""
-    db = get_db(demo=False)
+    db = get_db()
     exists = db["hosp_patients"].find_one({"subject_id": subject_id}, {"_id": 1}) is not None
     if not exists:
         raise HTTPException(status_code=404, detail="Paciente no encontrado")
@@ -38,7 +38,7 @@ def patient_exists_head(subject_id: int):
 @router.get("/{subject_id}")
 def get_patient(subject_id: int):
     """Obtiene información completa de un paciente"""
-    db = get_db(demo=False)
+    db = get_db()
     
     # Buscar datos básicos del paciente
     patient = db["hosp_patients"].find_one({"subject_id": subject_id})

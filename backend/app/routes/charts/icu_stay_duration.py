@@ -11,7 +11,7 @@ def get_icu_stay_duration():
     """
     try:
         # Conectar a la base de datos completa
-        db = get_db(demo=False)
+        db = get_db()
         
         # Agregación para calcular estancia promedio por unidad UCI
         pipeline = [

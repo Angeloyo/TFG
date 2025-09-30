@@ -106,7 +106,7 @@ tools = [
 
 async def get_schema(params):
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[params["collection"]]
         
         # Get a sample document to understand structure with timeout
@@ -125,7 +125,7 @@ async def get_schema(params):
 
 async def find_documents(params):
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[params["collection"]]
         query = params.get("query", {})
         limit = params.get("limit", 10)
@@ -136,7 +136,7 @@ async def find_documents(params):
 
 async def aggregate_data(params):
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[params["collection"]]
         pipeline = params["pipeline"]
         
@@ -146,7 +146,7 @@ async def aggregate_data(params):
 
 async def count_documents(params):
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[params["collection"]]
         query = params.get("query", {})
         

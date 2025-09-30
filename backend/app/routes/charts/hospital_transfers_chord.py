@@ -7,7 +7,7 @@ router = APIRouter()
 @router.get("/hospital-transfers-chord")
 def get_hospital_transfers_chord():
     try:
-        db = get_db(demo=False)
+        db = get_db()
         cursor = db["transfer_edges_chord"].find({}, {"_id": 0, "from": 1, "to": 1, "count": 1})
         edges = list(cursor)
 

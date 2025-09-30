@@ -13,7 +13,7 @@ def get_diagnosis_icicle(min_count: int = 50):
     min_count: umbral mínimo de frecuencia para incluir nodos (default: 50)
     """
     try:
-        db = get_db(demo=False)
+        db = get_db()
 
         # Agregación desde la colección preagregada de conteos por icd_code
         pipeline = [

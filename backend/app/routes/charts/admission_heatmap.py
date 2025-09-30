@@ -9,7 +9,7 @@ def get_admission_heatmap(
     view_type: str = Query("hourly", description="View type: 'hourly' or 'monthly'")
 ):
     try:
-        db = get_db(demo=False)
+        db = get_db()
         
         pipeline = []
         

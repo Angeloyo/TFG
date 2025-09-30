@@ -20,7 +20,7 @@ def get_schema(collection: str) -> dict:
     """Get the schema/structure of a MongoDB collection"""
     logging.info(f"get_schema called for collection: {collection}")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[collection]
         
         sample = coll.find_one({}, max_time_ms=10000)
@@ -43,7 +43,7 @@ def find_documents(collection: str, query: dict = {}, limit: int = 10) -> dict:
     """Find documents in a MongoDB collection"""
     logging.info(f"find_documents called for collection: {collection}, query: {query}, limit: {limit}")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[collection]
         
         documents = list(coll.find(query).limit(limit).max_time_ms(60000))
@@ -58,7 +58,7 @@ def aggregate_data(collection: str, pipeline: list) -> dict:
     """Run aggregation pipeline on MongoDB collection"""
     logging.info(f"aggregate_data called for collection: {collection}, pipeline: {pipeline}")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[collection]
         
         results = list(coll.aggregate(pipeline, maxTimeMS=60000))
@@ -73,7 +73,7 @@ def count_documents(collection: str, query: dict = {}) -> dict:
     """Count documents in a MongoDB collection"""
     logging.info(f"count_documents called for collection: {collection}, query: {query}")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[collection]
         
         count = coll.count_documents(query, maxTimeMS=60000)
@@ -88,7 +88,7 @@ def list_collections() -> dict:
     """List all collections in the MIMIC-IV database"""
     logging.info("list_collections called")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         collections = db.list_collection_names()
         logging.info(f"Collections found: {collections}")
         return {"collections": collections, "total": len(collections)}
@@ -101,7 +101,7 @@ def get_indexes(collection: str) -> dict:
     """Get index information for a MongoDB collection"""
     logging.info(f"get_indexes called for collection: {collection}")
     try:
-        db = get_db(demo=False)
+        db = get_db()
         coll = db[collection]
         
         indexes = list(coll.list_indexes())

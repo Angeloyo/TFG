@@ -10,7 +10,7 @@ def get_dashboard_stats():
     Súper rápido porque lee datos ya calculados.
     """
     # Conectar a la base de datos completa
-    db = get_db(demo=False)
+    db = get_db()
     
     # Leer estadísticas categorizadas pre-calculadas
     cached_stats = db["dashboard_stats_categorized"].find_one({"_id": "main"})
