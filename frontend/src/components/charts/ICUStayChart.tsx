@@ -16,7 +16,8 @@ export default function ICUStayChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://tfg-api.angeloyo.com/api/charts/icu-stay-duration');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const response = await fetch(`${apiUrl}/api/charts/icu-stay-duration`);
         if (!response.ok) throw new Error('Error al cargar datos');
         const result = await response.json();
         setData(result.data);

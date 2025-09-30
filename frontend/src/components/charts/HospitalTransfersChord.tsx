@@ -31,7 +31,8 @@ export default function HospitalTransfersChord() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('https://tfg-api.angeloyo.com/api/charts/hospital-transfers-chord');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const res = await fetch(`${apiUrl}/api/charts/hospital-transfers-chord`);
         if (!res.ok) throw new Error('Error al cargar datos');
         const json: ApiData = await res.json();
         setData(json);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API_BASE_URL = 'https://tfg-api.angeloyo.com';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export function useBackendHealth() {
   const [isBackendUp, setIsBackendUp] = useState(true);

@@ -27,7 +27,8 @@ export default function MedicationsSunburst() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('https://tfg-api.angeloyo.com/api/charts/medications-sunburst');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const res = await fetch(`${apiUrl}/api/charts/medications-sunburst`);
         if (!res.ok) throw new Error('Error al cargar datos');
         const json: MedicationsTreemapResponse = await res.json();
         setRoutes(json.data);

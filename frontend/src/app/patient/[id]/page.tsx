@@ -4,7 +4,8 @@ import PatientAdmissions from '@/components/patient/PatientAdmissions';
 import PatientAISummary from '@/components/patient/PatientAISummary';
 
 async function getPatient(id: string): Promise<PatientData> {
-  const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}`, {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const res = await fetch(`${apiUrl}/api/patients/${id}`, {
     cache: 'no-store'
   });
   

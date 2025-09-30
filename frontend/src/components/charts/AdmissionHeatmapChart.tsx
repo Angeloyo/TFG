@@ -20,7 +20,8 @@ export default function AdmissionHeatmapChart({ viewType }: AdmissionHeatmapChar
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `https://tfg-api.angeloyo.com/api/charts/admission-heatmap?filter_midnight=${filterMidnight}&view_type=${viewType}`;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const url = `${apiUrl}/api/charts/admission-heatmap?filter_midnight=${filterMidnight}&view_type=${viewType}`;
         const response = await fetch(url);
         const result = await response.json();
         setData(result.data);

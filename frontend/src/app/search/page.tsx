@@ -19,7 +19,8 @@ export default function SearchPage() {
     setError("");
     // setLoading(true);
     try {
-      const res = await fetch(`https://tfg-api.angeloyo.com/api/patients/${id}/exists`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${apiUrl}/api/patients/${id}/exists`, {
         method: "HEAD",
         cache: "no-store"
       });

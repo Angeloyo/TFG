@@ -17,7 +17,8 @@ export default function PatientAISummary({ data }: PatientAISummaryProps) {
     // setLoading(true);
     setSummary(null);
     try {
-      const res = await fetch('https://tfg-api.angeloyo.com/api/summary/patient', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const res = await fetch(`${apiUrl}/api/summary/patient`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

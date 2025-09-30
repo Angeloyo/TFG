@@ -19,7 +19,8 @@ export default function AgeDistributionChart({ detailed }: AgeDistributionChartP
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `https://tfg-api.angeloyo.com/api/charts/age-distribution${detailed ? '?detailed=true' : ''}`;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const url = `${apiUrl}/api/charts/age-distribution${detailed ? '?detailed=true' : ''}`;
         const response = await fetch(url);
 
         if (!response.ok) {

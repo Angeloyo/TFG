@@ -13,7 +13,8 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('https://tfg-api.angeloyo.com/api/dashboard/stats');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const response = await fetch(`${apiUrl}/api/dashboard/stats`);
         if (!response.ok) {
           throw new Error('Error al cargar estadísticas');
         }

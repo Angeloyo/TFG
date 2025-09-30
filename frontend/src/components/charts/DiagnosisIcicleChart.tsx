@@ -44,7 +44,8 @@ export default function DiagnosisIcicleChart() {
         setLoading(true);
         setError(null);
         // Un solo fetch inicial con umbral bajo para permitir filtrar en local
-        const url = `https://tfg-api.angeloyo.com/api/charts/diagnosis-icicle?min_count=1`;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const url = `${apiUrl}/api/charts/diagnosis-icicle?min_count=1`;
         // const url = `http://localhost:8088/api/charts/diagnosis-icicle?min_count=1`;
         const response = await fetch(url);
         if (!response.ok) {
