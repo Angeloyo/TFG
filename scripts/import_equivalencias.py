@@ -46,31 +46,6 @@ def importar_equivalencias():
         db_full["icd_equivalencias"].insert_many(records)
         print(f"✅ Importadas {len(records)} equivalencias a BD completa")
         
-        # Crear índices para consultas rápidas
-        print("🔍 Creando índices...")
-        
-        # Índices en BD demo
-        db_demo["icd_equivalencias"].create_index([("icd_code", 1), ("icd_version", 1)])
-        db_demo["icd_equivalencias"].create_index("chapter")
-        db_demo["icd_equivalencias"].create_index("super_section")
-        db_demo["icd_equivalencias"].create_index("section")
-        
-        # Índices en BD completa
-        db_full["icd_equivalencias"].create_index([("icd_code", 1), ("icd_version", 1)])
-        db_full["icd_equivalencias"].create_index("chapter")
-        db_full["icd_equivalencias"].create_index("super_section")
-        db_full["icd_equivalencias"].create_index("section")
-        
-        print("✅ Índices creados en ambas bases de datos")
-        
-        # Mostrar estadísticas
-        print("\n📊 Estadísticas:")
-        print(f"  - Total equivalencias: {len(records)}")
-        print(f"  - Columnas disponibles: {list(df_equiv.columns)}")
-        print(f"  - Capítulos únicos: {df_equiv['chapter'].nunique()}")
-        print(f"  - Super secciones únicas: {df_equiv['super_section'].nunique()}")
-        print(f"  - Secciones únicas: {df_equiv['section'].nunique()}")
-        
         print("\n🎉 Importación completada exitosamente")
         
     except Exception as e:
