@@ -1,19 +1,22 @@
+"""
+Script para importar equivalencias ICD a la BD FULL
+
+Uso:
+  python scripts/full/import_equivalencias.py
+"""
+
 import pandas as pd
 from pymongo import MongoClient
-from tqdm import tqdm
 
-# Conexiones a ambas bases de datos
-client_demo = MongoClient("mongodb://localhost:27017/")
-db_demo = client_demo["mimic_iv_demo"]
+# Conexión a la base de datos full
+client = MongoClient("mongodb://localhost:27018/")
+db = client["mimic_iv_full"]
 
-client_full = MongoClient("mongodb://localhost:27018/")
-db_full = client_full["mimic_iv_full"]
-
-# Ruta del archivo CSV
+# Ruta del archivo CSV (relativa desde la raíz del proyecto)
 csv_path = "icd_con_equivalencia_ic10_extended.csv"
 
 def importar_equivalencias():
-    """Importa las equivalencias ICD a ambas bases de datos"""
+    """Importa las equivalencias ICD a la base de datos full"""
     
     print("📁 Cargando archivo de equivalencias ICD...")
     
@@ -26,24 +29,14 @@ def importar_equivalencias():
         # Convertir a lista de documentos
         records = df_equiv.to_dict(orient="records")
         
-        # Importar a base de datos demo
-        print("📥 Importando a base de datos demo...")
-        
-        # Borrar colección existente si existe
-        db_demo.drop_collection("icd_equivalencias")
-        
-        # Insertar datos
-        db_demo["icd_equivalencias"].insert_many(records)
-        print(f"✅ Importadas {len(records)} equivalencias a BD demo")
-        
         # Importar a base de datos completa
         print("📥 Importando a base de datos completa...")
         
         # Borrar colección existente si existe
-        db_full.drop_collection("icd_equivalencias")
+        db.drop_collection("icd_equivalencias")
         
         # Insertar datos
-        db_full["icd_equivalencias"].insert_many(records)
+        db["icd_equivalencias"].insert_many(records)
         print(f"✅ Importadas {len(records)} equivalencias a BD completa")
         
         print("\n🎉 Importación completada exitosamente")
@@ -52,4 +45,4 @@ def importar_equivalencias():
         print(f"❌ Error durante la importación: {e}")
 
 if __name__ == "__main__":
-    importar_equivalencias() 
+    importar_equivalencias()
