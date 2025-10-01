@@ -46,7 +46,6 @@ export default function DiagnosisIcicleChart() {
         // Un solo fetch inicial con umbral bajo para permitir filtrar en local
         const apiUrl = process.env.NEXT_PUBLIC_API_URL;
         const url = `${apiUrl}/api/charts/diagnosis-icicle?min_count=1`;
-        // const url = `http://localhost:8088/api/charts/diagnosis-icicle?min_count=1`;
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error('Error al cargar datos');
