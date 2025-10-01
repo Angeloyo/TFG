@@ -15,10 +15,13 @@ def get_db(demo: bool = None):
         demo = os.getenv("USE_DEMO", "false").lower() == "true"
     
     if demo:
-        client = MongoClient("mongodb://localhost:27017/")
-        db = client["mimic_iv_demo"]
+        mongo_url = os.getenv("MONGO_DEMO_URL")
+        db_name = "mimic_iv_demo"
     else:
-        client = MongoClient("mongodb://localhost:27018/")
-        db = client["mimic_iv_full"]
+        mongo_url = os.getenv("MONGO_FULL_URL")
+        db_name = "mimic_iv_full"
+    
+    client = MongoClient(mongo_url)
+    db = client[db_name]
     
     return db
