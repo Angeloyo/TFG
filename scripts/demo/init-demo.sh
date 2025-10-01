@@ -19,19 +19,6 @@ echo "✅ MongoDB está disponible"
 # Cambiar al directorio raíz del proyecto
 cd /workspace
 
-# Descargar dataset demo si no existe
-if [ ! -d "mimic-iv-demo" ]; then
-  echo ""
-  echo "📥 Descargando MIMIC-IV demo desde PhysioNet..."
-  wget -r -N -c -np https://physionet.org/files/mimic-iv-demo/2.2/
-  # Reorganizar estructura de directorios
-  mv physionet.org/files/mimic-iv-demo/2.2 mimic-iv-demo
-  rm -rf physionet.org
-  echo "✅ Dataset descargado"
-else
-  echo "✅ Dataset demo ya existe, omitiendo descarga"
-fi
-
 # 1. Importar dataset demo
 echo ""
 echo "📥 [1/6] Importando dataset MIMIC-IV demo..."

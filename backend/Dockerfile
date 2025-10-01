@@ -2,9 +2,6 @@
 
 FROM python:3.13-slim
 
-# Instalar curl y wget
-RUN apt-get update && apt-get install -y curl wget && rm -rf /var/lib/apt/lists/*
-
 # Establecer directorio de trabajo
 WORKDIR /app
 

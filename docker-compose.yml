@@ -1,10 +1,7 @@
-version: '3.8'
-
 services:
   # Servicio MongoDB
   mongodb:
     image: mongo:8.0
-    container_name: mimic-demo-mongodb
     ports:
       - "27017:27017"
     volumes:
@@ -14,9 +11,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-      start_period: 10s
-    networks:
-      - mimic-network
 
   # Servicio de inicialización (ejecuta scripts una sola vez)
   init-db:
@@ -29,20 +23,17 @@ services:
         condition: service_healthy
     volumes:
       - ./scripts:/workspace/scripts
-      - ./icd_con_equivalencia_ic10_extended.csv:/workspace/icd_con_equivalencia_ic10_extended.csv
+      - ./data:/workspace/data
     environment:
       - MONGO_DEMO_URL=mongodb://mongodb:27017
+      - MIMIC_DEMO_PATH=/workspace/data/mimic-iv-clinical-database-demo-2.2
+      - ICD_CSV_PATH=/workspace/data/icd_con_equivalencia_ic10_extended.csv
     command: ["/bin/bash", "/workspace/scripts/demo/init-demo.sh"]
-    networks:
-      - mimic-network
     restart: "no"
 
   # Servicio Backend (FastAPI)
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: mimic-demo-backend
+    build: ./backend
     depends_on:
       init-db:
         condition: service_completed_successfully
@@ -52,39 +43,16 @@ services:
       - USE_DEMO=true
       - MONGO_DEMO_URL=mongodb://mongodb:27017
       - MONGO_FULL_URL=mongodb://mongodb:27017
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 20s
-    networks:
-      - mimic-network
     restart: unless-stopped
 
   # Servicio Frontend (Next.js)
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: mimic-demo-frontend
-    depends_on:
-      backend:
-        condition: service_healthy
+    build: ./frontend
     ports:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:8000
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    networks:
-      - mimic-network
     restart: unless-stopped
-
-networks:
-  mimic-network:
-    driver: bridge
 
 volumes:
   mongodb_data:
