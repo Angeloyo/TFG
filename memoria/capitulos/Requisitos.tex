@@ -57,10 +57,179 @@ Los requisitos no funcionales (R.N.F.) son aquellas restricciones que se imponen
     
 \end{itemize}
 
-\section{Casos de uso}
+%\section{Casos de uso}
+%\subsection{Actores}
 
-\subsection{Actores}
+\section{Actores}
 
-\subsection{Diagramas}
+Los actores son aquellas personas o entidades que usan la herramienta. Estos son fundamentales para la creación de casos de uso, ya que son aquellos que desde su perspectiva muestran como el sistema se comporta. 
+
+En el contexto de este proyecto se ha identificado un único actor humano principal: el Usuario. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & Usuario \\
+        \hline
+        \textbf{Identificador} & ACT-1 \\
+        \hline
+        \textbf{Descripción} & Persona que utiliza la aplicación web para consultar estadísticas, visualizar gráficos, buscar pacientes concretos y obtener apoyo de IA (resúmenes y chat) sobre los datos de MIMIC-IV. \\
+        \hline
+        \textbf{Características} & Perfil clínico, investigador o estudiante; acceso vía navegador; no requiere conocimientos de programación ni de consultas sobre la base de datos; usa la interfaz para filtrar, explorar y comprender la información. \\
+        \hline
+        \textbf{Referencias} & Requisitos funcionales: RF1, RF2, RF3, RF4, RF5, RF6. \\
+        \hline
+        \textbf{Versión} & 1.0 \\
+        \hline
+    \end{tabular}
+    \caption{Actor principal del sistema.}
+\end{table}
+
+%\subsection{Diagramas}
+
+\section{Casos de Uso}
+
+Un caso de uso es aquel que define como ante una situación o funcionalidad, tanto la herramienta como el sistema se tiene que comportar y actuar. Estos vienen definidos por los requisitos funcionales, por lo que cada uno de ellos está relacionado con uno o varios de estos requisitos.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-1: Acceder al dashboard \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, básico y esencial \\
+        \hline
+        \textbf{Referencias} & RF1 \\
+        \hline
+        \textbf{Precondición} & Backend disponible; datos precalculados accesibles. \\
+        \hline
+        \textbf{Poscondición} & El usuario visualiza KPIs y accesos a visualizaciones. \\
+        \hline
+        \textbf{Propósito} & Ofrecer una visión global rápida del estado de la base de datos. \\
+        \hline
+        \textbf{Resumen} & El sistema recupera estadísticas y las muestra en el dashboard. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-2: Explorar una visualización con filtros \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, básico y esencial \\
+        \hline
+        \textbf{Referencias} & RF1, RF2, RF3 \\
+        \hline
+        \textbf{Precondición} & Endpoint del gráfico disponible. \\
+        \hline
+        \textbf{Poscondición} & Gráfico renderizado con los filtros aplicados. \\
+        \hline
+        \textbf{Propósito} & Permitir exploración interactiva ajustando parámetros de visualización. \\
+        \hline
+        \textbf{Resumen} & El usuario selecciona la visualización y ajusta filtros; el sistema actualiza el gráfico. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-3: Buscar un paciente por identificador \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, básico \\
+        \hline
+        \textbf{Referencias} & RF4 \\
+        \hline
+        \textbf{Precondición} & El identificador \texttt{subject\_id} es válido o comprobable. \\
+        \hline
+        \textbf{Poscondición} & Navegación a la ficha del paciente o aviso de no encontrado. \\
+        \hline
+        \textbf{Propósito} & Acceder rápidamente a la información de un paciente concreto. \\
+        \hline
+        \textbf{Resumen} & El sistema verifica la existencia del paciente y redirige a su ficha si existe. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-4: Consultar la ficha de un paciente \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, esencial \\
+        \hline
+        \textbf{Referencias} & RF4 \\
+        \hline
+        \textbf{Precondición} & Paciente existente. \\
+        \hline
+        \textbf{Poscondición} & Información consolidada visible por ingreso hospitalario. \\
+        \hline
+        \textbf{Propósito} & Presentar el historial clínico estructurado del paciente. \\
+        \hline
+        \textbf{Resumen} & El sistema obtiene y muestra datos demográficos, ingresos, diagnósticos, procedimientos y laboratorio. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-5: Obtener resumen con IA del historial \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, básico \\
+        \hline
+        \textbf{Referencias} & RF5 \\
+        \hline
+        \textbf{Precondición} & Servicio de IA accesible; datos del paciente cargados en la vista. \\
+        \hline
+        \textbf{Poscondición} & Resumen clínico generado y visible en la interfaz. \\
+        \hline
+        \textbf{Propósito} & Facilitar una comprensión rápida del historial del paciente. \\
+        \hline
+        \textbf{Resumen} & El sistema envía los datos del paciente al servicio de IA y muestra el resumen devuelto. \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & CU-6: Realizar consulta en lenguaje natural (chat) \\
+        \hline
+        \textbf{Actores} & ACT-1 Usuario \\
+        \hline
+        \textbf{Tipo} & Primario, opcional \\
+        \hline
+        \textbf{Referencias} & RF6 \\
+        \hline
+        \textbf{Precondición} & Servicio de IA y herramientas MCP operativas. \\
+        \hline
+        \textbf{Poscondición} & Respuesta contextual mostrada al usuario. \\
+        \hline
+        \textbf{Propósito} & Permitir consultas ad-hoc sobre los datos en lenguaje natural. \\
+        \hline
+        \textbf{Resumen} & El sistema procesa la pregunta usando IA y datos disponibles y devuelve la respuesta. \\
+        \hline
+    \end{tabular}
+\end{table}
+
 
 % actores, casos de uso, diagramas de actividad , etc ..... ??? 
