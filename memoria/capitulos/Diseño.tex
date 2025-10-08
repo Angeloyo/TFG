@@ -4,18 +4,30 @@ Este capítulo presenta el diseño conceptual y arquitectónico de la plataforma
 
 \section{Diseño de la arquitectura}
 
-La plataforma se fundamenta en una arquitectura cliente-servidor desacoplada, un modelo robusto y escalable que separa claramente las responsabilidades del sistema. Esta arquitectura divide la aplicación en dos componentes principales e independientes:
+La plataforma se fundamenta en una arquitectura cliente-servidor desacoplada, un modelo robusto y escalable que separa claramente las responsabilidades del sistema. Esta arquitectura divide la aplicación en tres componentes principales e independientes:
 
 \begin{itemize}
-    \item El Backend (Servidor): Es el núcleo lógico de la aplicación. Se encarga de gestionar el acceso a la base de datos, procesar las consultas complejas, aplicar la lógica de negocio y exponer los datos de manera segura y estructurada a través de una API de servicio.
-    \item El Frontend (Cliente): Es la capa de presentación con la que interactúa el usuario. Se ejecuta en el navegador web y su única responsabilidad es solicitar los datos al backend, renderizar la interfaz de usuario y presentar las visualizaciones de datos de forma interactiva.
+    
+    \item La base de datos: Contiene todos los datos médicos con lo que se va a trabajar. Es la capa de persistencia en la apliación.
+    
+    \item El Backend: Es el núcleo lógico de la aplicación. Se encarga de gestionar el acceso a la base de datos, procesar las consultas complejas, aplicar la lógica de negocio y exponer los datos de manera segura y estructurada a través de una API de servicio.
+
+    \item El Frontend: Es la capa de presentación con la que interactúa el usuario. Se ejecuta en el navegador web y su única responsabilidad es solicitar los datos al backend, renderizar la interfaz de usuario y presentar las visualizaciones de datos de forma interactiva.
 \end{itemize}
+
+%\begin{figure}[H]
+%    \centering
+%    \fbox{\includegraphics[width=0.85\textwidth]{imagenes/frontandbackend.png}}
+    %\includegraphics[width=0.4\textwidth]{imagenes/physionet-logo.png}
+%    \caption{Esquema conexiones Frontend y Backend. \cite{backfrontendfoto}.}
+%\end{figure}
+
 
 \begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=0.85\textwidth]{imagenes/frontandbackend.png}}
+    \fbox{\includegraphics[width=0.85\textwidth]{imagenes/arch-dis2.png}}
     %\includegraphics[width=0.4\textwidth]{imagenes/physionet-logo.png}
-    \caption{Esquema conexiones Frontend y Backend. \cite{backfrontendfoto}.}
+    \caption{Esquema conexiones BD, Backend y Frontend.}
 \end{figure}
 
 
@@ -26,26 +38,28 @@ La elección de este modelo ofrece ventajas significativas para el proyecto. En 
 
 El flujo de información está diseñado para ser eficiente y unidireccional. El proceso comienza cuando el usuario realiza una acción en la interfaz del frontend (por ejemplo, cargar el dashboard o buscar un paciente). Esta acción desencadena una petición HTTPS a un endpoint específico de la API del backend. El backend recibe la petición, la procesa, construye una consulta optimizada para la base de datos MongoDB, recupera los datos necesarios, los transforma al formato adecuado y los devuelve al frontend en formato JSON. Finalmente, el cliente recibe estos datos y los utiliza para actualizar la interfaz y renderizar las visualizaciones correspondientes.
 
-... aquí irá imagen del flujo
+%... aquí irá imagen del flujo
 
 \section{Diseño de la Base de Datos}
 
-\section{Diseño del Backend}
+A pesar de que MIMIC-IV se distribuye en un formato relacional (archivos CSV interconectados), para este proyecto se ha optado por un modelo de datos NoSQL documental. Esta decisión de diseño se justifica por varias razones clave:
 
-El diseño del backend se centra en tres pilares: un modelo de datos flexible, una API de servicio bien definida y una capa de inteligencia artificial que permita la interacción en lenguaje natural.
-
-%\subsection{Modelo de Datos}
-
-A pesar de que MIMIC-IV se distribuye en un formato relacional (archivos CSV interconectados), para este proyecto se ha optado por un modelo de datos NoSQL documental, utilizando MongoDB. Esta decisión de diseño se justifica por varias razones clave:
 \begin{itemize}
     \item Flexibilidad: Los datos clínicos son inherentemente heterogéneos. Un modelo documental permite almacenar registros con estructuras variables sin la rigidez de un esquema predefinido, facilitando la integración de diferentes tipos de datos.
     \item Rendimiento: Las consultas que requieren agregar información de múltiples fuentes (por ejemplo, obtener un paciente con todos sus ingresos, diagnósticos y pruebas) pueden resolverse de manera más eficiente en un modelo documental, evitando complejas operaciones de \textit{join} que serían necesarias en una base de datos relacional.
     \item Alineación con la aplicación: La estructura de documentos JSON de MongoDB se alinea de forma natural con los objetos de datos que se consumen en el frontend a través de la API, simplificando el intercambio de información.
 \end{itemize}
 
+\section{Diseño del Backend}
+
+%El diseño del backend se centra en tres pilares: un modelo de datos flexible, una API de servicio bien definida y una capa de inteligencia artificial que permita la interacción en lenguaje natural.
+
+%\subsection{Modelo de Datos}
+
 %\subsection{Diseño de la API de Servicio}
 
-La comunicación entre el frontend y el backend se articula a través de una API RESTful. Esta API actúa como un contrato bien definido, exponiendo una serie de endpoints lógicos agrupados por funcionalidad. El diseño contempla los siguientes grupos de endpoints:
+%La comunicación entre el frontend y el backend se articula a través de una API RESTful. 
+El backend es la lógica de negocio de la apliación, es la capa intermedia entre la base de datos y el frontend. Consta principalmente de una API, que actúa como un contrato bien definido, exponiendo una serie de endpoints lógicos agrupados por funcionalidad. El diseño contempla los siguientes grupos de endpoints:
 
 \begin{itemize}
     \item Gestión de pacientes: Endpoints para obtener toda la información consolidada de un paciente específico.
