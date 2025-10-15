@@ -64,26 +64,46 @@ Los requisitos no funcionales (R.N.F.) son aquellas restricciones que se imponen
 
 Los actores son aquellas personas o entidades que usan la herramienta. Estos son fundamentales para la creación de casos de uso, ya que son aquellos que desde su perspectiva muestran como el sistema se comporta. 
 
-En el contexto de este proyecto se ha identificado un único actor humano principal: el Usuario. 
+En el contexto de este proyecto se han identificado dos actores principales: el Administrador y el Personal Médico. 
 
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|p{11cm}|}
         \hline
-        \textbf{Nombre} & Usuario \\
+        \textbf{Nombre} & Administrador \\
         \hline
         \textbf{Identificador} & ACT-1 \\
         \hline
-        \textbf{Descripción} & Persona que utiliza la aplicación web para consultar estadísticas, visualizar gráficos, buscar pacientes concretos y obtener apoyo de IA (resúmenes y chat) sobre los datos de MIMIC-IV. \\
+        \textbf{Descripción} & Persona encargada de la gestión y administración del sistema, con permisos para configurar el dashboard, gestionar permisos, visualizaciones y mantener la infraestructura técnica. \\
         \hline
-        \textbf{Características} & Perfil clínico, investigador o estudiante; acceso vía navegador; no requiere conocimientos de programación ni de consultas sobre la base de datos; usa la interfaz para filtrar, explorar y comprender la información. \\
+        \textbf{Características} & Perfil técnico con conocimientos en programación y administración de sistemas; acceso completo a todas las funcionalidades; supervisa el correcto funcionamiento del sistema. \\
         \hline
         \textbf{Referencias} & Requisitos funcionales: RF1, RF2, RF3, RF4, RF5, RF6. \\
         \hline
         \textbf{Versión} & 1.0 \\
         \hline
     \end{tabular}
-    \caption{Actor principal del sistema.}
+    \caption{Actor Administrador del sistema.}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{11cm}|}
+        \hline
+        \textbf{Nombre} & Personal Médico \\
+        \hline
+        \textbf{Identificador} & ACT-2 \\
+        \hline
+        \textbf{Descripción} & Profesional sanitario, investigador o estudiante que utiliza la aplicación web para consultar estadísticas, visualizar gráficos, buscar pacientes concretos y obtener apoyo de IA (resúmenes y chat) sobre los datos de MIMIC-IV. Su rol en el sistema es puramente consultivo y analítico. \\
+        \hline
+        \textbf{Características} & Perfil clínico, investigador o estudiante del ámbito sanitario; acceso vía navegador; no requiere conocimientos de programación ni de consultas sobre la base de datos; usa la interfaz para filtrar, explorar y comprender la información clínica. \\
+        \hline
+        \textbf{Referencias} & Requisitos funcionales: RF1, RF2, RF3, RF4, RF5, RF6. \\
+        \hline
+        \textbf{Versión} & 1.0 \\
+        \hline
+    \end{tabular}
+    \caption{Actor Personal Médico del sistema.}
 \end{table}
 
 %\subsection{Diagramas}
@@ -99,7 +119,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-1: Acceder al dashboard \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-1 Administrador, ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, básico y esencial \\
         \hline
@@ -122,7 +142,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-2: Explorar una visualización con filtros \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, básico y esencial \\
         \hline
@@ -145,7 +165,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-3: Buscar un paciente por identificador \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, básico \\
         \hline
@@ -168,7 +188,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-4: Consultar la ficha de un paciente \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, esencial \\
         \hline
@@ -191,7 +211,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-5: Obtener resumen con IA del historial \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, básico \\
         \hline
@@ -214,7 +234,7 @@ Un caso de uso es aquel que define como ante una situación o funcionalidad, tan
         \hline
         \textbf{Nombre} & CU-6: Realizar consulta en lenguaje natural (chat) \\
         \hline
-        \textbf{Actores} & ACT-1 Usuario \\
+        \textbf{Actores} & ACT-2 Personal Médico \\
         \hline
         \textbf{Tipo} & Primario, opcional \\
         \hline
