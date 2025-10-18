@@ -19,23 +19,35 @@ Para la estimación de costes, se han tenido en cuenta los recursos humanos, el 
 
 \subsubsection{Costes humanos}
 
-Para simular el coste de desarrollo de la plataforma en un entorno real, se ha considerado la contratación de un desarrollador junior a jornada completa (8 horas diarias, 21 días laborables al mes), lo que supone 168 horas mensuales. El salario anual medio para este perfil en España se estima en 20.000€.
+En un proyecto de software realista, además de un desarrollador junior a jornada completa, es habitual contemplar la participación parcial de un desarrollador senior (diseño, revisión y mentoría). Las tarifas se justifican con salario anual medio en España (fuente: Glassdoor \cite{glassdoor}), convertido a coste por hora asumiendo 2.016 horas/año (8 h/día \(\times\) 21 días/mes \(\times\) 12 meses).
 
-\begin{equation*}
-\text{Horas trabajadas al año} = 168\,\text{horas/mes} \times 12\,\text{meses} = 2.016\,\text{horas/año}
-\end{equation*}
+\paragraph{Perfiles y salarios anuales medios (justificación).}
+\begin{itemize}
+  \item Desarrollador junior: 20.000\,€/año $\Rightarrow$ 20.000 / 2.016 $\approx$ 9,92\,€/hora.
+  \item Desarrollador senior: 40.000\,€/año $\Rightarrow$ 40.000 / 2.016 $\approx$ 19,84\,€/hora.
+\end{itemize}
 
-\begin{equation*}
-\text{Coste por hora} = \frac{20.000\,€}{2.016\,\text{horas}} \approx 9,92\,€/hora
-\end{equation*}
+\paragraph{Cálculo de costes.}
+\noindent\textbf{Desarrollador junior (tiempo completo)}\\
+\[
+\text{Coste mensual} = 9{,}92\,€/h \times 168\,\text{h/mes} = 1.666{,}56\,€
+\]
+\[
+\text{Coste total (5 meses)} = 1.666{,}56\,€ \times 5 = 8.332{,}80\,€
+\]
 
-\begin{equation*}
-\text{Coste mensual} = 9,92\,€/hora \times 168\,\text{horas} = 1.666,56\,€
-\end{equation*}
+\noindent\textbf{Desarrollador senior (mentoría y revisión, 4 h/semana)}\\
+\[
+\text{Horas totales} = 4\,\text{h/sem} \times 4\,\text{sem/mes} \times 5\,\text{meses} = 80\,\text{h}
+\]
+\[
+\text{Coste senior} = 19{,}84\,€/h \times 80\,\text{h} = 1.587{,}20\,€
+\]
 
-\begin{equation*}
-\text{Coste total (5 meses)} = 1.666,56\,€ \times 5 = 8.332,80\,€
-\end{equation*}
+\paragraph{Resumen de coste de personal.}
+\[
+\text{Personal} = 8.332{,}80\,€ + 1.587{,}20\,€ = \mathbf{9.920{,}00\,€}
+\]
 
 \subsubsection{Costes de material}
 
@@ -86,11 +98,11 @@ A continuación se muestra un resumen de todos los costes estimados para el proy
 \hline
 \textbf{Concepto} & \textbf{Coste (€)} \\
 \hline
-Coste de personal & 8.332,80 \\
+Coste de personal & 9.920,00 \\
 Coste de material & 252,00 \\
 Coste de herramientas & 30 \\
 \hline
-\textbf{Total} & \textbf{8.614,80} \\
+\textbf{Total} & \textbf{10.202,00} \\
 \hline
 \end{tabular}
 \end{center}
