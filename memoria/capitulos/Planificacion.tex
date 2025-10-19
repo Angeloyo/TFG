@@ -1,12 +1,46 @@
 \chapter{Planificación}
 
-\section{Planificación}
+Este capítulo establece el marco metodológico del proyecto. En primer lugar, se presentan la motivación e hipótesis y se delimita el problema a resolver. A continuación, se describe el proceso de diseño de software seguido (análisis, diseño, implementación y despliegue/validación), del que se derivan las tareas T1–T9 que estructuran el trabajo. Por último, se recoge la planificación temporal mediante un diagrama de Gantt y se incluye una estimación de costes.
 
-En esta sección se presenta un diagrama de Gantt que recoge la planificación temporal del proyecto, abarcando los meses de marzo a agosto. El diagrama refleja las principales tareas a realizar, correspondientes a los siete objetivos específicos expuestos previamente, y permite visualizar la distribución y el solapamiento de actividades a lo largo de todo el desarrollo.
+%\section{Motivación e hipótesis}
+
+%La motivación de este trabajo es reducir la barrera técnica para explorar MIMIC-IV mediante una plataforma web con visualizaciones y capacidades de IA. La hipótesis de partida es que un diseño cliente–servidor con API especializada, agregaciones optimizadas y asistencia de LLMs (resúmenes y consultas en lenguaje natural) permite a perfiles clínicos no técnicos extraer conocimiento útil del dataset de forma eficiente y segura.
+
+\section{Problema a resolver}
+
+Investigadores y personal sanitario carecen de interfaces abiertas y mantenidas para explorar MIMIC-IV sin escribir consultas. El problema concreto es construir una solución accesible, con rendimiento adecuado sobre datos voluminosos, que integre visualizaciones clínicas relevantes y soporte IA de forma controlada.
+
+\section{Proceso de diseño de software}
+
+El proyecto se estructura como un proceso clásico de ingeniería de software con cuatro fases: (1) análisis, (2) diseño, (3) implementación y (4) despliegue/validación. Cada fase produce artefactos alineados con la solución:
+\begin{itemize}
+  \item \textbf{Análisis}: requisitos (RF/RNF), actores y casos de uso; estudio del dataset y limitaciones.
+  \item \textbf{Diseño}: arquitectura cliente–servidor, modelo de datos y API, y diseño de vistas.
+  \item \textbf{Implementación}: carga y organización de datos, servicio de API, visualizaciones y módulo de IA.
+  \item \textbf{Despliegue y validación}: publicación, demo y vídeo, pruebas exploratorias.
+\end{itemize}
+
+\section{Derivación de tareas desde los objetivos}
+
+De los objetivos del Capítulo~1 (OE1–OE7) se derivan las siguientes tareas:
+
+\begin{enumerate}
+  \item \textbf{T1 (OE1)} Análisis inicial: revisión del estado del arte, estudio del dataset y criterios de selección tecnológica.
+  \item \textbf{T2 (OE2)} Ingesta MIMIC-IV (demo): preparación de entorno, importación y validación.
+  \item \textbf{T3 (OE2)} Ingesta MIMIC-IV (completa): indexación, colecciones preagregadas y optimización de consultas.
+  \item \textbf{T4 (OE3)} API núcleo: endpoints de pacientes y dashboard con tests básicos de respuesta.
+  \item \textbf{T5 (OE3)} API de visualizaciones: endpoints específicos para las visualizaciones planificadas.
+  \item \textbf{T6 (OE4)} Frontend base: páginas (home, dashboard, paciente, chat) y componentes de interfaz.
+  \item \textbf{T7 (OE4)} Visualizaciones: implementación y validación de las gráficas interactivas.
+  \item \textbf{T8 (OE5)} IA: resúmenes de paciente y chat en lenguaje natural sobre los datos.
+  \item \textbf{T9 (OE6–OE7)} Despliegue y demo: publicación, vídeo de demostración y enlaces finales.
+\end{enumerate}
+
+Se presenta un diagrama de Gantt que recoge la planificación temporal del proyecto, abarcando los meses de marzo a agosto. El diagrama refleja las tareas derivadas de los objetivos expuestos, y permite visualizar la distribución y el solapamiento de actividades a lo largo de todo el desarrollo.
 
 \begin{figure}[H]
     \centering
-    \fbox{\includegraphics[width=\textwidth]{imagenes/gantt1.png}}
+    \fbox{\includegraphics[width=\textwidth]{imagenes/gantt3.png}}
     %\includegraphics[width=\textwidth]{imagenes/gantt1.png}
     \caption{Diagrama de Gantt con la planificación del proyecto.}
 \end{figure}
