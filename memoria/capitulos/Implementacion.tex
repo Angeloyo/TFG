@@ -315,6 +315,21 @@ Los componentes de visualización están diseñados como elementos autónomos qu
 
 
 
+\subsubsection{Tipos de visualización empleados}
+En esta subsección se describen de forma teórica los tipos de gráficos utilizados, su propósito, cómo se interpretan y la librería empleada. No hace referencia a resultados específicos de la aplicación.
+
+\paragraph{Population pyramid (Distribución por edad y género).} Muestra la distribución de una población por grupos de edad separada por género, permitiendo detectar envejecimiento, cohortes predominantes o asimetrías entre hombres y mujeres. Se interpreta leyendo barras horizontales a izquierda/derecha (generalmente hombres/mujeres) y el eje vertical con los grupos de edad. Implementado con Observable Plot \cite{populationPyramid,observableplot}.
+
+\paragraph{Heatmap (Mapa de calor temporal).} Representa densidades o frecuencias mediante una cuadrícula coloreada. En contexto temporal, el eje X puede ser la hora o el día del mes y el eje Y el día de la semana o el mes; la intensidad de color codifica el número de eventos. Es útil para identificar patrones cíclicos o picos de actividad. Implementado con Observable Plot \cite{heatmap,observableplot}.
+
+\paragraph{Horizontal bar chart (Barras horizontales).} Adecuado para comparar categorías con etiquetas largas. El eje Y contiene las categorías y el eje X el valor (p. ej., promedio de días). Facilita ordenar y comparar magnitudes. Implementado con Observable Plot \cite{hbarchart,observableplot}.
+
+\paragraph{Sunburst (Jerarquía radial).} Visualiza jerarquías en anillos concéntricos; cada arco representa un nodo y su ángulo codifica el valor agregado. Permite hacer zoom para explorar niveles. Es útil para descomponer un total en categorías y subcategorías. Implementado con D3 \cite{sunburst,d3}.
+
+\paragraph{Icicle (Jerarquía en segmentos).} Similar a sunburst pero en disposición rectangular; los rectángulos apilados muestran la jerarquía de mayor a menor nivel. El ancho representa el valor agregado. Adecuado para explorar taxonomías médicas y su contribución relativa. Implementado con D3 \cite{icicle,d3}.
+
+\paragraph{Directed chord diagram (Flujos entre categorías).} Muestra flujos dirigidos entre nodos dispuestos en un círculo; el grosor del acorde codifica la intensidad del flujo y la dirección se indica con marcadores o asimetrías. Útil para analizar transferencias entre unidades o servicios. Implementado con D3 \cite{chord,d3}.
+
 \subsection{Despliegue}
 
 El frontend de la aplicación se ha desplegado públicamente utilizando la plataforma Vercel \cite{vercel}, una solución en la nube especializada en el despliegue de aplicaciones web modernas. 

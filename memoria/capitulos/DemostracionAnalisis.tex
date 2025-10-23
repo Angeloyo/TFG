@@ -49,13 +49,13 @@ Al aterrizar en una de estas páginas, lo que hacemos es obtener el ID del pacie
 
 En primer lugar encontramos una sección con la información demográfica básica del paciente: género, edad, idioma, raza, etc. Implementado en el componente React \texttt{PatientBasicInfo}.
 
-En segundo lugar, una sección en la que se muestra un resumen del paciente realizada con Inteligencia Artificial. El funcionamiento es el siguiente: una vez se reciben todos los datos del paciente y se carga la página, automáticamente el componente \texttt{PatientAISummary} llama a otro endpoint del backend \texttt{/api/summary/patient} y le envía todos los datos del paciente, para que se llame al LLM y se obtenga el resumen del historial. De esta forma, enviando los datos directamente y no el ID del paciente, nos ahorramos el tiempo de espera de volver a agregar toda información.
+En segundo lugar, una sección con un resumen del historial del paciente generado mediante Inteligencia Artificial, que sintetiza diagnósticos y procedimientos relevantes a partir de los datos de la ficha.
 
 En tercer lugar tenemos el grueso de la información, en el componente \texttt{PatientAdmissions}. En el mediante desplegables, vemos un listado de todos los ingresos que ha tenido el paciente, junto a algunas estadísticas rápidas para ver a simple vista: número de días de duración de la hospitalización, número de diagnósticos asociados a la estancia, número de procedimientos, y número de tests de laboratorio. 
 
 Al hacer click en el desplegable, podemos ver más información del ingreso, como las fechas exactas de entrada y salida, el tipo del seguro del paciente, a dónde se trasfirió despues, etc. Además, de nuevo, a forma de desplegables, podemos ver la información detallada de los diagnósticos, procedimientos, y tests de laboratorio.
 
-En cuanto a los últimos, se ha implementado poder filtrar los tests según su categoría (Blood Gas, Hematology, Chemistry...) o bien verlos todos a la vez. De nuevo, se muestra el listado de los tests como un listado de elementos desplegables, búscando la limpieza visual al encapsular la información y visualizar sólo los datos que se quieren ver. Cuando se hace click en uno de los tests, si éste tiene dos o más ocurrencias, se mostrará una gráfica con la evolución temporal para dicha métrica. 
+En cuanto a los últimos, es posible filtrar los tests por categoría (Blood Gas, Hematology, Chemistry...) o verlos todos, y al seleccionar un test con varias ocurrencias se presenta una serie temporal que facilita observar la evolución clínica.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.9\textwidth]{imagenes/patient1.png}}
@@ -64,8 +64,7 @@ En cuanto a los últimos, se ha implementado poder filtrar los tests según su c
 \end{figure}
 
 \section{Visualizaciones y lectura}
-
-En esta sección se describen las visualizaciones de datos que se han implementado.
+En esta sección se muestran ejemplos concretos de la aplicación y una breve interpretación de cada visualización, centrada en lo que revela el dato en este contexto específico.
 
 \subsection{Distribución por edad y género}
 Ahora vamos a pasar a las visualizaciones de datos que se han implementado. El primer gráfico, realizado utilizando Observable Plot, es un Population Pyramid \cite{populationPyramid} de la distribución por edad y género, con dos variantes, una por rangos de edad, y la otra por edad específica.
@@ -83,9 +82,7 @@ Ahora vamos a pasar a las visualizaciones de datos que se han implementado. El p
 \end{figure}
 
 \subsection{Heatmap de ingresos}
-El segundo gráfico, también desarrollado con Observable Plot, consiste en un heatmap\cite{heatmap} que representa la cantidad de ingresos hospitalarios en función de la hora y la fecha, ofreciendo dos variantes. La primera muestra los ingresos distribuidos por horas y días de la semana, lo que permite identificar los periodos de mayor y menor actividad en el hospital. Durante el desarrollo se detectó una concentración anómala de ingresos a las 00:00:00, de lo que se dedujo que se trataban de registros en los que la hora real de ingreso no estaba disponible; por ello, se filtraron estos casos del gráfico principal, aunque se dejó la opción de visualizarlos mediante un botón para que el usuario pueda acceder siempre a la información completa.
-
-La segunda variante del heatmap representa los ingresos por mes y día del mes. Aquí, el día 29 de febrero presentaba un número de ingresos significativamente inferior, lo que distorsionaba la escala de colores y oscurecía el resto de los datos. Para evitar este efecto, se optó por excluir ese día del gráfico principal y mostrar su valor de forma separada, garantizando así una visualización más precisa y homogénea del resto de los datos.
+El segundo gráfico, desarrollado con Observable Plot, representa la cantidad de ingresos por hora/día de la semana y por mes/día del mes. En la vista horaria se aprecian franjas de mayor actividad y posibles cambios de turno; en la vista mensual se observan patrones estacionales o días con menor actividad relativa. La interpretación se centra en localizar picos y valles consistentes.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.8\textwidth]{imagenes/chart-heat-1.png}}
@@ -100,7 +97,7 @@ La segunda variante del heatmap representa los ingresos por mes y día del mes. 
 \end{figure}
 
 \subsection{Estancia promedio por unidad UCI}
-Este gráfico, un Horizontal Bar Chart \cite{hbarchart} de Observable Plot, muestra cual es el  número de días promedio de estancia para cada unidad UCI. Se ha implementado un input para modificar el umbral mínimo de estancias, ya que hay unidades con muy pocas estancias que pueden no ser informativas. Un ejemplo es la unidad \texttt{Neurology}, que sólo tiene una estancia, y es de 28 días, muy por encima del resto. 
+Este gráfico, un Horizontal Bar Chart \cite{hbarchart}, muestra el número de días promedio de estancia por unidad UCI. La lectura comparativa permite identificar unidades con estancias más prolongadas y posibles outliers; conviene considerar el volumen de estancias al contextualizar promedios extremos.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.75\textwidth]{imagenes/chart-icu.png}}
@@ -109,7 +106,7 @@ Este gráfico, un Horizontal Bar Chart \cite{hbarchart} de Observable Plot, mues
 \end{figure}
 
 \subsection{Medicamentos más prescritos por vía}
-Esta visualización es más compleja que las anteriores, por lo que se hace uso de la librería D3. Se trata de un gráfico Sunburst interactivo \cite{sunburst}, que permite hacer zoom para moverse por la información. Se muestran los medicamentos más prescritos por vía de administración. Para este gráfico, debido a la enorme cantidad de documentos (más de 20 millones) en la colección donde se aloja esta información \texttt{hosp\_prescriptions}, en lugar de obtener los datos en cada llamada al endpoint del backend, se ha realizado una colección nueva mediante un script Python, que contiene los datos ya pre-agregados, consiguiendo así obtener los datos mucho más rápido. También se implementan unos filtros de umbral mínimo y máximo para facilitar la visualización.
+Un sunburst \cite{sunburst} muestra los medicamentos más frecuentes organizados por vía de administración. La interpretación consiste en comparar sectores y subsectores para identificar rutas dominantes y fármacos predominantes en cada ruta.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.85\textwidth]{imagenes/chart-sunburst.png}}
@@ -118,9 +115,7 @@ Esta visualización es más compleja que las anteriores, por lo que se hace uso 
 \end{figure}
 
 \subsection{Diagnósticos por categoría}
-En este caso se presenta de nuevo un gráfico interactivo realizado con D3, denominado Icicle \cite{icicle}. El gráfico muestra todos los diagnósticos, con la opción de aplicar un filtro por umbral mínimo, y están organizados jerárquicamente según la tabla \texttt{icd\_equivalencias}, mencionada previamente. Esto permite visualizar no solo los diagnósticos más frecuentes, sino también las categorías superiores que los agrupan, haciendo zoom para ver la información detallada cuando se necesite. 
-
-Para esta visualización también se necesitó implementar un script que realiza las agregaciones necesarias y las almacena en una colección de MongoDB nueva, debido a la imposibilidad de agregar todos los datos en cada petición, el tiempo de espera era demasiado alto.
+Un icicle \cite{icicle} organiza jerárquicamente los diagnósticos según su taxonomía, permitiendo explorar de lo general a lo específico. La lectura se basa en el ancho relativo de cada segmento y en el zoom sobre las ramas de interés para detectar las categorías con mayor prevalencia.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.88\textwidth]{imagenes/chart-diag.png}}
@@ -129,7 +124,7 @@ Para esta visualización también se necesitó implementar un script que realiza
 \end{figure}
 
 \subsection{Flujos hospitalarios}
-Este gráfico, al igual que los dos anteriores, utiliza D3 y en este caso, se trata de un Directed Chord Diagram \cite{chord}. Para su implementación, se crea una nueva colección con los datos pre-agregados. El gráfico representa la información de \texttt{hosp\_transfers}, mostrando la cantidad de transferencias hospitalarias entre unidades. Al pasar el cursor sobre cada conexión, se ven la unidad de origen, la de destino, y el recuento de transferencias de ese tipo.
+Un directed chord diagram \cite{chord} presenta las transferencias entre unidades; la dirección y el grosor de los acordes permiten identificar orígenes, destinos y relaciones dominantes. La interpretación se centra en los pares con mayor flujo y en asimetrías notables entre ida y vuelta.
 \begin{figure}[H]
   \centering
   \fbox{\includegraphics[width=0.88\textwidth]{imagenes/chart-flows.png}}
